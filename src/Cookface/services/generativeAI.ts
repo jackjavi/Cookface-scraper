@@ -1,11 +1,6 @@
-interface Post {
-  user: string;
-  content: string;
-  timestamp: string;
-}
-
 import {GoogleGenerativeAI, GenerativeModel} from '@google/generative-ai';
-import config from '../config';
+import config from '../../../config';
+import {Post} from '../types/Post';
 
 class GenerativeAIService {
   private apiKey: string;
