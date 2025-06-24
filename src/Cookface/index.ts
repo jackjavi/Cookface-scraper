@@ -1,10 +1,13 @@
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import sleep from './utils/sleep';
+import config from '../../config';
+import {XTrendsToNews} from './modules/XTrendsToNews';
 
 puppeteer.use(StealthPlugin());
 // const username = config.username;
 // const password = config.password;
+const browserWSEndpointUrl = config.browserWSEndpointUrl;
 
 // Function to get weighted random choice
 function getWeightedChoice(weights: number[]) {
@@ -32,10 +35,9 @@ function getWeightedChoice(weights: number[]) {
     // MAC: /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --no-first-run --no-default-browser-check --user-data-dir=$(mktemp -d -t 'chrome-remote_data_dir')
     // PC: start chrome.exe –remote-debugging-port=9222
     // Note: this url changes each time the command is run.
-    const wsChromeEndpointUrl =
-      'ws://127.0.0.1:9222/devtools/browser/b9b6ae94-ae62-4758-81dd-260af6f9b773';
+    // const wsChromeEndpointUrl = 'ws://127.0.0.1:9222/devtools/browser/b9b6ae94-ae62-4758-81dd-260af6f9b773';
     const browser = await puppeteer.connect({
-      browserWSEndpoint: wsChromeEndpointUrl,
+      browserWSEndpoint: browserWSEndpointUrl,
     });
     const page = await browser.newPage();
     // await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36");
@@ -53,71 +55,21 @@ function getWeightedChoice(weights: number[]) {
 
     await sleep(1500);
 
-    const weights = [20, 0, 40, 0, 5, 5, 15, 15, 0, 0]; // Probabilities in percentages
-    // const weights = [0, 0, 0, 0, 100, 0, 0, 0, 0, 0]; // Probabilities in percentages
+    // const weights = [20, 0, 40, 0, 5, 5, 15, 15, 0, 0]; // Probabilities in percentages
+    const weights = [100]; // Probabilities in percentages
 
     while (true) {
       const choice = getWeightedChoice(weights);
 
       switch (choice) {
         case 0:
-          console.log('Starting Home Timeline processing...');
-          // await homeTimeLine('Home', page);
-          console.log('Home Timeline processing completed.');
+          console.log('Starting XTrendsToNews processing...');
+          await XTrendsToNews(page);
+          console.log('XTrendsToNews processing completed.');
           await sleep(75000);
           break;
-        case 1:
-          console.log('Starting Home Timeline (No Comments) processing...');
-          // await homeTimeLineNoComments('Home', page);
-          console.log('Home Timeline (No Comments) processing completed.');
-          await sleep(75000);
-          break;
-        case 2:
-          console.log('Starting Search and Explore...');
-          // await explore('Search and explore', page);
-          console.log('Search and Explore completed.');
-          await sleep(75000);
-          break;
-        case 3:
-          console.log('Starting exploreGridComments processing...');
-          // await exploreGridComments('Search and explore', page);
-          console.log('exploreGridComments processing completed.');
-          await sleep(75000);
-        case 4:
-          console.log('Starting Notifications processing...');
-          // await notifications('Notifications', page);
-          console.log('Notifications processing completed.');
-          await sleep(75000);
-          break;
-        case 5:
-          console.log('Starting Post processing...');
-          // await post('Home', page);
-          await sleep(75000);
-          console.log('Post processing completed.');
-          break;
-        case 6:
-          console.log('Starting Home Timeline (Likes Only) processing...');
-          // await homeTimeLike('Home', page);
-          await sleep(75000);
-          console.log('Home Timeline (Likes Only) processing completed.');
-          break;
-        case 7:
-          console.log('Starting Active Users tagging...');
-          // await tagActiveUsers('Search and explore', page);
-          await sleep(75000);
-          console.log('Active Users tagging completed.');
-          break;
-        case 8:
-          console.log('Starting Post EBC processing...');
-          // await postEBC('Home', page);
-          await sleep(75000);
-          console.log('Post EBC processing completed.');
-          break;
-        case 9:
-          console.log('Starting Post Subtle Dynamic Post processing...');
-          // await PostSubtleDynamicPost('Home', page);
-          await sleep(75000);
-          console.log('Post Subtle Dynamic Post processing completed.');
+        default:
+          console.log(`No action taken for choice: ${choice}`);
           break;
       }
 
