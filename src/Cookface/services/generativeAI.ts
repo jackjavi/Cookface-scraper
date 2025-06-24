@@ -28,7 +28,7 @@ class GenerativeAIService {
     }
 
     const examplePosts = posts
-      .slice(0, 10) // Limit to 10 posts
+      .slice(0, 15) // Limit to 15 posts
       .map(
         (post, index) =>
           `Post ${index + 1}:\nUser: ${post.user}\nContent: "${post.content}"\nTimestamp: ${post.timestamp}\n\n`,
@@ -36,7 +36,7 @@ class GenerativeAIService {
       .join('');
 
     const prompt = `
-      **Task**: Analyze the following trending topic and user posts from platform X.
+      **Task**: Analyze the following trending topic and user posts from X/Twitter.
   
       ## Trending Topic:
       "${trendingTopic}"
@@ -77,33 +77,5 @@ class GenerativeAIService {
     }
   }
 }
-
-// Usage example
-const generativeAIService = new GenerativeAIService();
-(async () => {
-  try {
-    const trendingTopic = 'AI in Social Media';
-    const posts: Post[] = [
-      {
-        user: 'user1',
-        content: 'Loving the new AI features on this platform!',
-        timestamp: '2023-10-01T12:00:00Z',
-      },
-      {
-        user: 'user2',
-        content: 'AI is changing the way we interact online.',
-        timestamp: '2023-10-01T12:05:00Z',
-      },
-    ];
-
-    const generatedPost = await generativeAIService.generateTweetTrends(
-      trendingTopic,
-      posts,
-    );
-    console.log('Generated Post:', generatedPost);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-})();
 
 export default GenerativeAIService;
