@@ -33,7 +33,7 @@ function getWeightedChoice(weights: number[]) {
     // PC: start chrome.exe –remote-debugging-port=9222
     // Note: this url changes each time the command is run.
     const wsChromeEndpointUrl =
-      'ws://127.0.0.1:9222/devtools/browser/b2345451-3d2d-4448-80c9-48b0a4151705';
+      'ws://127.0.0.1:9222/devtools/browser/b9b6ae94-ae62-4758-81dd-260af6f9b773';
     const browser = await puppeteer.connect({
       browserWSEndpoint: wsChromeEndpointUrl,
     });
