@@ -18,8 +18,9 @@ export const XTrendsToNews = async (page: Page): Promise<void> => {
       const spans = Array.from(
         document.querySelectorAll('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6'),
       );
-      const target = spans.find(
-        span => span.textContent?.trim() === "What's on your mind, Jack?",
+
+      const target = spans.find(span =>
+        span.textContent?.includes("What's on your mind,"),
       );
 
       if (target) {
@@ -31,7 +32,7 @@ export const XTrendsToNews = async (page: Page): Promise<void> => {
     });
 
     if (clicked) {
-      console.log('Clicked on "What’s on your mind?" successfully.');
+      console.log('Clicked on "What’s on your mind?" span successfully.');
     } else {
       console.warn('Target span not found.');
     }
