@@ -15,9 +15,9 @@
     "clean": "gts clean",
     "compile": "tsc",
     "fix": "gts fix",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile",
-    "posttest": "npm run lint"
+    "prepare": "npm.cmd run compile",
+    "pretest": "npm.cmd run compile",
+    "posttest": "npm.cmd run lint"
   },
   "devDependencies": {
     "@types/node": "^22.7.5",
@@ -26,7 +26,9 @@
   },
   "dependencies": {
     "@google/genai": "^1.6.0",
+    "@google/generative-ai": "^0.24.1",
     "dotenv": "^16.5.0",
+    "fs": "^0.0.1-security",
     "install": "^0.13.0",
     "npm": "^11.4.2",
     "puppeteer": "^24.10.2",

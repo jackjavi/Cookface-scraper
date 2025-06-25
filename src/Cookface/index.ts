@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import sleep from './utils/sleep';
-import config from '../../config';
+import config from './config';
 import {XTrendsToNews} from './modules/XTrendsToNews';
 
 puppeteer.use(StealthPlugin());
@@ -10,7 +10,7 @@ puppeteer.use(StealthPlugin());
 const browserWSEndpointUrl = config.browserWSEndpointUrl;
 
 // Function to get weighted random choice
-function getWeightedChoice(weights: number[]) {
+function getWeightedChoice(weights: number[]): any {
   const sum = weights.reduce((acc, weight) => acc + weight, 0);
   const rand = Math.random() * sum;
 

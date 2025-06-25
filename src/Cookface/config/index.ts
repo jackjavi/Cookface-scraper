@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 const requiredEnvVars = ['GENERATIVE_AI_API_KEY', 'BROWSERWSENDPOINT_URL'];
