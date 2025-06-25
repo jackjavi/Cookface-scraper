@@ -1,6 +1,5 @@
 import puppeteer from 'puppeteer-extra';
-// import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import sleep from './utils/sleep';
 import config from './config/index';
 import {XTrendsToNews} from './modules/XTrendsToNews';
