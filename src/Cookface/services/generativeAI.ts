@@ -1,6 +1,6 @@
-import {GoogleGenerativeAI, GenerativeModel} from '@google/generative-ai';
-import config from '../config';
-import {Post} from '../types/Post';
+import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
+import config from '../config/index';
+import { Post } from '../types/Post';
 
 class GenerativeAIService {
   private apiKey: string;
@@ -77,5 +77,38 @@ class GenerativeAIService {
     }
   }
 }
+
+// usage example
+(async () => {
+  const service = new GenerativeAIService();
+  const trendingTopic = 'AI in 2024';
+  const examplePosts: Post[] = [
+    {
+      user: 'user1',
+      content: 'Excited about the future of AI!',
+      timestamp: new Date().toISOString(),
+    },
+    {
+      user: 'user2',
+      content: 'AI is changing the world as we know it.',
+      timestamp: new Date().toISOString(),
+    },
+    {
+      user: 'user3',
+      content: 'What are your thoughts on AI advancements?',
+      timestamp: new Date().toISOString(),
+    },
+  ];
+
+  try {
+    const generatedPost = await service.generateTweetTrends(
+      trendingTopic,
+      examplePosts,
+    );
+    console.log('Generated Post:', generatedPost);
+  } catch (error) {
+    console.error('Error:', error);
+  } 
+})();
 
 export default GenerativeAIService;

@@ -85,5 +85,4 @@ const scrapeTrends24 = async () => {
  }
 };
 
-
-export { scrapeTrends24 };
+export default scrapeTrends24;
