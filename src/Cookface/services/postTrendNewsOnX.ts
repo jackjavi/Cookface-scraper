@@ -2,6 +2,7 @@ import sleep from "../utils/sleep";
 import getRandomWaitTime from "../utils/randomWaitTime";
 import GenerativeAIService from "./generativeAI";
 import { Page } from "puppeteer";
+import { exit } from "process";
 
 const postTrendNewsOnX = async (label: string, page: Page, newsBite: string) => {
   const generativeAI = new GenerativeAIService();
@@ -60,7 +61,7 @@ const postTrendNewsOnX = async (label: string, page: Page, newsBite: string) => 
     await page.keyboard.type(newsBite, { delay: 200 });
     console.log("Typed the message into the editor successfully.");
     await sleep(2000);
-    await sleep(75000);
+    // await sleep(75000);
 
     // Step 6: Click the "Post" button
     const isPostClicked = await page.evaluate((postButtonSelector) => {
@@ -86,9 +87,11 @@ const postTrendNewsOnX = async (label: string, page: Page, newsBite: string) => 
     console.log('Clicked on the "Post" button successfully.');
     const waitTime = getRandomWaitTime(2000, 6000);
     await sleep(waitTime);
+    exit(0); // Exit the process after posting
 
   } catch (err: any) {
     console.error(`Error in post function: ${err.message}`);
+    exit(1); // Exit with an error code if something goes wrong 
   }
 };
 

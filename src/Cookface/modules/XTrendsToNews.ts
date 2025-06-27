@@ -35,7 +35,7 @@ export const XTrendsToNews = async (): Promise<void> => {
     await sleep(2000);
     await postTrendNewsOnX('Home', page, newsBite);
 
-    // await sleep(75000);
+    await sleep(2000);
     console.log('Waiting for Facebook home to fully load...');
 
      /* await page.waitForSelector('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6', {
