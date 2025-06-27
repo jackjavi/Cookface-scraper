@@ -1,6 +1,6 @@
 import sleep from '../utils/sleep';
 import {Page} from 'puppeteer';
-import { getNewXPage, closePage } from '../utils/browserManager';
+import {getNewXPage, closePage} from '../utils/browserManager';
 
 interface Trend {
   title: string;

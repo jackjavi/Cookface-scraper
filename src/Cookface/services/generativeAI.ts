@@ -1,6 +1,6 @@
 import {GoogleGenerativeAI, GenerativeModel} from '@google/generative-ai';
 import config from '../config/index';
-import {Post} from '../types/Post';
+import {Comment} from '../types/Comment';
 
 class GenerativeAIService {
   private apiKey: string;
@@ -13,9 +13,9 @@ class GenerativeAIService {
     this.model = this.genAI.getGenerativeModel({model: 'gemini-2.0-flash'});
   }
 
-  async generateTweetTrends(
-    trendingTopic: String,
-    posts: Post[],
+  async generateNewsBiteFromTrends(
+    trendingTopic: string | null,
+    posts: Comment[],
   ): Promise<string> {
     if (
       typeof trendingTopic !== 'string' ||
@@ -36,25 +36,42 @@ class GenerativeAIService {
       .join('');
 
     const prompt = `
-      **Task**: Analyze the following trending topic and user posts from X/Twitter.
-  
-      ## Trending Topic:
-      "${trendingTopic}"
-  
-      ## Example Posts:
-      ${examplePosts}
-  
-      **Your Objective**: Craft a post that seamlessly integrates the trending topic into its content. The new post should:
-      - Resonate with the tone, mood, and style of the provided posts.
-      - Be concise, relevant, and engaging.
-      - Include the trending topic naturally, whether as a hashtag or phrase.
-      - Be suitable for platform X, encouraging engagement and relatability.
-      - Avoid directly copying any specific content but feel authentic to the conversation.
-      - Be between 20 and 120 characters.
-  
-      **Examples to Mimic**: Mimic the energy, language, and tone of the posts provided above. Ensure the generated post feels like it belongs in the same discussion.
-  
-      Output the post as plain text without any additional explanations or formatting.
+      You are a digital writer creating compelling, original, and stylized "NEWS Bites" for Facebook under the theme - TRENDING NEWS KE.
+
+Context:
+You run a unique solo page — not affiliated with any official news channel — 
+that reports trending developments in Kenya based on the hottest X (formerly Twitter) trends. 
+These are not reposts or summaries of the tweets but instead re-imagined, professional-yet-personal 
+news-style blurbs written in your own engaging voice. Your style feels:
+- Conversational, yet polished
+- Curiously edgy, yet grounded
+- Scrollable and addictive — people visit your timeline just to keep up
+- Reflective, sometimes humorous or urgent, depending on the tone of the trend
+
+You are not just reporting — you're interpreting the vibe, revealing subtext, and writing like someone who reads between the lines.
+
+---
+
+**Task:**
+Generate a compelling Facebook news-style post (not a tweet) based on the following real trending topic 
+and sample user posts collected from X in Kenya. Keep the tone uniquely mine: 
+a professional but human tone that raises curiosity and delivers scroll-worthy updates. 
+Format it like a one-paragraph news summary, with slight storytelling flair, and a catchy closer if possible.
+
+Title: TRENDING NEWS KE  
+Trending Topic: ${trendingTopic}  
+Top Posts: ${examplePosts}
+
+---
+
+**Rules:**
+- Do NOT copy tweets verbatim
+- Do NOT address the audience directly ("you")
+- Do NOT include hashtags
+- Avoid sounding like a reporter reading the news on-air
+- Reimagine and rewrite from the collective vibe, not from any one tweet
+- Assume the reader wants to be updated quickly but with color and tone
+
     `;
 
     try {
@@ -77,38 +94,5 @@ class GenerativeAIService {
     }
   }
 }
-
-// usage example
-(async () => {
-  const service = new GenerativeAIService();
-  const trendingTopic = 'AI in 2024';
-  const examplePosts: Post[] = [
-    {
-      user: 'user1',
-      content: 'Excited about the future of AI!',
-      timestamp: new Date().toISOString(),
-    },
-    {
-      user: 'user2',
-      content: 'AI is changing the world as we know it.',
-      timestamp: new Date().toISOString(),
-    },
-    {
-      user: 'user3',
-      content: 'What are your thoughts on AI advancements?',
-      timestamp: new Date().toISOString(),
-    },
-  ];
-
-  try {
-    const generatedPost = await service.generateTweetTrends(
-      trendingTopic,
-      examplePosts,
-    );
-    console.log('Generated Post:', generatedPost);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-})();
 
 export default GenerativeAIService;

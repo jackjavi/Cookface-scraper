@@ -2,6 +2,8 @@ import {Page} from 'puppeteer';
 import sleep from '../utils/sleep';
 import fetchTweetTrends from '../services/fetchTweetTrends';
 import scrapeTrends24 from '../services/scrapeTrends24';
+import GenerativeAIService from '../services/generativeAI';
+import {Comment} from '../types/Comment';
 
 /**
  * Clicks on the Facebook "What's on your mind?" box to begin composing a post.
@@ -9,6 +11,8 @@ import scrapeTrends24 from '../services/scrapeTrends24';
  */
 export const XTrendsToNews = async (page: Page): Promise<void> => {
   try {
+    console.log('Starting XTrendsToNews processing...');
+    const genAIService = new GenerativeAIService();
     const trends = await scrapeTrends24();
 
     if (!trends || trends.length === 0) {
@@ -16,8 +20,15 @@ export const XTrendsToNews = async (page: Page): Promise<void> => {
       return;
     }
 
-    const res = await fetchTweetTrends('Search and explore', trends);
-    console.log('Fetched comments:', res);
+    const {randomPhrase, comments} = await fetchTweetTrends(
+      'Search and explore',
+      trends,
+    );
+    const newsBite = await genAIService.generateNewsBiteFromTrends(
+      randomPhrase,
+      comments,
+    );
+    console.log(`Generated News Bite: ${newsBite}`);
 
     await sleep(75000);
     console.log('Waiting for Facebook home to fully load...');

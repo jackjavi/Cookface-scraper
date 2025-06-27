@@ -1,8 +1,6 @@
 import sleep from './utils/sleep';
 import {XTrendsToNews} from './modules/XTrendsToNews';
 import {getFacebookPage} from './utils/browserManager';
-import fetchTweetTrends from './services/fetchTweetTrends';
-import scrapeTrends24 from './services/scrapeTrends24';
 
 // Weighted choice helper
 function getWeightedChoice(weights: number[]): number {
@@ -20,10 +18,10 @@ function getWeightedChoice(weights: number[]): number {
 
 (async () => {
   try {
-    const fbPage = await getFacebookPage(); // 👈 This is now from browserManager
+    const fbPage = await getFacebookPage();
     await sleep(1500);
 
-    const weights = [100]; // Currently only doing XTrendsToNews
+    const weights = [100];
 
     while (true) {
       const choice = getWeightedChoice(weights);
