@@ -13,8 +13,12 @@ interface Comment {
   timestamp: string | null;
 }
 
-async function fetchTweetTrends(label: string, trends: Trend[]) {
-  const page = await getNewXPage();
+async function fetchTweetTrends(label: string, trends: Trend[]): Promise<{
+  randomPhrase: string | null;
+  comments: Comment[];
+  page: Page;
+}> {
+  const page: Page = await getNewXPage();
   const navSelector = 'nav[aria-label="Primary"] a';
 
   function getRandomWaitTime(min: any, max: any) {
@@ -119,13 +123,13 @@ async function fetchTweetTrends(label: string, trends: Trend[]) {
 
     // console.log("Final comments:", comments);
     await sleep(1000);
-    return {randomPhrase, comments};
+    return {randomPhrase, comments, page};
   } catch (err: any) {
     console.error(`Error in fetchTweetTrends function: ${err.message}`);
-    return {randomPhrase: null, comments: []};
-  } finally {
+    return {randomPhrase: null, comments: [], page};
+  } /* finally {
     await closePage(page);
-  }
+  } */
 }
 
 export default fetchTweetTrends;

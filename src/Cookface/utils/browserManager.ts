@@ -7,7 +7,7 @@ puppeteer.use(StealthPlugin());
 
 let browser: Browser | null = null;
 let fbPage: Page | null = null;
-const xPage: Page | null = null;
+let xPage: Page | null = null;
 
 const browserWSEndpoint = config.browserWSEndpointUrl;
 
@@ -30,10 +30,10 @@ export async function getFacebookPage(): Promise<Page> {
 
 export async function getNewXPage(): Promise<Page> {
   const browser = await initializeBrowser();
-  const newPage = await browser.newPage();
-  await newPage.goto('https://x.com');
+  xPage = await browser.newPage();
+  await xPage.goto('https://x.com');
   console.log('New X.com page opened.');
-  return newPage;
+  return xPage;
 }
 
 export async function closePage(page: Page): Promise<void> {

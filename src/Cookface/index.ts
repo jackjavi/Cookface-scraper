@@ -18,7 +18,7 @@ function getWeightedChoice(weights: number[]): number {
 
 (async () => {
   try {
-    const fbPage = await getFacebookPage();
+    // const fbPage = await getFacebookPage();
     await sleep(1500);
 
     const weights = [100];
@@ -29,7 +29,8 @@ function getWeightedChoice(weights: number[]): number {
       switch (choice) {
         case 0:
           console.log('Starting XTrendsToNews processing...');
-          await XTrendsToNews(fbPage);
+          // await XTrendsToNews(fbPage);
+          await XTrendsToNews();
           console.log('XTrendsToNews processing completed.');
           await sleep(75000);
           break;
