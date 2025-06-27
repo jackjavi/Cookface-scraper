@@ -1,6 +1,6 @@
-import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
+import {GoogleGenerativeAI, GenerativeModel} from '@google/generative-ai';
 import config from '../config/index';
-import { Post } from '../types/Post';
+import {Post} from '../types/Post';
 
 class GenerativeAIService {
   private apiKey: string;
@@ -108,7 +108,7 @@ class GenerativeAIService {
     console.log('Generated Post:', generatedPost);
   } catch (error) {
     console.error('Error:', error);
-  } 
+  }
 })();
 
 export default GenerativeAIService;

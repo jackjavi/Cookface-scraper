@@ -1,6 +1,8 @@
 import sleep from './utils/sleep';
-import { XTrendsToNews } from './modules/XTrendsToNews';
-import { getFacebookPage } from './utils/browserManager';
+import {XTrendsToNews} from './modules/XTrendsToNews';
+import {getFacebookPage} from './utils/browserManager';
+import fetchTweetTrends from './services/fetchTweetTrends';
+import scrapeTrends24 from './services/scrapeTrends24';
 
 // Weighted choice helper
 function getWeightedChoice(weights: number[]): number {

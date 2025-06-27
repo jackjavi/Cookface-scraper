@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer-extra';
-import { Browser, Page } from 'puppeteer';
+import {Browser, Page} from 'puppeteer';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import config from '../config/index';
 
@@ -7,13 +7,13 @@ puppeteer.use(StealthPlugin());
 
 let browser: Browser | null = null;
 let fbPage: Page | null = null;
-let xPage: Page | null = null;
+const xPage: Page | null = null;
 
 const browserWSEndpoint = config.browserWSEndpointUrl;
 
 export async function initializeBrowser() {
   if (!browser) {
-    browser = await puppeteer.connect({ browserWSEndpoint });
+    browser = await puppeteer.connect({browserWSEndpoint});
   }
   return browser;
 }

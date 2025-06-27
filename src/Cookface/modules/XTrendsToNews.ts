@@ -1,5 +1,7 @@
 import {Page} from 'puppeteer';
 import sleep from '../utils/sleep';
+import fetchTweetTrends from '../services/fetchTweetTrends';
+import scrapeTrends24 from '../services/scrapeTrends24';
 
 /**
  * Clicks on the Facebook "What's on your mind?" box to begin composing a post.
@@ -7,6 +9,17 @@ import sleep from '../utils/sleep';
  */
 export const XTrendsToNews = async (page: Page): Promise<void> => {
   try {
+    const trends = await scrapeTrends24();
+
+    if (!trends || trends.length === 0) {
+      console.warn('No trends returned from scrapeTrends24.');
+      return;
+    }
+
+    const res = await fetchTweetTrends('Search and explore', trends);
+    console.log('Fetched comments:', res);
+
+    await sleep(75000);
     console.log('Waiting for Facebook home to fully load...');
 
     await page.waitForSelector('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6', {
