@@ -2,7 +2,6 @@ import sleep from "../utils/sleep";
 import getRandomWaitTime from "../utils/randomWaitTime";
 import GenerativeAIService from "./generativeAI";
 import { Page } from "puppeteer";
-import { exit } from "process";
 
 const postTrendNewsOnX = async (label: string, page: Page, newsBite: string) => {
   const generativeAI = new GenerativeAIService();
@@ -33,7 +32,7 @@ const postTrendNewsOnX = async (label: string, page: Page, newsBite: string) => 
     await page.reload({ waitUntil: "networkidle2" });
     console.log("Page reloaded successfully.");
 
-    // Step 4: Click on the placeholder with "What’s happening?" inner text
+    // Step 2: Click on the placeholder with "What’s happening?" inner text
    const isPlaceholderClicked = await page.evaluate(
   (placeholderSelector) => {
     const placeholder = document.querySelector(placeholderSelector) as HTMLElement | null;
@@ -57,13 +56,13 @@ const postTrendNewsOnX = async (label: string, page: Page, newsBite: string) => 
     );
     await sleep(2000);
 
-    // Step 5: Type the randomly selected post into the editor
+    // Step 3: Type the randomly selected post into the editor
     await page.keyboard.type(newsBite, { delay: 200 });
     console.log("Typed the message into the editor successfully.");
     await sleep(2000);
-    // await sleep(75000);
+    await sleep(75000);
 
-    // Step 6: Click the "Post" button
+    // Step 4: Click the "Post" button
     const isPostClicked = await page.evaluate((postButtonSelector) => {
   const postButton = Array.from(
     document.querySelectorAll(postButtonSelector)
@@ -87,11 +86,9 @@ const postTrendNewsOnX = async (label: string, page: Page, newsBite: string) => 
     console.log('Clicked on the "Post" button successfully.');
     const waitTime = getRandomWaitTime(2000, 6000);
     await sleep(waitTime);
-    exit(0); // Exit the process after posting
 
   } catch (err: any) {
-    console.error(`Error in post function: ${err.message}`);
-    exit(1); // Exit with an error code if something goes wrong 
+    console.error(`Error in post function: ${err.message}`); 
   }
 };
 

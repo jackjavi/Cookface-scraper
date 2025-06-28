@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import {CountryData} from '../types/CountryData';
 import {Trend} from '../types/Trend';
 
-const scrapeTrends24 = async () => {
+const scrapeTrends24 = async () : Promise<Trend[] | void> => {
   const countriesData: CountryData[] = JSON.parse(
     fs.readFileSync('./countries.json', 'utf8'),
   );
