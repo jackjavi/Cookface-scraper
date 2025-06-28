@@ -1,6 +1,8 @@
 import sleep from '../utils/sleep';
-import {Page} from 'puppeteer';
-import {getNewXPage, closePage} from '../utils/browserManager';
+import { Page } from 'puppeteer';
+import { getNewXPage, closePage } from '../utils/browserManager';
+import GenerativeAIService from './generativeAI';
+import * as fs from 'fs';
 
 interface Trend {
   title: string;
@@ -13,27 +15,62 @@ interface Comment {
   timestamp: string | null;
 }
 
-async function fetchTweetTrends(label: string, trends: Trend[]): Promise<{
+async function fetchTweetTrends(
+  label: string,
+  trends: Trend[]
+): Promise<{
   randomPhrase: string | null;
   comments: Comment[];
   page: Page;
 }> {
   const page: Page = await getNewXPage();
   const navSelector = 'nav[aria-label="Primary"] a';
+  const genAIService = new GenerativeAIService();
 
-  function getRandomWaitTime(min: any, max: any) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  function getRecentTrends(): string[] {
+    const path = './usedTrends.json';
+    if (!fs.existsSync(path)) return [];
+    return JSON.parse(fs.readFileSync(path, 'utf-8')).slice(0, 5);
   }
 
-  function getRandomPhrase() {
-    const firstFiveTrends = trends.slice(0, 5);
-    const randomTrend =
-      firstFiveTrends[Math.floor(Math.random() * firstFiveTrends.length)];
-    console.log(`Random Trend: ${randomTrend.title}`);
-    return randomTrend.title;
+  async function getBestTitleFromTopTrends(): Promise<{ title: string; index: number }> {
+    const top10Trends = trends.slice(0, 10);
+    const recentTrends = getRecentTrends();
+
+    const prompt = `
+You are an expert at spotting the best trending topic to write about on social media in Kenya. 
+
+Below are 10 trending topics:
+${top10Trends.map((t, i) => `${i + 1}. ${t.title}`).join('\n')}
+
+Avoid these recent trends: ${recentTrends.join(', ') || 'None'}.
+
+Rules:
+- Ignore titles that are promotional, branded, religious, or previously used (see list).
+- Choose the most engaging, newsworthy, or viral-friendly title for mass audience content.
+- Your job is to pick **only one** from the list.
+
+Now reply ONLY with the number (1–10) of the trend you recommend. No explanation.`;
+
+    const result = await genAIService['model'].generateContent(prompt);
+    const response = await result.response;
+    const answer = response.text().trim();
+    const chosenIndex = parseInt(answer) - 1;
+
+    if (isNaN(chosenIndex) || chosenIndex < 0 || chosenIndex >= top10Trends.length) {
+      throw new Error(`Invalid trend selection index: ${answer}`);
+    }
+
+    const selected = top10Trends[chosenIndex];
+    genAIService['saveTrendToFile'](selected.title);
+    console.log(`Selected Trend: ${selected.title}`);
+    return { title: selected.title, index: chosenIndex };
   }
 
   try {
+    // Step 0: Choose best trend title using AI
+    const { title: selectedTitle } = await getBestTitleFromTopTrends();
+
     // Step 1: Click the navigation link
     await page.evaluate(
       (label, navSelector) => {
@@ -52,21 +89,14 @@ async function fetchTweetTrends(label: string, trends: Trend[]): Promise<{
     );
     console.log(`Clicked on the "${label}" link successfully.`);
 
-    // Step 2: Search for a random phrase
+    // Step 2: Search for the selected title
     const searchInputSelector = 'input[data-testid="SearchBox_Search_Input"]';
     await page.waitForSelector(searchInputSelector);
-    const randomPhrase = getRandomPhrase();
-    await page.type(searchInputSelector, randomPhrase, {delay: 100});
+    await page.type(searchInputSelector, selectedTitle, { delay: 100 });
     await page.keyboard.press('Enter');
-    console.log(`Search initiated for "${randomPhrase}".`);
+    console.log(`Search initiated for "${selectedTitle}".`);
 
     await sleep(2000);
-
-    // Reload the page
-    // await page.reload({ waitUntil: "networkidle2" });
-    // console.log("Page reloaded successfully.");
-
-    // Wait for the articles to load
     await page.waitForSelector('article[role="article"][data-testid="tweet"]');
 
     const comments: Comment[] = [];
@@ -75,21 +105,16 @@ async function fetchTweetTrends(label: string, trends: Trend[]): Promise<{
     while (comments.length < 15) {
       const newComments = await page.evaluate(() => {
         const articles = document.querySelectorAll(
-          'article[role="article"][data-testid="tweet"]',
+          'article[role="article"][data-testid="tweet"]'
         );
 
         return Array.from(articles).map(article => {
-          const userSpan = article.querySelector(
-            '[data-testid="User-Name"] span',
-          );
+          const userSpan = article.querySelector('[data-testid="User-Name"] span');
           const contentEl = article.querySelector('[lang]');
-          const user =
-            userSpan instanceof HTMLElement ? userSpan.innerText : null;
-          const content =
-            contentEl instanceof HTMLElement ? contentEl.innerText : null;
-          const timestamp =
-            article.querySelector('time')?.getAttribute('datetime') || null;
-          return {user, content, timestamp};
+          const user = userSpan instanceof HTMLElement ? userSpan.innerText : null;
+          const content = contentEl instanceof HTMLElement ? contentEl.innerText : null;
+          const timestamp = article.querySelector('time')?.getAttribute('datetime') || null;
+          return { user, content, timestamp };
         });
       });
 
@@ -106,14 +131,10 @@ async function fetchTweetTrends(label: string, trends: Trend[]): Promise<{
 
       if (comments.length >= 15) break;
 
-      previousHeight = (await page.evaluate(
-        () => document.body.scrollHeight,
-      )) as number;
+      previousHeight = (await page.evaluate(() => document.body.scrollHeight)) as number;
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       await sleep(3000);
-      const newHeight = (await page.evaluate(
-        () => document.body.scrollHeight,
-      )) as number;
+      const newHeight = (await page.evaluate(() => document.body.scrollHeight)) as number;
 
       if (newHeight === previousHeight) {
         console.log('No more new comments to load.');
@@ -121,15 +142,12 @@ async function fetchTweetTrends(label: string, trends: Trend[]): Promise<{
       }
     }
 
-    // console.log("Final comments:", comments);
     await sleep(1000);
-    return {randomPhrase, comments, page};
+    return { randomPhrase: selectedTitle, comments, page };
   } catch (err: any) {
     console.error(`Error in fetchTweetTrends function: ${err.message}`);
-    return {randomPhrase: null, comments: [], page};
-  } /* finally {
-    await closePage(page);
-  } */
+    return { randomPhrase: null, comments: [], page };
+  }
 }
 
 export default fetchTweetTrends;

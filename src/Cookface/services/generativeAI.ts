@@ -7,7 +7,7 @@ class GenerativeAIService {
   private apiKey: string;
   private genAI: GoogleGenerativeAI;
   private model: GenerativeModel;
-  private trendsFilePath: string = './usedTrends.json';
+  private trendsFilePath = './usedTrends.json';
 
   constructor() {
     this.apiKey = config.generativeAIKey;
@@ -15,24 +15,72 @@ class GenerativeAIService {
     this.model = this.genAI.getGenerativeModel({model: 'gemini-2.0-flash'});
   }
 
-
-  private saveTrendToFile(trend: string): void {
+  public saveTrendToFile(trend: string): void {
     let usedTrends: string[] = [];
     try {
       if (fs.existsSync(this.trendsFilePath)) {
         usedTrends = JSON.parse(fs.readFileSync(this.trendsFilePath, 'utf-8'));
       }
       usedTrends.unshift(trend);
-      fs.writeFileSync(this.trendsFilePath, JSON.stringify(usedTrends, null, 2));
+      fs.writeFileSync(
+        this.trendsFilePath,
+        JSON.stringify(usedTrends, null, 2),
+      );
     } catch (error) {
       console.error('Failed to save trend to file:', error);
+    }
+  }
+
+  async chooseBestTitleOnly(
+    top10Titles: string[],
+    recentTrends: string[],
+  ): Promise<string | null> {
+    const prompt = `
+You're an assistant for a social media page called "TRENDING NEWS KE", which covers viral stories and popular trends in Kenya and globally.
+
+You will receive:
+- A list of the top 10 trending topics by title (no context, no tweets)
+- A list of the 5 most recently used trends that should be avoided
+
+Your job is to select the **single best** trend title to use next for generating a Facebook News Bite. Avoid titles that:
+- Are hashtags for promotions/brands/events
+- Are religious or political slogans
+- Were used in the last 5 posts
+
+Prefer titles that are:
+- Timely and relevant to national or global events
+- Likely to spark engagement or emotion
+- Naturally viral or eye-catching
+
+Here are the top 10 titles:
+${top10Titles.map((t, i) => `${i}. ${t}`).join('\n')}
+
+Do NOT pick any of these 5 recent ones:
+${recentTrends.join(', ')}
+
+Reply ONLY with the exact title from the list that should be used (no number, no explanation, just the text).`;
+
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const chosenTitle = response.text().trim();
+
+      if (!top10Titles.includes(chosenTitle)) {
+        console.warn('AI returned a title not found in the top 10 list.');
+        return null;
+      }
+
+      return chosenTitle;
+    } catch (error) {
+      console.error('Error choosing best title only:', error);
+      return null;
     }
   }
 
   async chooseBestTrend(
     candidateTrend: string,
     comments: Comment[],
-    recentTrends: string[]
+    recentTrends: string[],
   ): Promise<'1' | '2' | '3' | '5'> {
     const examplePosts = comments
       .slice(0, 15)
@@ -42,7 +90,7 @@ class GenerativeAIService {
 User: ${post.user}
 Content: "${post.content}"
 Timestamp: ${post.timestamp}
-`
+`,
       )
       .join('\n');
 
@@ -54,7 +102,6 @@ Input: A trending topic "${candidateTrend}" with 15 sample posts.
 Rules:
 - Do NOT select if the trend is a promotional hashtag or clearly linked to a specific group (e.g., religious orgs, brands).
 - Do NOT select if the topic was used recently. Here are the last 5 used: ${recentTrends.join(', ')}
-- DO select if the trend has mass engagement or touches on current national/world events, emotions, politics, humor, or controversy.
 
 Score the trend with:
 1 — Strongly Recommended
@@ -66,7 +113,7 @@ Score the trend with:
 Example Posts:
 ${examplePosts}
 ---
-Now, respond ONLY with one of the numbers: 1, 2, 3, or 5, based on the quality of the topic."`;
+Now, respond ONLY with one of the numbers: 1, 2, 3, or 5.`;
 
     try {
       const result = await this.model.generateContent(prompt);
@@ -77,7 +124,6 @@ Now, respond ONLY with one of the numbers: 1, 2, 3, or 5, based on the quality o
         throw new Error('Invalid score returned from GenAI');
       }
 
-      // If score is acceptable, save the trend
       if (answer === '1' || answer === '2') {
         this.saveTrendToFile(candidateTrend);
       }
@@ -85,10 +131,9 @@ Now, respond ONLY with one of the numbers: 1, 2, 3, or 5, based on the quality o
       return answer as '1' | '2' | '3' | '5';
     } catch (error) {
       console.error('Error choosing best trend:', error);
-      return '5'; // Default to reject if error occurs
+      return '5';
     }
   }
-
 
   async generateNewsBiteFromTrends(
     trendingTopic: string | null,
@@ -134,7 +179,7 @@ Generate a compelling Facebook news-style post (not a tweet) based on the follow
 and sample user posts collected from X in Kenya. Keep the tone uniquely mine: 
 a professional but human tone that raises curiosity and delivers scroll-worthy updates. 
 Format it like a one-paragraph news summary, with slight storytelling flair, and a catchy closer if possible.
-Character limit should not exceed 240 characters or 40 words.
+Character limit should not exceed 220 characters or 35 words.
 
 Title: TRENDING NEWS KE  
 Trending Topic: ${trendingTopic}  
@@ -143,8 +188,8 @@ Top Posts: ${examplePosts}
 ---
 
 **Rules:**
-- Character limit: 240 characters
-- word count: 40 words
+- Character limit: 220 characters
+- word count: 35 words
 - Do NOT copy tweets verbatim
 - Do NOT address the audience directly ("you")
 - Do NOT include hashtags

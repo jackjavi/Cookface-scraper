@@ -2,7 +2,7 @@ import sleep from '../utils/sleep';
 import getRandomWaitTime from '../utils/randomWaitTime';
 import GenerativeAIService from './generativeAI';
 import scrapeTrends24 from './scrapeTrends24';
-import fetchTweetTrends from './fetchTweetTrends';
+// import fetchTweetTrends from './fetchTweetTrends';
 // import fetch from "node-fetch";
 import {Page} from 'puppeteer';
 import {Trend} from '../types/Trend';
@@ -27,7 +27,7 @@ const postTweetTrends = async (label: string, page: Page) => {
     // console.log(`Generated Post: ${randomPost}`);
 
     // fetch trending topics and go to explore tab to fetch top posts
-    let trends: Trend[] | undefined = [];
+    let trends: Trend[] | void = [];
     console.log('Fetching trends...');
     trends = await scrapeTrends24();
     console.log('Fetched trends:', trends);

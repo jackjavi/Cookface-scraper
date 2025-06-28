@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import {CountryData} from '../types/CountryData';
 import {Trend} from '../types/Trend';
 
-const scrapeTrends24 = async () : Promise<Trend[] | void> => {
+const scrapeTrends24 = async (): Promise<Trend[]> => {
   const countriesData: CountryData[] = JSON.parse(
     fs.readFileSync('./countries.json', 'utf8'),
   );
@@ -61,11 +61,11 @@ const scrapeTrends24 = async () : Promise<Trend[] | void> => {
       return trends;
     } else {
       console.log(`No valid trends found after ${maxAttempts} attempts`);
-      return;
+      return [];
     }
   } catch (error) {
     console.error('Error scraping Trends24:', error);
-    return;
+    return [];
   } finally {
     if (browser) {
       await browser.close();
