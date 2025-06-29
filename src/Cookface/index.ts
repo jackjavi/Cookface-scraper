@@ -1,6 +1,7 @@
+// index.ts
 import sleep from './utils/sleep';
 import {XTrendsToNews} from './modules/XTrendsToNews';
-import {getFacebookPage} from './utils/browserManager';
+import {initializeBrowser} from './utils/browserManager';
 
 // Weighted choice helper
 function getWeightedChoice(weights: number[]): number {
@@ -18,7 +19,16 @@ function getWeightedChoice(weights: number[]): number {
 
 (async () => {
   try {
-    // const fbPage = await getFacebookPage();
+    const FIFTEEN_MINUTES = 15 * 60 * 1000;
+    const browser = await initializeBrowser();
+    const xPage = await browser.newPage();
+    await xPage.goto('https://x.com');
+    console.log('X.com page initialized.');
+
+    const fbPage = await browser.newPage();
+    await fbPage.goto('https://www.facebook.com/');
+    console.log('Facebook page initialized.');
+
     await sleep(1500);
 
     const weights = [100];
@@ -29,10 +39,9 @@ function getWeightedChoice(weights: number[]): number {
       switch (choice) {
         case 0:
           console.log('Starting XTrendsToNews processing...');
-          // await XTrendsToNews(fbPage);
-          await XTrendsToNews();
+          await XTrendsToNews(xPage, fbPage);
           console.log('XTrendsToNews processing completed.');
-          await sleep(75000);
+          await sleep(FIFTEEN_MINUTES); // Wait 15 minutes
           break;
         default:
           console.log(`No action taken for choice: ${choice}`);

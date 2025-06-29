@@ -1,29 +1,26 @@
 import sleep from '../utils/sleep';
 import getRandomWaitTime from '../utils/randomWaitTime';
-import GenerativeAIService from './generativeAI';
-import {getFacebookPage} from '../utils/browserManager';
-import {Page} from 'puppeteer';
+import { Page } from 'puppeteer';
 
-const postTrendNewsOnFB = async (newsBite: string) => {
-  const generativeAI = new GenerativeAIService();
-  const navSelector = 'nav[aria-label="Primary"] a';
-  const placeholderSelector = '.public-DraftEditorPlaceholder-inner';
+/**
+ * Posts trend news on Facebook
+ * @param page Puppeteer page instance
+ * @param newsBite The news bite to post
+ */
+const postTrendNewsOnFB = async (
+  page: Page,
+  newsBite: string,
+): Promise<void> => {
   const postButtonSelector = 'div[dir="ltr"] span.css-1jxf684 > span';
 
   try {
-    // Step 1: Get the Facebook page instance
-    const page: Page = await getFacebookPage();
-    if (!page) {
-      throw new Error('Failed to get Facebook page instance.');
-    }
-
-    // Wait for the target span element to appear (up to 15 seconds)
+    // Step 1: Wait for the "What's on your mind?" span to appear
     await page.waitForSelector('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6', {
       timeout: 15000,
       visible: true,
     });
 
-    // Scroll until the span with exact inner text is visible and clickable
+    // Step 2: Click the "What's on your mind?" span
     const clicked = await page.evaluate(() => {
       const spans = Array.from(
         document.querySelectorAll('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6'),
@@ -34,7 +31,6 @@ const postTrendNewsOnFB = async (newsBite: string) => {
       );
 
       if (target) {
-        target.scrollIntoView({behavior: 'smooth', block: 'center'});
         (target as HTMLElement).click();
         return true;
       }
@@ -49,26 +45,18 @@ const postTrendNewsOnFB = async (newsBite: string) => {
 
     await sleep(3000);
 
-    // Type the post
-    await page.keyboard.type(newsBite, {delay: 200});
+    // Step 3: Type the post
+    await page.keyboard.type(newsBite, { delay: 200 });
     console.log('Typed the message into the editor successfully.');
 
-    await sleep(getRandomWaitTime(2000, 3000));
-    // Wait for the "Post" span to appear
-    await page.waitForFunction(
-      () => {
-        const spans = Array.from(document.querySelectorAll('span'));
-        return spans.some(span => span.textContent?.trim() === 'Post');
-      },
-      {timeout: 10000},
-    );
+    // Step 4: Wait briefly then click "Post" button
+    await sleep(3000);
 
     const postClicked = await page.evaluate(() => {
       const spans = Array.from(document.querySelectorAll('span'));
       const postBtn = spans.find(span => span.textContent?.trim() === 'Post');
 
       if (postBtn) {
-        postBtn.scrollIntoView({behavior: 'smooth', block: 'center'});
         (postBtn as HTMLElement).click();
         return true;
       }
@@ -80,9 +68,10 @@ const postTrendNewsOnFB = async (newsBite: string) => {
     } else {
       console.warn('"Post" button not found.');
     }
+
   } catch (err: any) {
-    console.error(`Error in post function: ${err.message}`);
+    console.error(`Error in postTrendNewsOnFB: ${err.message}`);
   }
 };
 
-export {postTrendNewsOnFB};
+export { postTrendNewsOnFB };
