@@ -45,7 +45,7 @@ export const XTrendsToNews = async (
     await postTrendNewsOnX('Home', xPage, newsBite);
 
     fbPage.bringToFront();
-    await sleep(900000);
+    await sleep(225000);
     await postTrendNewsOnFB(fbPage, newsBite);
 
   } catch (error) {
