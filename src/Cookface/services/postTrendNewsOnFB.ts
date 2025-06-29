@@ -2,10 +2,12 @@ import sleep from '../utils/sleep';
 import getRandomWaitTime from '../utils/randomWaitTime';
 import { Page } from 'puppeteer';
 
+const YOUTUBE_LINK = 'https://youtu.be/XbmB6vvCaOQ?si=DpYmCd67nrlG3gxI';
+
 /**
- * Posts trend news on Facebook
+ * Posts trend news or YouTube video link on Facebook
  * @param page Puppeteer page instance
- * @param newsBite The news bite to post
+ * @param newsBite The news bite to post if not posting the YouTube link
  */
 const postTrendNewsOnFB = async (
   page: Page,
@@ -45,8 +47,11 @@ const postTrendNewsOnFB = async (
 
     await sleep(3000);
 
-    // Step 3: Type the post
-    await page.keyboard.type(newsBite, { delay: 200 });
+    // Step 3: Randomly decide what to post
+    const toPost = Math.random() > 0.8 ? YOUTUBE_LINK : newsBite;
+    console.log(`Typing content: ${toPost}`);
+
+    await page.keyboard.type(toPost, { delay: 200 });
     console.log('Typed the message into the editor successfully.');
 
     // Step 4: Wait briefly then click "Post" button
