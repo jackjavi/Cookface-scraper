@@ -92,20 +92,22 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     );
     console.log(`Clicked on the "${label}" link successfully.`);
 
-    await sleep(2000);
-    // Wait for the "live" filter link and click
-    const linkSelector = 'a[href*="&f=live"]';
-    await page.waitForSelector(linkSelector);
-    await page.click(linkSelector);
-    console.log("Selected 'Live' filter.");
-
     const searchInputSelector = 'input[data-testid="SearchBox_Search_Input"]';
     await page.waitForSelector(searchInputSelector);
     await page.type(searchInputSelector, selectedTitle, {delay: 100});
     await page.keyboard.press('Enter');
     console.log(`Search initiated for "${selectedTitle}".`);
 
+    await sleep(3000);
+
+    // Wait for the "live" filter link and click
+    const linkSelector = 'a[href*="&f=live"]';
+    await page.waitForSelector(linkSelector);
+    await page.click(linkSelector);
+    console.log("Selected 'Live' filter.");
     await sleep(2000);
+
+
     await page.waitForSelector('article[role="article"][data-testid="tweet"]');
 
     const comments: Comment[] = [];
