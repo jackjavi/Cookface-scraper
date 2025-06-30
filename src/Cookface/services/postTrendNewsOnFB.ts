@@ -16,6 +16,9 @@ const postTrendNewsOnFB = async (
   const postButtonSelector = 'div[dir="ltr"] span.css-1jxf684 > span';
 
   try {
+    // Reload the page
+    await page.reload({ waitUntil: "networkidle2" });
+    console.log("Page reloaded successfully.");
     // Step 1: Wait for the "What's on your mind?" span to appear
     await page.waitForSelector('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6', {
       timeout: 15000,
