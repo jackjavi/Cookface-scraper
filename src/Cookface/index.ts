@@ -1,4 +1,3 @@
-// index.ts
 import sleep from './utils/sleep';
 import {XTrendsToNews} from './modules/XTrendsToNews';
 import {initializeBrowser} from './utils/browserManager';
@@ -19,7 +18,8 @@ function getWeightedChoice(weights: number[]): number {
 
 (async () => {
   try {
-    const FIFTEEN_MINUTES = 15 * 60 * 1000;
+    // const FIFTEEN_MINUTES = 15 * 60 * 1000;
+    const THIRTY_MINUTES = 30 * 60 * 1000;
     const browser = await initializeBrowser();
     const xPage = await browser.newPage();
     await xPage.goto('https://x.com');
@@ -41,7 +41,7 @@ function getWeightedChoice(weights: number[]): number {
           console.log('Starting XTrendsToNews processing...');
           await XTrendsToNews(xPage, fbPage);
           console.log('XTrendsToNews processing completed.');
-          await sleep(FIFTEEN_MINUTES); // Wait 15 minutes
+          await sleep(THIRTY_MINUTES); // Wait 15 minutes
           break;
         default:
           console.log(`No action taken for choice: ${choice}`);
