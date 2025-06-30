@@ -28,20 +28,20 @@ async function fetchTweetTrends(
   function getRecentTrends(): string[] {
     const path = './usedTrends.json';
     if (!fs.existsSync(path)) return [];
-    return JSON.parse(fs.readFileSync(path, 'utf-8')).slice(0, 5);
+    return JSON.parse(fs.readFileSync(path, 'utf-8')).slice(0, 8);
   }
 
   async function getBestTitleFromTopTrends(): Promise<{
     title: string;
     index: number;
   }> {
-    const top10Trends = trends.slice(0, 10);
+    const top10Trends = trends.slice(0, 15);
     const recentTrends = getRecentTrends();
 
     const prompt = `
 You are an expert at spotting the best trending topic to write about on social media in Kenya. 
 
-Below are 10 trending topics:
+Below are 15 trending topics:
 ${top10Trends.map((t, i) => `${i + 1}. ${t.title}`).join('\n')}
 
 Avoid these recent trends: ${recentTrends.join(', ') || 'None'}.
@@ -51,7 +51,7 @@ Rules:
 - Choose the most engaging, newsworthy, or viral-friendly title for mass audience content.
 - Your job is to pick **only one** from the list.
 
-Now reply ONLY with the number (1–10) of the trend you recommend. No explanation.`;
+Now reply ONLY with the number (1–15) of the trend you recommend. No explanation.`;
 
     const result = await genAIService['model'].generateContent(prompt);
     const response = await result.response;
