@@ -100,6 +100,7 @@ You're a trend analyzer for social media. Your task is to help decide if a trend
 Input: A trending topic "${candidateTrend}" with 15 sample posts.
 
 Rules:
+- Ensure to include all relevant context from the posts so that anyone can understand the news bite without needing to see the original posts.
 - Do NOT select if the trend is a promotional hashtag or clearly linked to a specific group (e.g., religious orgs, brands).
 - Do NOT select if the topic was used recently. Here are the last 5 used: ${recentTrends.join(', ')}
 
