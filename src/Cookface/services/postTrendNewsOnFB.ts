@@ -48,7 +48,7 @@ const postTrendNewsOnFB = async (
     await sleep(3000);
 
     // Step 3: Randomly decide what to post
-    const toPost = Math.random() > 0.8 ? YOUTUBE_LINK : newsBite;
+    const toPost = Math.random() > 0.9 ? YOUTUBE_LINK : newsBite;
     console.log(`Typing content: ${toPost}`);
 
     await page.keyboard.type(toPost, { delay: 200 });
