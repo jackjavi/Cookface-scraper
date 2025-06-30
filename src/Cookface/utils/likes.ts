@@ -21,7 +21,7 @@ async function likeComments(article: ElementHandle, page: Page): Promise<void> {
       return;
     }
 
-    await sleep(2000); // Allow time for comments to load
+    await sleep(2000);
 
     // Find all article tags within the comments section
     const commentArticles = await page.$$(
@@ -46,7 +46,7 @@ async function likeComments(article: ElementHandle, page: Page): Promise<void> {
             likesClicked++;
             console.log(`Liked a comment. Total likes so far: ${likesClicked}`);
             if (likesClicked >= 15) {
-              // console.log("Liked 3 comments successfully.");
+            
               return;
             }
           }
