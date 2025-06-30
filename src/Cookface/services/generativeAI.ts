@@ -211,7 +211,8 @@ Top Posts: ${examplePosts}
         .replace(/^[^:]*:\s*/, '') // Remove everything up to and including the first colon
         .replace(/\*\*/g, '') // Remove any Markdown-style bold indicators (**)
         .replace(/\n/g, ' ') // Replace newlines with spaces
-        .replace(/^\"|\"$/g, '') // Remove leading and trailing quotes
+        .replace(/(^["'“”‘’]+)|(["'“”‘’]+$)/g, '') // Remove quotes at start/end
+        .replace(/(?<=\s)["'“”‘’]+|["'“”‘’]+(?=\s)/g, '') // Remove stray quotes around words
         .trim();
 
       return cleanPost;

@@ -1,6 +1,7 @@
 import sleep from '../utils/sleep';
 import getRandomWaitTime from '../utils/randomWaitTime';
-import { Page } from 'puppeteer';
+import retweetOwnPost from '../utils/retweetOwnPost';
+import {Page} from 'puppeteer';
 
 /**
  * Posts trend news on X (formerly Twitter)
@@ -38,7 +39,7 @@ const postTrendNewsOnX = async (
     await sleep(2000);
 
     // Reload the page
-    await page.reload({ waitUntil: 'networkidle2' });
+    await page.reload({waitUntil: 'networkidle2'});
     console.log('Page reloaded successfully.');
 
     // Step 2: Click on the "What’s happening?" input
@@ -64,7 +65,7 @@ const postTrendNewsOnX = async (
     await sleep(2000);
 
     // Step 3: Type into the editor
-    await page.keyboard.type(newsBite, { delay: 200 });
+    await page.keyboard.type(newsBite, {delay: 200});
     console.log('Typed the message into the editor successfully.');
     await sleep(2000);
 
@@ -78,7 +79,7 @@ const postTrendNewsOnX = async (
       });
 
       if (postButton) {
-        postButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        postButton.scrollIntoView({behavior: 'smooth', block: 'center'});
         (postButton as HTMLElement).click();
         return true;
       }
@@ -92,9 +93,11 @@ const postTrendNewsOnX = async (
     console.log('Clicked on the "Post" button successfully.');
     await sleep(getRandomWaitTime(3000, 5000));
 
+    // Retweet and Later Like
+    await retweetOwnPost('Search and explore', page, newsBite);
   } catch (err: any) {
     console.error(`Error in postTrendNewsOnX: ${err.message}`);
   }
 };
 
-export { postTrendNewsOnX };
+export {postTrendNewsOnX};

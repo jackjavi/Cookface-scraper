@@ -41,7 +41,7 @@ function getWeightedChoice(weights: number[]): number {
           console.log('Starting XTrendsToNews processing...');
           await XTrendsToNews(xPage, fbPage);
           console.log('XTrendsToNews processing completed.');
-          await sleep(THIRTY_MINUTES); // Wait 15 minutes
+          await sleep(THIRTY_MINUTES); // Wait 30 minutes
           break;
         default:
           console.log(`No action taken for choice: ${choice}`);

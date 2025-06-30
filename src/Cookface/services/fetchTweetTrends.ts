@@ -1,5 +1,5 @@
 import sleep from '../utils/sleep';
-import { Page } from 'puppeteer';
+import {Page} from 'puppeteer';
 import GenerativeAIService from './generativeAI';
 import * as fs from 'fs';
 
@@ -17,7 +17,7 @@ interface Comment {
 async function fetchTweetTrends(
   label: string,
   trends: Trend[],
-  page: Page
+  page: Page,
 ): Promise<{
   randomPhrase: string | null;
   comments: Comment[];
@@ -58,18 +58,22 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     const answer = response.text().trim();
     const chosenIndex = parseInt(answer) - 1;
 
-    if (isNaN(chosenIndex) || chosenIndex < 0 || chosenIndex >= top10Trends.length) {
+    if (
+      isNaN(chosenIndex) ||
+      chosenIndex < 0 ||
+      chosenIndex >= top10Trends.length
+    ) {
       throw new Error(`Invalid trend selection index: ${answer}`);
     }
 
     const selected = top10Trends[chosenIndex];
     genAIService['saveTrendToFile'](selected.title);
     console.log(`Selected Trend: ${selected.title}`);
-    return { title: selected.title, index: chosenIndex };
+    return {title: selected.title, index: chosenIndex};
   }
 
   try {
-    const { title: selectedTitle } = await getBestTitleFromTopTrends();
+    const {title: selectedTitle} = await getBestTitleFromTopTrends();
 
     await page.evaluate(
       (label, navSelector) => {
@@ -90,7 +94,7 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
 
     const searchInputSelector = 'input[data-testid="SearchBox_Search_Input"]';
     await page.waitForSelector(searchInputSelector);
-    await page.type(searchInputSelector, selectedTitle, { delay: 100 });
+    await page.type(searchInputSelector, selectedTitle, {delay: 100});
     await page.keyboard.press('Enter');
     console.log(`Search initiated for "${selectedTitle}".`);
 
@@ -102,14 +106,21 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
 
     while (comments.length < 15) {
       const newComments = await page.evaluate(() => {
-        const articles = document.querySelectorAll('article[role="article"][data-testid="tweet"]');
+        const articles = document.querySelectorAll(
+          'article[role="article"][data-testid="tweet"]',
+        );
         return Array.from(articles).map(article => {
-          const userSpan = article.querySelector('[data-testid="User-Name"] span');
+          const userSpan = article.querySelector(
+            '[data-testid="User-Name"] span',
+          );
           const contentEl = article.querySelector('[lang]');
-          const user = userSpan instanceof HTMLElement ? userSpan.innerText : null;
-          const content = contentEl instanceof HTMLElement ? contentEl.innerText : null;
-          const timestamp = article.querySelector('time')?.getAttribute('datetime') || null;
-          return { user, content, timestamp };
+          const user =
+            userSpan instanceof HTMLElement ? userSpan.innerText : null;
+          const content =
+            contentEl instanceof HTMLElement ? contentEl.innerText : null;
+          const timestamp =
+            article.querySelector('time')?.getAttribute('datetime') || null;
+          return {user, content, timestamp};
         });
       });
 
@@ -138,10 +149,10 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     }
 
     await sleep(1000);
-    return { randomPhrase: selectedTitle, comments };
+    return {randomPhrase: selectedTitle, comments};
   } catch (err: any) {
     console.error(`Error in fetchTweetTrends function: ${err.message}`);
-    return { randomPhrase: null, comments: [] };
+    return {randomPhrase: null, comments: []};
   }
 }
 

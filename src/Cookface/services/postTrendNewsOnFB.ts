@@ -1,6 +1,7 @@
 import sleep from '../utils/sleep';
 import getRandomWaitTime from '../utils/randomWaitTime';
-import { Page } from 'puppeteer';
+import {Page} from 'puppeteer';
+import fbLike from './fbLike';
 
 const YOUTUBE_LINK = 'https://youtu.be/XbmB6vvCaOQ?si=DpYmCd67nrlG3gxI';
 
@@ -17,8 +18,8 @@ const postTrendNewsOnFB = async (
 
   try {
     // Reload the page
-    await page.reload({ waitUntil: "networkidle2" });
-    console.log("Page reloaded successfully.");
+    await page.reload({waitUntil: 'networkidle2'});
+    console.log('Page reloaded successfully.');
     // Step 1: Wait for the "What's on your mind?" span to appear
     await page.waitForSelector('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6', {
       timeout: 15000,
@@ -54,7 +55,7 @@ const postTrendNewsOnFB = async (
     const toPost = Math.random() > 0.9 ? YOUTUBE_LINK : newsBite;
     console.log(`Typing content: ${toPost}`);
 
-    await page.keyboard.type(toPost, { delay: 200 });
+    await page.keyboard.type(toPost, {delay: 200});
     console.log('Typed the message into the editor successfully.');
 
     // Step 4: Wait briefly then click "Post" button
@@ -77,9 +78,15 @@ const postTrendNewsOnFB = async (
       console.warn('"Post" button not found.');
     }
 
+    await sleep(getRandomWaitTime(2000, 5000));
+    await page.reload({waitUntil: 'networkidle2'});
+    console.log('Page reloaded after posting.');
+    await fbLike(page);
+    await sleep(getRandomWaitTime(3000, 6000));
+    await page.reload({waitUntil: 'networkidle2'});
   } catch (err: any) {
     console.error(`Error in postTrendNewsOnFB: ${err.message}`);
   }
 };
 
-export { postTrendNewsOnFB };
+export {postTrendNewsOnFB};

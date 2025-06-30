@@ -2,9 +2,9 @@ import sleep from '../utils/sleep';
 import fetchTweetTrends from '../services/fetchTweetTrends';
 import scrapeTrends24 from '../services/scrapeTrends24';
 import GenerativeAIService from '../services/generativeAI';
-import { postTrendNewsOnX } from '../services/postTrendNewsOnX';
-import { postTrendNewsOnFB } from '../services/postTrendNewsOnFB';
-import { Page } from 'puppeteer';
+import {postTrendNewsOnX} from '../services/postTrendNewsOnX';
+import {postTrendNewsOnFB} from '../services/postTrendNewsOnFB';
+import {Page} from 'puppeteer';
 
 /**
  * Processes X trends and posts news to X and Facebook
@@ -26,7 +26,7 @@ export const XTrendsToNews = async (
       return;
     }
 
-    const { randomPhrase, comments } = await fetchTweetTrends(
+    const {randomPhrase, comments} = await fetchTweetTrends(
       'Search and explore',
       trends,
       xPage,
@@ -46,8 +46,8 @@ export const XTrendsToNews = async (
 
     fbPage.bringToFront();
     await sleep(225000);
+    // await sleep(2000); // Reduced sleep time for testing
     await postTrendNewsOnFB(fbPage, newsBite);
-
   } catch (error) {
     console.error('XTrendsToNews error:', error);
   }
