@@ -2,24 +2,27 @@ import sleep from '../utils/sleep';
 import getRandomWaitTime from '../utils/randomWaitTime';
 import {Page} from 'puppeteer';
 import fbLike from './fbLike';
+import GenerativeAIService from '../services/generativeAI';
 
 const YOUTUBE_LINK = 'https://youtu.be/XbmB6vvCaOQ?si=DpYmCd67nrlG3gxI';
 
 /**
- * Posts trend news or YouTube video link on Facebook
+ * Posts trend news, YouTube video link, or engagement content on Facebook
  * @param page Puppeteer page instance
- * @param newsBite The news bite to post if not posting the YouTube link
+ * @param newsBite The news bite to post if not posting the YouTube link or engagement post
  */
 const postTrendNewsOnFB = async (
   page: Page,
   newsBite: string,
 ): Promise<void> => {
   const postButtonSelector = 'div[dir="ltr"] span.css-1jxf684 > span';
+  const genAI = new GenerativeAIService();
 
   try {
     // Reload the page
     await page.reload({waitUntil: 'networkidle2'});
     console.log('Page reloaded successfully.');
+
     // Step 1: Wait for the "What's on your mind?" span to appear
     await page.waitForSelector('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6', {
       timeout: 15000,
@@ -31,11 +34,9 @@ const postTrendNewsOnFB = async (
       const spans = Array.from(
         document.querySelectorAll('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6'),
       );
-
       const target = spans.find(span =>
         span.textContent?.includes("What's on your mind,"),
       );
-
       if (target) {
         (target as HTMLElement).click();
         return true;
@@ -52,9 +53,17 @@ const postTrendNewsOnFB = async (
     await sleep(3000);
 
     // Step 3: Randomly decide what to post
-    const toPost = Math.random() > 0.9 ? YOUTUBE_LINK : newsBite;
-    console.log(`Typing content: ${toPost}`);
+    const rand = Math.random();
+    let toPost: string;
+    if (rand > 0.9) {
+      toPost = YOUTUBE_LINK;
+    } else if (rand > 0.5) {
+      toPost = await genAI.generateEngagementPost();
+    } else {
+      toPost = newsBite;
+    }
 
+    console.log(`Typing content: ${toPost}`);
     await page.keyboard.type(toPost, {delay: 200});
     console.log('Typed the message into the editor successfully.');
 
@@ -64,7 +73,6 @@ const postTrendNewsOnFB = async (
     const postClicked = await page.evaluate(() => {
       const spans = Array.from(document.querySelectorAll('span'));
       const postBtn = spans.find(span => span.textContent?.trim() === 'Post');
-
       if (postBtn) {
         (postBtn as HTMLElement).click();
         return true;
@@ -79,7 +87,6 @@ const postTrendNewsOnFB = async (
     }
 
     await sleep(getRandomWaitTime(2000, 5000));
-    // await page.reload({waitUntil: 'networkidle2'});
     console.log('Page reloaded after posting.');
     await fbLike(page);
     await sleep(getRandomWaitTime(3000, 6000));

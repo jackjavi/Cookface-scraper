@@ -8,6 +8,7 @@ class GenerativeAIService {
   private genAI: GoogleGenerativeAI;
   private model: GenerativeModel;
   private trendsFilePath = './usedTrends.json';
+  private engagementIdeasPath = './usedIdeas.json';
 
   constructor() {
     this.apiKey = config.generativeAIKey;
@@ -15,19 +16,74 @@ class GenerativeAIService {
     this.model = this.genAI.getGenerativeModel({model: 'gemini-2.0-flash'});
   }
 
-  public saveTrendToFile(trend: string): void {
-    let usedTrends: string[] = [];
+  private saveToJson(filePath: string, entry: string) {
+    let data: string[] = [];
     try {
-      if (fs.existsSync(this.trendsFilePath)) {
-        usedTrends = JSON.parse(fs.readFileSync(this.trendsFilePath, 'utf-8'));
+      if (fs.existsSync(filePath)) {
+        data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
       }
-      usedTrends.unshift(trend);
-      fs.writeFileSync(
-        this.trendsFilePath,
-        JSON.stringify(usedTrends, null, 2),
-      );
+      data.unshift(entry);
+      if (data.length > 20) data = data.slice(0, 20);
+      fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
     } catch (error) {
-      console.error('Failed to save trend to file:', error);
+      console.error(`Failed to write to ${filePath}:`, error);
+    }
+  }
+
+  private getRecentEntries(filePath: string, count: number): string[] {
+    try {
+      if (fs.existsSync(filePath)) {
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        return Array.isArray(data) ? data.slice(0, count) : [];
+      }
+    } catch (error) {
+      console.error(`Failed to read ${filePath}:`, error);
+    }
+    return [];
+  }
+
+  public saveTrendToFile(trend: string): void {
+    this.saveToJson(this.trendsFilePath, trend);
+  }
+
+  public saveIdeaToFile(idea: string): void {
+    this.saveToJson(this.engagementIdeasPath, idea);
+  }
+
+  async generateEngagementPost(): Promise<string> {
+    const recentIdeas = this.getRecentEntries(this.engagementIdeasPath, 8);
+
+    const prompt = `
+You are a social media creator writing short, highly engaging Facebook posts to spark interaction, curiosity, or reflection.
+Avoid repeating these recent ideas: ${recentIdeas.join(', ')}
+
+Your goal:
+- Make readers pause, think, and possibly comment.
+- Use a creative mix of history facts, curiosity, psychological prompts, or quirky trivia.
+- Search the web or trending data for fresh and relevant post ideas.
+- Keep it under 80 characters and DO NOT add hashtags.
+
+Examples:
+- "Did you know ancient Egyptians used honey as a wound treatment?"
+- "Why do we dream? Neuroscientists are still debating."
+- "What if Mondays were optional?"
+- "Napoleon was once attacked by a horde of bunnies."
+
+Write 1 such post idea now. Keep it original and don’t repeat the above.`;
+
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const idea = response
+        .text()
+        .replace(/^\*\*.*?:\s*/, '')
+        .trim();
+
+      this.saveIdeaToFile(idea);
+      return idea;
+    } catch (error) {
+      console.error('Error generating engagement post:', error);
+      throw new Error('Failed to generate engagement post');
     }
   }
 
@@ -154,7 +210,7 @@ Now, respond ONLY with one of the numbers: 1, 2, 3, or 5.`;
     }
 
     const examplePosts = posts
-      .slice(0, 15) // Limit to 15 posts
+      .slice(0, 15)
       .map(
         (post, index) =>
           `Post ${index + 1}:\nUser: ${post.user}\nContent: "${post.content}"\nTimestamp: ${post.timestamp}\n\n`,
@@ -208,13 +264,12 @@ Top Posts: ${examplePosts}
       const response = await result.response;
       const generatedPost = response.text();
 
-      // Clean the post for output
       const cleanPost = generatedPost
-        .replace(/^[^:]*:\s*/, '') // Remove everything up to and including the first colon
-        .replace(/\*\*/g, '') // Remove any Markdown-style bold indicators (**)
-        .replace(/\n/g, ' ') // Replace newlines with spaces
-        .replace(/(^["'“”‘’]+)|(["'“”‘’]+$)/g, '') // Remove quotes at start/end
-        .replace(/(?<=\s)["'“”‘’]+|["'“”‘’]+(?=\s)/g, '') // Remove stray quotes around words
+        .replace(/^[^:]*:\s*/, '')
+        .replace(/\*\*/g, '')
+        .replace(/\n/g, ' ')
+        .replace(/(^["'“”‘’]+)|(["'“”‘’]+$)/g, '')
+        .replace(/(?<=\s)["'“”‘’]+|["'“”‘’]+(?=\s)/g, '')
         .trim();
 
       return cleanPost;

@@ -101,11 +101,11 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     await sleep(3000);
 
     // Wait for the "live" filter link and click
-    const linkSelector = 'a[href*="&f=live"]';
+    /* const linkSelector = 'a[href*="&f=live"]';
     await page.waitForSelector(linkSelector);
     await page.click(linkSelector);
     console.log("Selected 'Live' filter.");
-    await sleep(2000);
+    await sleep(2000); */
 
 
     await page.waitForSelector('article[role="article"][data-testid="tweet"]');
