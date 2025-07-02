@@ -39,15 +39,17 @@ class GenerativeAIService {
 You're an assistant for a social media page called "TRENDING NEWS KE", which covers viral stories and popular trends in Kenya and globally.
 
 You will receive:
-- A list of the top 10 trending topics by title (no context, no tweets)
-- A list of the 5 most recently used trends that should be avoided
+- A list of the top 15 trending topics by title (no context, no tweets)
+- A list of the 8 most recently used trends that should be avoided
 
 Your job is to select the **single best** trend title to use next for generating a Facebook News Bite. Avoid titles that:
 - Are hashtags for promotions/brands/events
 - Are religious or political slogans
-- Were used in the last 5 posts
+- Were used in the last 8 posts
 
 Prefer titles that are:
+- Sports, entertainment, or lifestyle related
+- Unique, catchy, and engaging
 - Timely and relevant to national or global events
 - Likely to spark engagement or emotion
 - Naturally viral or eye-catching
@@ -55,7 +57,7 @@ Prefer titles that are:
 Here are the top 10 titles:
 ${top10Titles.map((t, i) => `${i}. ${t}`).join('\n')}
 
-Do NOT pick any of these 5 recent ones:
+Do NOT pick any of these 8 recent ones:
 ${recentTrends.join(', ')}
 
 Reply ONLY with the exact title from the list that should be used (no number, no explanation, just the text).`;
