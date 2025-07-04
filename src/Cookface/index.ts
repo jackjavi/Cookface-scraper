@@ -2,27 +2,24 @@ import sleep from './utils/sleep';
 import getRandomWaitTime from './utils/randomWaitTime';
 import {XTrendsToNews} from './modules/XTrendsToNews';
 import {initializeBrowser} from './utils/browserManager';
+import {isWithinSleepWindow} from './utils/sleepWindow';
 
-// Weighted choice helper
 function getWeightedChoice(weights: number[]): number {
   const sum = weights.reduce((acc, weight) => acc + weight, 0);
   const rand = Math.random() * sum;
-
   let cumulative = 0;
   for (let i = 0; i < weights.length; i++) {
     cumulative += weights[i];
     if (rand < cumulative) return i;
   }
-
   return 0;
 }
 
 (async () => {
   try {
-    // const FIFTEEN_MINUTES = 15 * 60 * 1000;
-    const THIRTY_MINUTES = 30 * 60 * 1000;
-    const ONE_HOUR = 60 * 60 * 1000;
     const FORTY_FIVE_MINUTES = 45 * 60 * 1000;
+    const ONE_HOUR = 60 * 60 * 1000;
+
     const browser = await initializeBrowser();
     const xPage = await browser.newPage();
     await xPage.goto('https://x.com');
@@ -37,6 +34,17 @@ function getWeightedChoice(weights: number[]): number {
     const weights = [100];
 
     while (true) {
+      const now = new Date();
+
+      // 💡 Check for the sleep window
+      if (isWithinSleepWindow()) {
+        console.log(
+          `[${now.toLocaleTimeString()}] 💤 Sleep window (00:45–05:30) active. Sleeping 15 mins...`
+        );
+        await sleep(15 * 60 * 1000); // Sleep 15 minutes before retrying
+        continue;
+      }
+
       const choice = getWeightedChoice(weights);
 
       switch (choice) {
