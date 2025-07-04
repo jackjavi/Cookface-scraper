@@ -57,7 +57,7 @@ const postTrendNewsOnFB = async (
     let toPost: string;
     if (rand > 0.9) {
       toPost = YOUTUBE_LINK;
-    } else if (rand > 0.5) {
+    } else if (rand > 0.7) {
       toPost = await genAI.generateEngagementPost();
     } else {
       toPost = newsBite;
