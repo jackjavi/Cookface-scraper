@@ -1,4 +1,5 @@
 import sleep from './utils/sleep';
+import getRandomWaitTime from './utils/randomWaitTime';
 import {XTrendsToNews} from './modules/XTrendsToNews';
 import {initializeBrowser} from './utils/browserManager';
 
@@ -20,6 +21,8 @@ function getWeightedChoice(weights: number[]): number {
   try {
     // const FIFTEEN_MINUTES = 15 * 60 * 1000;
     const THIRTY_MINUTES = 30 * 60 * 1000;
+    const ONE_HOUR = 60 * 60 * 1000;
+    const FORTY_FIVE_MINUTES = 45 * 60 * 1000;
     const browser = await initializeBrowser();
     const xPage = await browser.newPage();
     await xPage.goto('https://x.com');
@@ -41,7 +44,7 @@ function getWeightedChoice(weights: number[]): number {
           console.log('Starting XTrendsToNews processing...');
           await XTrendsToNews(xPage, fbPage);
           console.log('XTrendsToNews processing completed.');
-          await sleep(THIRTY_MINUTES); // Wait 30 minutes
+          await sleep(getRandomWaitTime(FORTY_FIVE_MINUTES, ONE_HOUR));
           break;
         default:
           console.log(`No action taken for choice: ${choice}`);
