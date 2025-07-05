@@ -17,6 +17,7 @@ function getWeightedChoice(weights: number[]): number {
 
 (async () => {
   try {
+    const TWENTY_MINUTES = 20 * 60 * 1000;
     const FORTY_FIVE_MINUTES = 45 * 60 * 1000;
     const ONE_HOUR = 60 * 60 * 1000;
 
@@ -52,7 +53,7 @@ function getWeightedChoice(weights: number[]): number {
           console.log('Starting XTrendsToNews processing...');
           await XTrendsToNews(xPage, fbPage);
           console.log('XTrendsToNews processing completed.');
-          await sleep(getRandomWaitTime(FORTY_FIVE_MINUTES, ONE_HOUR));
+          await sleep(getRandomWaitTime(TWENTY_MINUTES ,FORTY_FIVE_MINUTES));
           break;
         default:
           console.log(`No action taken for choice: ${choice}`);
