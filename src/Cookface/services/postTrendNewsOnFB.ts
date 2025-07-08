@@ -55,7 +55,7 @@ const postTrendNewsOnFB = async (
     // Step 3: Randomly decide what to post
     const rand = Math.random();
     let toPost: string;
-    if (rand > 0.9) {
+    if (rand > 0.85) {
       toPost = YOUTUBE_LINK;
     } else if (rand > 0.7) {
       toPost = await genAI.generateEngagementPost();
