@@ -2,8 +2,10 @@ import {GoogleGenerativeAI, GenerativeModel} from '@google/generative-ai';
 import config from '../config/index';
 import {Comment} from '../types/Comment';
 import * as fs from 'fs';
+import {Post} from '../types/Post';
 
 class GenerativeAIService {
+  private xUsername: string;
   private apiKey: string;
   private genAI: GoogleGenerativeAI;
   private model: GenerativeModel;
@@ -11,6 +13,7 @@ class GenerativeAIService {
   private engagementIdeasPath = './usedIdeas.json';
 
   constructor() {
+    this.xUsername = config.xUsername;
     this.apiKey = config.generativeAIKey;
     this.genAI = new GoogleGenerativeAI(this.apiKey);
     this.model = this.genAI.getGenerativeModel({model: 'gemini-2.0-flash'});
@@ -275,6 +278,69 @@ Top Posts: ${examplePosts}
     } catch (error) {
       console.error('Error generating tweet trends post:', error);
       throw new Error('Failed to generate a post for the trending topic');
+    }
+  }
+
+  async generateReply(posts: Post[]): Promise<string> {
+    if (!Array.isArray(posts) || posts.length === 0) {
+      throw new Error('Posts should be a non-empty array of objects.');
+    }
+
+    const mainPost = posts[0];
+    const comments = posts.slice(1);
+
+    const prompt = `
+My username is: ${this.xUsername}
+
+You're an internet-native, witty persona who understands online culture. Your goal is to craft a short, sharp, and punchy reply (under 15 characters) to a trending post on X (formerly Twitter), based on the original post and the energy in the comments.
+
+### 🔷 Main Post
+- 👤 User: ${mainPost.user}
+- 📝 Content: "${mainPost.content}"
+- ⏰ Time: ${mainPost.timestamp}
+
+### 💬 Top Comments
+${comments
+  .map(
+    (comment, index) =>
+      `${index + 1}. 👤 ${comment.user}  
+    📝 "${comment.content}"  
+    ⏰ ${comment.timestamp}`,
+  )
+  .join('\n')}
+
+### 🧠 Your Job:
+Craft a **very short** (≤15 characters) reply that:
+- **Feels native** to this thread's vibe and tone.
+- **Engages or teases**—encourage interaction, spark curiosity, or add an on-point jab.
+- Avoids hashtags and boring stuff.
+- If the post asks for usernames, respond with one that keeps underscores (_), e.g. @life_meth_money
+- Your tone: Smart, spicy, culturally aware. Slightly unhinged is okay—but not irrelevant.
+- Style: Tweet-like. Fits into the chaotic genius of the X timeline.
+
+Only output the final reply. No explanations. No markdown. No hashtags.
+
+Let’s go viral.
+`;
+
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const reply = response.text();
+      // Clean the post: remove everything up to and including the first colon and any "**" markdown
+      const cleanReply = reply
+        .replace(/^[^:]*:\s*/, '') // Remove everything up to and including the first colon
+        .replace(/\*\*/g, '') // Remove any Markdown-style bold indicators (**)
+        .replace(/\n/g, ' ') // Replace newlines with spaces
+        .replace(/(^["'“”‘’]+)|(["'“”‘’]+$)/g, '') // Remove quotes at start/end
+        .replace(/(?<=\s)["'“”‘’]+|["'“”‘’]+(?=\s)/g, '') // Remove stray quotes around words
+        .trim();
+
+      console.log('Cleaned reply:', cleanReply);
+      return cleanReply;
+    } catch (error) {
+      console.error('Error generating reply:', error);
+      throw new Error('Failed to generate reply');
     }
   }
 }

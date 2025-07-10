@@ -46,7 +46,6 @@ async function likeComments(article: ElementHandle, page: Page): Promise<void> {
             likesClicked++;
             console.log(`Liked a comment. Total likes so far: ${likesClicked}`);
             if (likesClicked >= 15) {
-            
               return;
             }
           }

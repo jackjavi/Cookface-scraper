@@ -107,7 +107,6 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     console.log("Selected 'Live' filter.");
     await sleep(2000); */
 
-
     await page.waitForSelector('article[role="article"][data-testid="tweet"]');
 
     const comments: Comment[] = [];

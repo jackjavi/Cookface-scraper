@@ -1,6 +1,7 @@
 import sleep from './utils/sleep';
 import getRandomWaitTime from './utils/randomWaitTime';
 import {XTrendsToNews} from './modules/XTrendsToNews';
+import {XEngage} from './modules/XEngage';
 import {initializeBrowser} from './utils/browserManager';
 import {isWithinSleepWindow} from './utils/sleepWindow';
 
@@ -32,7 +33,7 @@ function getWeightedChoice(weights: number[]): number {
 
     await sleep(1500);
 
-    const weights = [100];
+    const weights = [0, 100]; // Equal weights for XTrendsToNews and XEngage
 
     while (true) {
       const now = new Date();
@@ -40,7 +41,7 @@ function getWeightedChoice(weights: number[]): number {
       // 💡 Check for the sleep window
       if (isWithinSleepWindow()) {
         console.log(
-          `[${now.toLocaleTimeString()}] 💤 Sleep window (00:45–05:30) active. Sleeping 15 mins...`
+          `[${now.toLocaleTimeString()}] 💤 Sleep window (00:45–05:30) active. Sleeping 15 mins...`,
         );
         await sleep(15 * 60 * 1000); // Sleep 15 minutes before retrying
         continue;
@@ -53,7 +54,13 @@ function getWeightedChoice(weights: number[]): number {
           console.log('Starting XTrendsToNews processing...');
           await XTrendsToNews(xPage, fbPage);
           console.log('XTrendsToNews processing completed.');
-          await sleep(getRandomWaitTime(TWENTY_MINUTES ,FORTY_FIVE_MINUTES));
+          await sleep(getRandomWaitTime(TWENTY_MINUTES, FORTY_FIVE_MINUTES));
+          break;
+        case 1:
+          console.log('Starting XEngage processing...');
+          await XEngage(xPage);
+          console.log('XEngage processing completed.');
+          await sleep(getRandomWaitTime(TWENTY_MINUTES, ONE_HOUR));
           break;
         default:
           console.log(`No action taken for choice: ${choice}`);

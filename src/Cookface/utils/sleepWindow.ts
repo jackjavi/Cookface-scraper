@@ -5,7 +5,7 @@ export function isWithinSleepWindow(): boolean {
 
   return (
     (hours === 0 && minutes >= 45) || // 00:45–00:59
-    (hours >= 1 && hours < 5) ||      // 01:00–04:59
-    (hours === 5 && minutes < 30)     // 05:00–05:29
+    (hours >= 1 && hours < 5) || // 01:00–04:59
+    (hours === 5 && minutes < 30) // 05:00–05:29
   );
 }
