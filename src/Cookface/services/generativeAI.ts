@@ -265,7 +265,6 @@ Top Posts: ${examplePosts}
       const generatedPost = response.text();
 
       const cleanPost = generatedPost
-        .replace(/^[^:]*:\s*/, '')
         .replace(/\*\*/g, '')
         .replace(/\n/g, ' ')
         .replace(/(^["'“”‘’]+)|(["'“”‘’]+$)/g, '')
