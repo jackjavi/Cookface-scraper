@@ -9,8 +9,11 @@ class GenerativeAIService {
   private apiKey: string;
   private genAI: GoogleGenerativeAI;
   private model: GenerativeModel;
-  private trendsFilePath = './usedTrends.json';
-  private engagementIdeasPath = './usedIdeas.json';
+  private trendsFilePath = 'src/Cookface/storage/usedTrends.json';
+  private engagementIdeasPath = 'src/Cookface/storage/usedIdeas.json';
+  private jokesFilePath = 'src/Cookface/storage/usedJokes.json';
+  private shengPostsFilePath = 'src/Cookface/storage/usedShengPosts.json';
+  private shortPostsFilePath = 'src/Cookface/storage/usedShortPosts.json';
 
   constructor() {
     this.xUsername = config.xUsername;
@@ -341,6 +344,75 @@ Let’s go viral.
     } catch (error) {
       console.error('Error generating reply:', error);
       throw new Error('Failed to generate reply');
+    }
+  }
+
+  async generateKenyanJokePost(): Promise<string> {
+    const recentJokes = this.getRecentEntries(this.jokesFilePath, 10);
+
+    const prompt = `
+      **Task**: Write a short joke in a mix of Kiswahili and Sheng. 
+      Avoid repeating these: ${recentJokes.join(', ')}
+
+      The joke should feel like a funny Facebook post from a young Kenyan.
+      Use cultural references and witty phrasing. Max 100 characters. No emojis or hashtags.
+    `;
+
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const rawJoke = response.text();
+      const cleanJoke = rawJoke.replace(/\*\*/g, '').replace(/\n/g, ' ').trim();
+      this.saveToJson(this.jokesFilePath, cleanJoke);
+      return cleanJoke;
+    } catch (error) {
+      console.error('Error generating Kenyan joke:', error);
+      throw new Error('Failed to generate Kenyan joke');
+    }
+  }
+
+  async generateFacebookPostSwahiliSheng(): Promise<string> {
+    const recentPosts = this.getRecentEntries(this.shengPostsFilePath, 10);
+
+    const prompt = `
+      **Task**: Andika post fupi ya Kiswahili/Sheng. Epuka kurudia hizi: ${recentPosts.join(', ')}
+      Style: Funny, reflective, or ironic. Max 100 characters. No emojis or hashtags.
+    `;
+
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const rawPost = response.text();
+      const cleanPost = rawPost.replace(/\*\*/g, '').replace(/\n/g, ' ').trim();
+      this.saveToJson(this.shengPostsFilePath, cleanPost);
+      return cleanPost;
+    } catch (error) {
+      console.error('Error generating Kiswahili/Sheng post:', error);
+      throw new Error('Failed to generate local Facebook post');
+    }
+  }
+
+  async generateShortFacebookPost(): Promise<string> {
+    const recentPosts = this.getRecentEntries(this.shortPostsFilePath, 10);
+
+    const prompt = `
+      **Task**: Write a short-form Facebook post. Avoid these: ${recentPosts.join(', ')}
+      Style: punchy, human, thought-provoking. < 80 characters. No hashtags.
+    `;
+
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const generatedPost = response.text();
+      const cleanPost = generatedPost
+        .replace(/\*\*/g, '')
+        .replace(/\n/g, ' ')
+        .trim();
+      this.saveToJson(this.shortPostsFilePath, cleanPost);
+      return cleanPost;
+    } catch (error) {
+      console.error('Error generating post:', error);
+      throw new Error('Failed to generate post');
     }
   }
 }

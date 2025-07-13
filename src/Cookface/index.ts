@@ -1,9 +1,9 @@
 import sleep from './utils/sleep';
 import getRandomWaitTime from './utils/randomWaitTime';
-import { XTrendsToNews } from './modules/XTrendsToNews';
-import { XEngage } from './modules/XEngage';
-import { initializeBrowser } from './utils/browserManager';
-import { isWithinSleepWindow } from './utils/sleepWindow';
+import {XTrendsToNews} from './modules/XTrendsToNews';
+import {XEngage} from './modules/XEngage';
+import {initializeBrowser} from './utils/browserManager';
+import {isWithinSleepWindow} from './utils/sleepWindow';
 
 (async () => {
   try {
@@ -30,7 +30,9 @@ import { isWithinSleepWindow } from './utils/sleepWindow';
 
       // 💡 Sleep window check
       if (isWithinSleepWindow()) {
-        console.log(`[${new Date().toLocaleTimeString()}] 💤 Sleep window active. Sleeping 15 minutes...`);
+        console.log(
+          `[${new Date().toLocaleTimeString()}] 💤 Sleep window active. Sleeping 15 minutes...`,
+        );
         await sleep(15 * 60 * 1000);
         continue;
       }
