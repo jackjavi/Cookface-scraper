@@ -55,18 +55,24 @@ const postTrendNewsOnFB = async (
     // Step 3: Randomly decide what to post
     const rand = Math.random();
     let toPost: string;
+    // Helper to pick randomly from 3 post generators
+    const getRandomPostFromThree = async (): Promise<string> => {
+      const options = [
+        () => genAI.generateKenyanJokePost(),
+        () => genAI.generateFacebookPostSwahiliSheng(),
+        () => genAI.generateShortFacebookPost(),
+      ];
+      const randomIndex = Math.floor(Math.random() * options.length);
+      return await options[randomIndex]();
+    };
+
     if (rand > 0.85) {
       toPost = YOUTUBE_LINK;
-    } else if (rand > 0.7) {
-      toPost = await genAI.generateEngagementPost();
+    } else if (rand > 0.35) {
+      toPost = await getRandomPostFromThree();
     } else {
       toPost = newsBite;
     }
-    /* if (rand > 0.8) {
-    toPost = YOUTUBE_LINK;
-    } else {
-      toPost = await genAI.generateEngagementPost();
-    } */
 
     console.log(`Typing content: ${toPost}`);
     await page.keyboard.type(toPost, {delay: 200});
