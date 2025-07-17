@@ -58,8 +58,7 @@ const postTrendNewsOnFB = async (
     // Helper to pick randomly from 3 post generators
     const getRandomPostFromThree = async (): Promise<string> => {
       const options = [
-        () => genAI.generateKenyanJokePost(),
-        () => genAI.generateFacebookPostSwahiliSheng(),
+        () => genAI.generateEngagementPost(),
         () => genAI.generateShortFacebookPost(),
       ];
       const randomIndex = Math.floor(Math.random() * options.length);

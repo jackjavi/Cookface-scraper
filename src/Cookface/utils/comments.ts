@@ -45,9 +45,11 @@ async function comments(article: ElementHandle, page: Page): Promise<void> {
 
       if (comments.length > 0) {
         console.log('Extracted comments successfully.');
-        const reply = await generativeAIService.generateReply(
+        let reply = await generativeAIService.generateReply(
           comments as Post[],
         );
+        // Add space at the end of the reply
+        reply += ' ';
         console.log('Generated reply:', reply);
 
         // Type the reply
