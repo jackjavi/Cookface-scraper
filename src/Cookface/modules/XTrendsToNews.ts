@@ -42,7 +42,7 @@ export const XTrendsToNews = async (
     console.log(`Generated News Bite: ${newsBite}`);
     await sleep(2000);
 
-    await postTrendNewsOnX('Home', xPage, newsBite);
+    // await postTrendNewsOnX('Home', xPage, newsBite);
 
     fbPage.bringToFront();
     await sleep(225000);
