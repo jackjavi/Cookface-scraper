@@ -38,13 +38,13 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       }
 
       // Run XEngage every ~6 minutes
-      if (now - lastEngage > SIX_MINUTES) {
+      /* if (now - lastEngage > SIX_MINUTES) {
         console.log('⏱ Starting XEngage...');
         await XEngage(xPage);
         lastEngage = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      }
+      } */
 
       // Run XTrendsToNews every ~20 minutes
       if (now - lastTrends > TWENTY_MINUTES) {

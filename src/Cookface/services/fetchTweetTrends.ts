@@ -54,7 +54,7 @@ Rules:
 Now reply ONLY with the number (1–15) of the trend you recommend. No explanation.`;
 
     const result = await genAIService['model'].generateContent(prompt);
-    const response = await result.response;
+    const response = result.response;
     const answer = response.text().trim();
     const chosenIndex = parseInt(answer) - 1;
 
