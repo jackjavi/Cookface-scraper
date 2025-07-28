@@ -9,6 +9,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
   try {
     const SIX_MINUTES = 6 * 60 * 1000;
     const TWENTY_MINUTES = 20 * 60 * 1000;
+    const THIRTY_MINUTES = 30 * 60 * 1000;
 
     const browser = await initializeBrowser();
     const xPage = await browser.newPage();
@@ -46,8 +47,8 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         continue;
       }
 
-      // Run XTrendsToNews every ~20 minutes
-      if (now - lastTrends > TWENTY_MINUTES) {
+      // Run XTrendsToNews every ~30 minutes
+      if (now - lastTrends > THIRTY_MINUTES) {
         console.log('📊 Starting XTrendsToNews...');
         await XTrendsToNews(xPage, fbPage);
         lastTrends = Date.now();
