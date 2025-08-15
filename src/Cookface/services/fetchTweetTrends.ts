@@ -44,12 +44,12 @@ You are an expert at spotting the best trending topic to write about on social m
 Below are 15 trending topics:
 ${top10Trends.map((t, i) => `${i + 1}. ${t.title}`).join('\n')}
 
-Avoid these recent trends: ${recentTrends.join(', ') || 'None'}.
+Avoid these recent trends: ${recentTrends.map((rt, i) => `${i + 1}. ${rt}`).join('\n')}
 
 Rules:
-- Ignore titles that are promotional, branded, religious, or previously used (see list).
+- Ignore titles that are promotional, branded, religious, or previously used ${recentTrends.map((rt, i) => `${i + 1}. ${rt}`).join('\n')}.
 - Choose the most engaging, newsworthy, or viral-friendly title for mass audience content.
-- Your job is to pick **only one** from the list.
+- Your job is to pick **only one** from the list and ensure to avoid previously used trends.
 
 Now reply ONLY with the number (1–15) of the trend you recommend. No explanation.`;
 
