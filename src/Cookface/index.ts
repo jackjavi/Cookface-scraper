@@ -9,6 +9,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
   try {
     const SIX_MINUTES = 6 * 60 * 1000;
     const TWENTY_MINUTES = 20 * 60 * 1000;
+    const THIRTY_MINUTES = 30 * 60 * 1000;
     const ONEHOUR = 60 * 60 * 1000;
 
     const browser = await initializeBrowser();
@@ -39,16 +40,16 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       }
 
       // Run XEngage every ~6 minutes
-      if (now - lastEngage > SIX_MINUTES) {
+      /** if (now - lastEngage > SIX_MINUTES) {
         console.log('⏱ Starting XEngage...');
         await XEngage(xPage);
         lastEngage = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      }
+      } */
 
-      // Run XTrendsToNews every ~60 minutes
-      if (now - lastTrends > ONEHOUR) {
+      // Run XTrendsToNews every ~30 minutes
+      if (now - lastTrends > THIRTY_MINUTES) {
         console.log('📊 Starting XTrendsToNews...');
         await XTrendsToNews(xPage, fbPage);
         lastTrends = Date.now();

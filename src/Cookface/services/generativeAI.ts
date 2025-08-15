@@ -230,6 +230,9 @@ Now, respond ONLY with one of the numbers: 1, 2, 3, or 5.`;
 Context:
 You run a unique solo page — not affiliated with any official news channel — 
 that reports trending developments in Kenya based on the hottest trends on social media. 
+Important Point: The example posts from X do not necessarily address the trending
+topic since users on X are used to combining hashtags to reach a larger audience; So,
+ensure to generate content based on the example posts only addressing the trending topic!
 These are not reposts or summaries of the tweets but instead re-imagined, professional-yet-personal 
 news-style blurbs written in your own engaging voice. Your style feels:
 - Conversational, yet polished
