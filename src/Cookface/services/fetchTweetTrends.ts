@@ -28,52 +28,53 @@ async function fetchTweetTrends(
   function getRecentTrends(): string[] {
     const path = './usedTrends.json';
     if (!fs.existsSync(path)) return [];
-    return JSON.parse(fs.readFileSync(path, 'utf-8')).slice(0, 8);
+    return JSON.parse(fs.readFileSync(path, 'utf-8')).slice(0, 7);
   }
 
-  async function getBestTitleFromTopTrends(): Promise<{
+  function getBestTitleFromTopTrends(): {
     title: string;
     index: number;
-  }> {
-    const top10Trends = trends.slice(0, 15);
+  } {
+    const top10Trends = trends.slice(0, 10);
     const recentTrends = getRecentTrends();
 
-    const prompt = `
-You are an expert at spotting the best trending topic to write about on social media in Kenya. 
+    // Loop through top10trends and find the first unused one
+    for (let i = 0; i < top10Trends.length; i++) {
+      const currentTrend = top10Trends[i];
 
-Below are 15 trending topics:
-${top10Trends.map((t, i) => `${i + 1}. ${t.title}`).join('\n')}
+      // Check if this trend is NOT in the recent trends list
+      if (!recentTrends.includes(currentTrend.title)) {
+        console.log(`Selected Trend: ${currentTrend.title}`);
 
-Avoid these recent trends: ${recentTrends.map((rt, i) => `${i + 1}. ${rt}`).join('\n')}
+        // Save the selected trend to file
+        genAIService['saveTrendToFile'](currentTrend.title);
 
-Rules:
-- Ignore titles that are promotional, branded, religious, or previously used ${recentTrends.map((rt, i) => `${i + 1}. ${rt}`).join('\n')}.
-- Choose the most engaging, newsworthy, or viral-friendly title for mass audience content.
-- Your job is to pick **only one** from the list and ensure to avoid previously used trends.
-
-Now reply ONLY with the number (1–15) of the trend you recommend. No explanation.`;
-
-    const result = await genAIService['model'].generateContent(prompt);
-    const response = result.response;
-    const answer = response.text().trim();
-    const chosenIndex = parseInt(answer) - 1;
-
-    if (
-      isNaN(chosenIndex) ||
-      chosenIndex < 0 ||
-      chosenIndex >= top10Trends.length
-    ) {
-      throw new Error(`Invalid trend selection index: ${answer}`);
+        return {
+          title: currentTrend.title,
+          index: i,
+        };
+      }
     }
 
-    const selected = top10Trends[chosenIndex];
-    genAIService['saveTrendToFile'](selected.title);
-    console.log(`Selected Trend: ${selected.title}`);
-    return {title: selected.title, index: chosenIndex};
+    // If all top 10 trends have been used recently, return null or handle as needed
+    console.log(
+      'All top 10 trends have been used recently. Returning number 1 trend!',
+    );
+    return {
+      title: top10Trends[1].title,
+      index: 1,
+    };
   }
 
   try {
-    const {title: selectedTitle} = await getBestTitleFromTopTrends();
+    const selectedTrend = getBestTitleFromTopTrends();
+
+    if (!selectedTrend) {
+      console.log('No unused trend available. Skipping this execution.');
+      return {randomPhrase: null, comments: []};
+    }
+
+    const selectedTitle = selectedTrend.title;
 
     await page.evaluate(
       (label, navSelector) => {
@@ -101,11 +102,11 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     await sleep(3000);
 
     // Wait for the "live" filter link and click
-    /* const linkSelector = 'a[href*="&f=live"]';
+    const linkSelector = 'a[href*="&f=live"]';
     await page.waitForSelector(linkSelector);
     await page.click(linkSelector);
     console.log("Selected 'Live' filter.");
-    await sleep(2000); */
+    await sleep(2000);
 
     await page.waitForSelector('article[role="article"][data-testid="tweet"]');
 

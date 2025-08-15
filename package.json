@@ -18,7 +18,8 @@
     "fix": "gts fix",
     "prepare": "npm.cmd run compile",
     "pretest": "npm.cmd run compile",
-    "posttest": "npm.cmd run lint"
+    "posttest": "npm.cmd run lint",
+    "all": "npm run clean && npm run compile && npm run start"
   },
   "devDependencies": {
     "@types/node": "^22.7.5",

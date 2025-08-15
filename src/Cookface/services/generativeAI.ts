@@ -184,7 +184,7 @@ Now, respond ONLY with one of the numbers: 1, 2, 3, or 5.`;
 
     try {
       const result = await this.model.generateContent(prompt);
-      const response = await result.response;
+      const response = result.response;
       const answer = response.text().trim();
 
       if (!['1', '2', '3', '5'].includes(answer)) {
@@ -271,7 +271,7 @@ Top Posts: ${examplePosts}
 
     try {
       const result = await this.model.generateContent(prompt);
-      const response = await result.response;
+      const response = result.response;
       const generatedPost = response.text();
 
       const cleanPost = generatedPost
