@@ -65,9 +65,9 @@ const postTrendNewsOnFB = async (
       return await options[randomIndex]();
     };
 
-    if (rand > 0.9) {
+    if (rand > 0.975) {
       toPost = YOUTUBE_LINK;
-    } else if (rand > 0.85) {
+    } else if (rand > 0.95) {
       toPost = await getRandomPostFromThree();
     } else {
       toPost = newsBite;
