@@ -48,8 +48,8 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         continue;
       } */
 
-      // Run XTrendsToNews every ~30 minutes
-      if (now - lastTrends > THIRTY_MINUTES) {
+      // Run XTrendsToNews every ~20 minutes
+      if (now - lastTrends > TWENTY_MINUTES) {
         console.log('📊 Starting XTrendsToNews...');
         await XTrendsToNews(xPage, fbPage);
         lastTrends = Date.now();
