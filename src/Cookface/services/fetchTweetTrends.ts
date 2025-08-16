@@ -27,7 +27,9 @@ async function fetchTweetTrends(
 
   function getRecentTrends(): string[] {
     const path = 'storage/usedTrends.json';
-    if (!fs.existsSync(path)) return [];
+    if (!fs.existsSync(path)) {
+      return [];
+    }
     return JSON.parse(fs.readFileSync(path, 'utf-8')).slice(0, 8);
   }
 

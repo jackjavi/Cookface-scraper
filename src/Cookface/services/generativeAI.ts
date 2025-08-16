@@ -9,11 +9,11 @@ class GenerativeAIService {
   private apiKey: string;
   private genAI: GoogleGenerativeAI;
   private model: GenerativeModel;
-  private trendsFilePath = 'src/Cookface/storage/usedTrends.json';
-  private engagementIdeasPath = 'src/Cookface/storage/usedIdeas.json';
-  private jokesFilePath = 'src/Cookface/storage/usedJokes.json';
-  private shengPostsFilePath = 'src/Cookface/storage/usedShengPosts.json';
-  private shortPostsFilePath = 'src/Cookface/storage/usedShortPosts.json';
+  private trendsFilePath = 'storage/usedTrends.json';
+  private engagementIdeasPath = 'storage/usedIdeas.json';
+  private jokesFilePath = 'storage/usedJokes.json';
+  private shengPostsFilePath = 'storage/usedShengPosts.json';
+  private shortPostsFilePath = 'storage/usedShortPosts.json';
 
   constructor() {
     this.xUsername = config.xUsername;

@@ -5,7 +5,7 @@ import {Trend} from '../types/Trend';
 
 const scrapeTrends24 = async (): Promise<Trend[]> => {
   const countriesData: CountryData[] = JSON.parse(
-    fs.readFileSync('./countries.json', 'utf8'),
+    fs.readFileSync('storage/countries.json', 'utf8'),
   );
 
   let browser;
