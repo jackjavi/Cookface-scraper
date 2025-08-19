@@ -49,17 +49,18 @@ async function commentsSpecial(
         const reply2 = `🚂 https://youtu.be/XbmB6vvCaOQ?si=Ds9Wt-NSlEmxHSLH `;
         const reply3 = `🚂 https://youtu.be/0d4XpTxObBU`;
         const reply4 = `🚂 https://youtu.be/EUWf0opisUg`;
+        const reply5 = `🚂@life_meth_money`;
 
         const randomNumber = Math.random();
 
         let reply;
         if (randomNumber > 0.9) {
           reply = reply1;
-        } else {
-          reply = reply2;
-        } /* else if (randomNumber > 0.3) {
+        } else if (randomNumber > 0.8) {
           reply = reply2;
         } else {
+          reply = reply5;
+        } /* else {
           reply = reply4;
         } */
 
