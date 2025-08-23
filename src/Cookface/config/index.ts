@@ -12,6 +12,7 @@ const requiredEnvVars = [
   'PARAPHRASED_CONTENT_FOR_TELEGRAM_STORE',
   'TELEGRAM_HTTP_TOKEN',
   'TELEGRAM_EBC_SPORTS_GROUP_CHAT_ID',
+  'EBC_SPORTS_CHANNEL_LINK',
 ];
 
 requiredEnvVars.forEach(key => {
@@ -32,6 +33,7 @@ interface Config {
   telegramToken: string;
   telegramEBCSportsChatID: string;
   telegramPhotosStore: string;
+  ebcSportsChannelLink: string;
 }
 
 const config: Config = {
@@ -49,6 +51,7 @@ const config: Config = {
   telegramEBCSportsChatID: process.env
     .TELEGRAM_EBC_SPORTS_GROUP_CHAT_ID as string,
   telegramPhotosStore: process.env.TELEGRAM_PHOTOS_STORE as string,
+  ebcSportsChannelLink: process.env.EBC_SPORTS_CHANNEL_LINK as string,
 };
 
 export default config;
