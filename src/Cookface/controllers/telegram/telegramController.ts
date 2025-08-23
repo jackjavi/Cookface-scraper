@@ -1,6 +1,7 @@
 import fsPromises from 'fs/promises';
 import config from '../../config/index.js';
 import sleep from '../../utils/sleep.js';
+import getRandomWaitTime from '../../utils/randomWaitTime.js';
 import {TelegramArticle} from '../../types/Article.js';
 import TelegramService from '../../services/telegram/telegramService.js';
 import {
@@ -83,7 +84,7 @@ const sendTelegramContent = async () => {
       }
 
       // Wait between sends to avoid rate limiting
-      await sleep(3000);
+      await sleep(getRandomWaitTime(3000, 10000));
     }
 
     // Update JSON file - remove successfully sent articles
@@ -113,4 +114,4 @@ const sendTelegramContent = async () => {
   }
 };
 
-export {sendArticleToTelegram, sendTelegramContent};
+export {sendTelegramContent};

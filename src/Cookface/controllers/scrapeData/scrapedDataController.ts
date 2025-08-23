@@ -5,14 +5,13 @@ import {
   closePage,
   visitBrowserPageLink,
 } from '../../utils/browserManager.js';
-import {Request, Response} from 'express';
 import sleep from '../../utils/sleep.js';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import config from '../../config/index.js';
 import {Browser, Page} from 'puppeteer';
 
-const fetchSkySportsArticles = async (req: Request, res: Response) => {
+const fetchSkySportsArticles = async () => {
   try {
     const browser: Browser | undefined = await initializeBrowser();
     let page: Page | undefined = await visitBrowserPageLink(
@@ -99,52 +98,21 @@ const fetchSkySportsArticles = async (req: Request, res: Response) => {
 
     await closePage(page!);
 
-    res
-      .status(200)
-      .json({
-        articles,
-        totalArticles: articles.length,
-        collectionMethod: 'immediate-visible-items-no-badges',
-      });
+    return {success: true, data: articles};
   } catch (error: any) {
     console.error(
       'Error fetching football news headlines from Sky Sports:',
       error,
     );
-    res
-      .status(500)
-      .json({
-        message: 'Failed to fetch football news headlines from Sky Sports',
-        error: error.message,
-      });
+    return {
+      success: false,
+      message: 'Failed to fetch football news headlines from Sky Sports',
+      error: error.message,
+    };
   }
 };
 
-const fetchSkySportsFullArticles = async (
-  req: Request,
-  res: {
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      json: {
-        (arg0: {
-          message?: string;
-          totalArticles?: number;
-          extractedData?: {
-            title: any;
-            link: any;
-            imageUrl: any;
-            totalArticles: number;
-            articles: any[];
-            collectedAt: string;
-          }[];
-          error?: string;
-        }): void;
-        new (): any;
-      };
-    };
-  },
-) => {
+const fetchSkySportsFullArticles = async () => {
   try {
     const rawData: any = fs.readFileSync(config.articlesStore);
     const articlesStructure = JSON.parse(rawData);
@@ -381,16 +349,15 @@ const fetchSkySportsFullArticles = async (
       `Successfully extracted content from ${extractedData.length} articles`,
     );
 
-    res
-      .status(200)
-      .json({
-        message: 'Articles content extracted successfully',
-        totalArticles: extractedData.length,
-        extractedData,
-      });
-  } catch (error) {
+    return {
+      success: true,
+      message: 'Articles content extracted successfully',
+      totalArticles: extractedData.length,
+      data: extractedData,
+    };
+  } catch (error: any) {
     console.error('Error scraping articles:', error);
-    res.status(500).json({error: 'Internal server error'});
+    return {success: false, error: error.message};
   }
 };
 
