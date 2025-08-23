@@ -11,7 +11,8 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
     const SIX_MINUTES = 6 * 60 * 1000;
     const TWENTY_MINUTES = 20 * 60 * 1000;
     // const THIRTY_MINUTES = 30 * 60 * 1000;
-    const ONEHOUR = 60 * 60 * 1000;
+    // const ONEHOUR = 60 * 60 * 1000;
+    const TWOHOURS = 60 * 90 * 1000; // 1.5 HRS
 
     const browser = await initializeBrowser();
     const xPage = await browser!.newPage();
@@ -60,7 +61,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       }
 
       // Run TelegramNews every ~1 hour
-      if (now - lastTrends > ONEHOUR) {
+      if (now - lastTrends > TWOHOURS) {
         console.log('📊 Starting TelegramNews...');
         await TelegramNews();
         lastTrends = Date.now();
