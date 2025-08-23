@@ -6,6 +6,12 @@ const requiredEnvVars = [
   'BROWSERWSENDPOINT_URL',
   'X_USERNAME',
   'X_PASSWORD',
+  'GENERATIVE_AI_API_KEY_EBC_SPORTS',
+  'ARTICLES_STORE',
+  'FULL_ARTICLES_STORE',
+  'PARAPHRASED_CONTENT_FOR_TELEGRAM_STORE',
+  'TELEGRAM_HTTP_TOKEN',
+  'TELEGRAM_EBC_SPORTS_GROUP_CHAT_ID',
 ];
 
 requiredEnvVars.forEach(key => {
@@ -19,6 +25,13 @@ interface Config {
   browserWSEndpointUrl: string;
   xUsername: string;
   xPassword: string;
+  generativeAIKeyEBCSports: string;
+  articlesStore: string;
+  fullArticlesStore: string;
+  paraphrasedForTelegramStore: string;
+  telegramToken: string;
+  telegramEBCSportsChatID: string;
+  telegramPhotosStore: string;
 }
 
 const config: Config = {
@@ -26,6 +39,16 @@ const config: Config = {
   browserWSEndpointUrl: process.env.BROWSERWSENDPOINT_URL as string,
   xUsername: process.env.X_USERNAME as string,
   xPassword: process.env.X_PASSWORD as string,
+  generativeAIKeyEBCSports: process.env
+    .GENERATIVE_AI_API_KEY_EBC_SPORTS as string,
+  articlesStore: process.env.ARTICLES_STORE as string,
+  fullArticlesStore: process.env.FULL_ARTICLES_STORE as string,
+  paraphrasedForTelegramStore: process.env
+    .PARAPHRASED_CONTENT_FOR_TELEGRAM_STORE as string,
+  telegramToken: process.env.TELEGRAM_HTTP_TOKEN as string,
+  telegramEBCSportsChatID: process.env
+    .TELEGRAM_EBC_SPORTS_GROUP_CHAT_ID as string,
+  telegramPhotosStore: process.env.TELEGRAM_PHOTOS_STORE as string,
 };
 
 export default config;

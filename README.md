@@ -14,9 +14,17 @@
 // PC: start chrome.exe –remote-debugging-port=9222
 // Note: this url changes each time the command is run.
 
+### Chromium-start
+
+```bash
+chromium-browser --remote-debugging-port=9222 --start-maximized
+```
+
 ### Browser Url to access the endpoint url
 
+```bash
 http://127.0.0.1:9222/json/version
+```
 
 ### Run
 

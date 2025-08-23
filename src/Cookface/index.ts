@@ -13,11 +13,11 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
     const ONEHOUR = 60 * 60 * 1000;
 
     const browser = await initializeBrowser();
-    const xPage = await browser.newPage();
+    const xPage = await browser!.newPage();
     await xPage.goto('https://x.com');
     console.log('X.com page initialized.');
 
-    const fbPage = await browser.newPage();
+    const fbPage = await browser!.newPage();
     await fbPage.goto('https://www.facebook.com/');
     console.log('Facebook page initialized.');
 
