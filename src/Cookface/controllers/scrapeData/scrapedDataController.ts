@@ -182,7 +182,7 @@ const fetchSkySportsFullArticles = async () => {
                 );
                 if (!timestampSpan) return; // Skip if no timestamp
 
-                const timestampText = timestampSpan.textContent.trim();
+                const timestampText = timestampSpan?.textContent?.trim();
 
                 // Check if within time range (this will be validated in Node.js)
                 // For now, just collect the timestamp text for server-side validation
@@ -196,14 +196,14 @@ const fetchSkySportsFullArticles = async () => {
                 // Get h2 tag (subheading)
                 const h2Element = div.querySelector('h2');
                 const subheading = h2Element
-                  ? h2Element.textContent.trim()
+                  ? h2Element?.textContent?.trim()
                   : null;
 
                 // Get all p tags (content) and combine into one paragraph
                 const pElements = div.querySelectorAll('p');
                 let contentParagraphs: string[] = [];
                 pElements.forEach(pElement => {
-                  const text = pElement.textContent.trim();
+                  const text = pElement?.textContent?.trim();
                   if (text) {
                     contentParagraphs.push(text);
                   }
