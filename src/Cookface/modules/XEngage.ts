@@ -16,7 +16,6 @@ function getWeightedChoice(weights: number[]): number {
 }
 
 export const XEngage = async (xPage: Page): Promise<void> => {
-  const label = 'Search and explore';
   try {
     console.log('Starting XEngage processing...');
     await xPage.bringToFront();
@@ -29,19 +28,19 @@ export const XEngage = async (xPage: Page): Promise<void> => {
     switch (choice) {
       case 0:
         console.log('Executing explore function (60% probability)');
-        await explore(label, xPage);
+        await explore('Search and explore', xPage);
         break;
       case 1:
         console.log('Executing notifications function (20% probability)');
-        await notifications(label, xPage);
+        await notifications('Notifications', xPage);
         break;
       case 2:
         console.log('Executing tagActiveUsers function (20% probability)');
-        await tagActiveUsers(label, xPage);
+        await tagActiveUsers('Search and explore', xPage);
         break;
       default:
         console.log('Fallback: Executing explore function');
-        await explore(label, xPage);
+        await explore('Search and explore', xPage);
         break;
     }
 
