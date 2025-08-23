@@ -41,15 +41,6 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         continue;
       }
 
-      // Run TelegramNews every ~1 hour
-      if (now - lastTrends > ONEHOUR) {
-        console.log('📊 Starting TelegramNews...');
-        await TelegramNews();
-        lastTrends = Date.now();
-        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
-        continue;
-      }
-
       // Run XEngage every ~6 minutes
       if (now - lastEngage > SIX_MINUTES) {
         console.log('⏱ Starting XEngage...');
@@ -63,6 +54,15 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       if (now - lastTrends > TWENTY_MINUTES) {
         console.log('📊 Starting XTrendsToNews...');
         await XTrendsToNews(xPage, fbPage);
+        lastTrends = Date.now();
+        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
+        continue;
+      }
+
+      // Run TelegramNews every ~1 hour
+      if (now - lastTrends > ONEHOUR) {
+        console.log('📊 Starting TelegramNews...');
+        await TelegramNews();
         lastTrends = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;

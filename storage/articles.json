@@ -1,0 +1,29 @@
+{
+  "title": "Sky Sports Headlines",
+  "articles": [
+    {
+      "headline": "The rise of Max Dowman - Arsenal's most exciting wonderkid yet",
+      "link": "https://www.skysports.com/football/story-telling/11670/13417302/max-dowman-inside-the-rise-of-arsenals-15-year-old-wonderkid-who-could-be-gunners-best-academy-product-yet",
+      "imageUrl": "https://e0.365dm.com/25/07/768x432/skysports-dowman-arsenal_6977068.jpg?20250729155442",
+      "index": 1
+    },
+    {
+      "headline": "Burnley latest: 'We are scanning the market,' says Parker",
+      "link": "https://www.skysports.com/football/live-blog/11095/13353582/burnley-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts",
+      "imageUrl": "https://e0.365dm.com/25/04/768x432/skysports-scott-parker_6894397.jpg?20250423095458",
+      "index": 6
+    },
+    {
+      "headline": "Aston Villa latest: Emery wants players' futures resolved before window shuts",
+      "link": "https://www.skysports.com/football/live-blog/11677/13025491/aston-villa-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts",
+      "imageUrl": "https://e0.365dm.com/24/07/768x432/skysports-aston-villa-graphic_6618483.jpg?20240705120852",
+      "index": 7
+    },
+    {
+      "headline": "Sunderland latest: Le Bris offers Ballard injury update",
+      "link": "https://www.skysports.com/football/live-blog/11695/13375102/sunderland-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts",
+      "imageUrl": "https://e0.365dm.com/25/05/768x432/skysports-sunderland-club-blog_6929406.jpg?20250528092613",
+      "index": 8
+    }
+  ]
+}

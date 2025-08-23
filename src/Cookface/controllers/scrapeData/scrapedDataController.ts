@@ -117,9 +117,26 @@ const fetchSkySportsFullArticles = async () => {
     const rawData: any = fs.readFileSync(config.articlesStore);
     const articlesStructure = JSON.parse(rawData);
     const articles = articlesStructure.articles;
-    const rawFullArticles: any = fs.readFileSync(config.fullArticlesStore);
-    const fullArticlesStructure = JSON.parse(rawFullArticles);
-    const fullArticles = fullArticlesStructure.articles;
+
+    // Handle edge case where fullArticles file doesn't exist or is empty
+    let fullArticles = [];
+    try {
+      if (fs.existsSync(config.fullArticlesStore)) {
+        const rawFullArticles: any = fs.readFileSync(config.fullArticlesStore);
+        const fileContent = rawFullArticles.toString().trim();
+
+        if (fileContent) {
+          const fullArticlesStructure = JSON.parse(fileContent);
+          fullArticles = fullArticlesStructure.articles || [];
+        }
+      }
+    } catch (parseError: any) {
+      console.warn(
+        'Could not parse fullArticles file, starting with empty array:',
+        parseError.message,
+      );
+      fullArticles = [];
+    }
 
     const browser = await initializeBrowser();
     let extractedData = [];
@@ -128,7 +145,7 @@ const fetchSkySportsFullArticles = async () => {
       if (article.link) {
         // Check if article already exists in fullArticles array
         const existingArticle = fullArticles.find(
-          (fullArticle: any) => fullArticle.title,
+          (fullArticle: any) => fullArticle.title === article.headline,
         );
 
         if (!existingArticle) {
