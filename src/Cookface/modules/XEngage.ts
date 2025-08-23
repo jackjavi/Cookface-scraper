@@ -22,7 +22,7 @@ export const XEngage = async (xPage: Page): Promise<void> => {
 
     // Weights: [explore, notifications, tagActiveUsers]
     // explore: 60%, notifications: 20%, tagActiveUsers: 20%
-    const weights = [60, 20, 20];
+    const weights = [65, 10, 25];
     const choice = getWeightedChoice(weights);
 
     switch (choice) {
