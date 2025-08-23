@@ -45,11 +45,12 @@ async function commentsSpecial(
 
       if (comments.length > 0) {
         console.log('Extracted comments successfully.');
-        const reply1 = `🚂 Want to hop on the upcoming Gain Train? \nDrop your X username to this database link and secure your spot 👉 https://www.elitebrainsconsulting.com/digital-marketing`;
-        const reply2 = `🚂 https://youtu.be/XbmB6vvCaOQ?si=Ds9Wt-NSlEmxHSLH `;
-        const reply3 = `🚂 https://youtu.be/0d4XpTxObBU`;
-        const reply4 = `🚂 https://youtu.be/EUWf0opisUg`;
-        const reply5 = `🚂@life_meth_money`;
+        const reply1 =
+          '🚂 Want to hop on the upcoming Gain Train? \nDrop your X username to this database link and secure your spot 👉 https://www.elitebrainsconsulting.com/digital-marketing';
+        const reply2 = '🚂 https://youtu.be/XbmB6vvCaOQ?si=Ds9Wt-NSlEmxHSLH ';
+        const reply3 = '🚂 https://youtu.be/0d4XpTxObBU';
+        const reply4 = '🚂 https://youtu.be/EUWf0opisUg';
+        const reply5 = '🚂@life_meth_money';
 
         const randomNumber = Math.random();
 

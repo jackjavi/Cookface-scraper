@@ -77,7 +77,7 @@ async function retweetOwnPostAndComment(
 
       const articles = await page.$$('article');
 
-      for (let article of articles) {
+      for (const article of articles) {
         try {
           // Locate the retweet button within the article
           const retweetButton = await article.$('[data-testid="retweet"]');

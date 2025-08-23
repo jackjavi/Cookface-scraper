@@ -1,5 +1,6 @@
 import sleep from '../utils/sleep.js';
 import phrases from '../utils/gainPhrases.js';
+import engagementPhrases from '../utils/engagementPhrases.js';
 import {postActiveUsers} from '../utils//postActiveUsers.js';
 import {Page} from 'puppeteer';
 
@@ -9,6 +10,11 @@ async function tagActiveUsers(label: string, page: Page) {
   function getRandomPhrase() {
     const randomIndex = Math.floor(Math.random() * phrases.length);
     return phrases[randomIndex];
+  }
+
+  function getRandomEngagementPhrase() {
+    const randomIndex = Math.floor(Math.random() * engagementPhrases.length);
+    return engagementPhrases[randomIndex];
   }
 
   try {
@@ -124,7 +130,7 @@ async function tagActiveUsers(label: string, page: Page) {
     // Add @life_meth_money and @node_brogrammer to the list of active users
 
     // activeUsers.push({ user: '@life_meth_money' });
-    let savedTweeps = [
+    const savedTweeps = [
       {user: '@snipes_254'},
       {user: '@Micheal_K10'},
       {user: '@m_capty'},
@@ -217,9 +223,10 @@ async function tagActiveUsers(label: string, page: Page) {
     // activeUsers.push({ user: '@KVistoh' }, { user: '@wrdonthestrit' }, { user: '@celebishere' }, { user: '@DavidPolycap' }, { user: '@mekky_ayo' }, { user: '@Eliaskaneke' },);
     activeUsers.push({user: '@TnkTrending'});
     activeUsers.sort(() => Math.random() - 0.5);
+    const randomEngagementPhrase = getRandomEngagementPhrase();
     const formattedString =
-      `Gain Train ... Fff:\n\n` +
-      `@life_meth_money\n\n` +
+      `${randomEngagementPhrase}\n\n` +
+      '@life_meth_money\n\n' +
       activeUsers.map(({user}) => user).join('\n\n');
 
     await sleep(1000);
