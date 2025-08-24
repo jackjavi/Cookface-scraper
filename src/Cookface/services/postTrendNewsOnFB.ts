@@ -5,6 +5,8 @@ import fbLike from './fbLike';
 import GenerativeAIService from '../services/generativeAI';
 
 const YOUTUBE_LINK = 'https://youtu.be/XbmB6vvCaOQ?si=DpYmCd67nrlG3gxI';
+const CHANNEL_LINK =
+  'Click the link to join our Telegram Football Channel - https://t.me/ebcsports';
 
 /**
  * Posts trend news, YouTube video link, or engagement content on Facebook
@@ -67,8 +69,8 @@ const postTrendNewsOnFB = async (
 
     if (rand > 0.975) {
       toPost = YOUTUBE_LINK;
-    } else if (rand > 0.95) {
-      toPost = await getRandomPostFromThree();
+    } else if (rand > 0.925) {
+      toPost = CHANNEL_LINK;
     } else {
       toPost = newsBite;
     }

@@ -1,7 +1,7 @@
 import sleep from '../utils/sleep.js';
 import phrases from '../utils/gainPhrases.js';
 import engagementPhrases from '../utils/engagementPhrases.js';
-import {postActiveUsers} from '../utils//postActiveUsers.js';
+import {postActiveUsers} from '../utils/postActiveUsers.js';
 import {Page} from 'puppeteer';
 
 async function tagActiveUsers(label: string, page: Page) {
