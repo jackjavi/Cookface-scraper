@@ -100,7 +100,7 @@ const postTrendNewsOnFB = async (
 
     await sleep(getRandomWaitTime(2000, 5000));
     // console.log('Page reloaded after posting.');
-    // await fbLike(page);
+    await fbLike(page);
     await sleep(getRandomWaitTime(3000, 6000));
     // await page.reload({waitUntil: 'networkidle2'});
   } catch (err: any) {

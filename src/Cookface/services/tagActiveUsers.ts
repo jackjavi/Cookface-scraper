@@ -211,7 +211,7 @@ async function tagActiveUsers(label: string, page: Page) {
 
     // Randomize the order of active users and select the first 17 users if more than 17 users are found
     activeUsers.sort(() => Math.random() - 0.5);
-    activeUsers.splice(15);
+    activeUsers.splice(14);
     // vary the number of users to tag btwn 5 and 10 so instead of
     // activeUsers.splice(15);
     // we can do something like this

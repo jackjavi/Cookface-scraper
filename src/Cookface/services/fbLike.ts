@@ -11,7 +11,7 @@ const fbLike = async (page: Page): Promise<void> => {
     let likedCount = 0;
     let previousHeight = 0;
 
-    while (likedCount < 10) {
+    while (likedCount < 5) {
       // Evaluate all target <i> elements within unliked spans
       const likedThisRound = await page.evaluate(() => {
         const targetLikes = Array.from(
@@ -23,7 +23,7 @@ const fbLike = async (page: Page): Promise<void> => {
         let clicks = 0;
 
         for (const icon of targetLikes) {
-          if (clicks >= 10) break;
+          if (clicks >= 5) break;
           (icon as HTMLElement).click();
           clicks++;
         }
@@ -34,14 +34,14 @@ const fbLike = async (page: Page): Promise<void> => {
       likedCount += likedThisRound;
       console.log(`Liked ${likedCount} post(s) so far.`);
 
-      if (likedCount >= 10) break;
+      if (likedCount >= 5) break;
 
       previousHeight = await page.evaluate(() => document.body.scrollHeight);
       await page.evaluate(() =>
         window.scrollBy({top: 800, behavior: 'smooth'}),
       );
 
-      const randomPause = await getRandomWaitTime(2000, 5000);
+      const randomPause = getRandomWaitTime(5000, 10000);
       await sleep(randomPause);
 
       const newHeight = await page.evaluate(() => document.body.scrollHeight);
