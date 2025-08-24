@@ -34,11 +34,20 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       const now = Date.now();
 
       // 💡 Sleep window check
-      if (isWithinSleepWindow()) {
+      /* if (isWithinSleepWindow()) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 💤 Sleep window active. Sleeping 15 minutes...`,
         );
         await sleep(15 * 60 * 1000);
+        continue;
+      } */
+
+      // Run TelegramNews every ~1 hour
+      if (now - lastTrends > TWOHOURS) {
+        console.log('📊 Starting TelegramNews...');
+        await TelegramNews();
+        lastTelegram = Date.now();
+        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
       }
 
@@ -55,15 +64,6 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       if (now - lastTrends > TWENTY_MINUTES) {
         console.log('📊 Starting XTrendsToNews...');
         await XTrendsToNews(xPage, fbPage);
-        lastTrends = Date.now();
-        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
-        continue;
-      }
-
-      // Run TelegramNews every ~1 hour
-      if (now - lastTrends > TWOHOURS) {
-        console.log('📊 Starting TelegramNews...');
-        await TelegramNews();
         lastTrends = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
