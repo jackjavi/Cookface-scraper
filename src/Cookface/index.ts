@@ -43,7 +43,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       } */
 
       // Run TelegramNews every ~1 hour
-      if (now - lastTrends > TWOHOURS) {
+      if (now - lastTelegram > TWOHOURS) {
         console.log('📊 Starting TelegramNews...');
         await TelegramNews();
         lastTelegram = Date.now();
