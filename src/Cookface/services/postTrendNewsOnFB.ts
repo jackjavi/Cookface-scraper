@@ -1,7 +1,7 @@
 import sleep from '../utils/sleep';
 import getRandomWaitTime from '../utils/randomWaitTime';
 import {Page} from 'puppeteer';
-import fbLike from './fbLike';
+// import fbLike from './fbLike';
 import GenerativeAIService from '../services/generativeAI';
 
 const YOUTUBE_LINK = 'https://youtu.be/XbmB6vvCaOQ?si=DpYmCd67nrlG3gxI';
@@ -101,7 +101,7 @@ const postTrendNewsOnFB = async (
 
     await sleep(getRandomWaitTime(2000, 5000));
     // console.log('Page reloaded after posting.');
-    await fbLike(page);
+    // await fbLike(page);
     await sleep(getRandomWaitTime(3000, 6000));
     // await page.reload({waitUntil: 'networkidle2'});
   } catch (err: any) {
