@@ -42,11 +42,11 @@ export const XTrendsToNews = async (
     console.log(`Generated News Bite: ${newsBite}`);
     await sleep(2000);
 
-    // await postTrendNewsOnX('Home', xPage, newsBite);
+    await postTrendNewsOnX('Home', xPage, newsBite);
 
     fbPage.bringToFront();
-    // await sleep(225000);
-    await sleep(2000); // Reduced sleep time for testing
+    await sleep(225000);
+    // await sleep(2000); // Reduced sleep time for testing
     await postTrendNewsOnFB(fbPage, newsBite);
   } catch (error) {
     console.error('XTrendsToNews error:', error);
