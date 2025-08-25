@@ -61,9 +61,9 @@ async function commentsSpecial(
           reply = reply1;
         } else if (randomNumber > 0.8) {
           reply = reply2;
-        } else if (randomNumber > 0.7) {
+        } /* else if (randomNumber > 0.7) {
           reply = reply3;
-        } else {
+        }*/ else {
           reply = reply5;
         }
 

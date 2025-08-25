@@ -2,7 +2,7 @@ import sleep from './utils/sleep';
 import getRandomWaitTime from './utils/randomWaitTime';
 import {XTrendsToNews} from './modules/XTrendsToNews';
 import {XEngage} from './modules/XEngage';
-import {TelegramNews} from './modules/TelegramNews';
+// import {TelegramNews} from './modules/TelegramNews';
 import {initializeBrowser} from './utils/browserManager';
 import {isWithinSleepWindow} from './utils/sleepWindow';
 
@@ -28,7 +28,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
     // Initialize timers
     let lastEngage = 0;
     let lastTrends = 0;
-    let lastTelegram = 0;
+    // let lastTelegram = 0;
 
     while (true) {
       const now = Date.now();
@@ -61,13 +61,13 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       }
 
       // Run TelegramNews every ~1 hour
-      if (now - lastTelegram > TWOHOURS) {
+      /* if (now - lastTelegram > TWOHOURS) {
         console.log('📊 Starting TelegramNews...');
         await TelegramNews();
         lastTelegram = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      }
+      }*/
 
       // If nothing is ready, sleep briefly
       await sleep(60 * 1000); // Sleep 1 minute before checking again

@@ -70,9 +70,9 @@ const postTrendNewsOnFB = async (
     if (rand > 0.95) {
       toPost =
         'For social media automation and software development services, do not hesitate to contact us';
-    } else if (rand > 0.925) {
+    } /* else if (rand > 0.925) {
       toPost = CHANNEL_LINK;
-    } else {
+    } */ else {
       toPost = newsBite;
     }
 
@@ -103,7 +103,7 @@ const postTrendNewsOnFB = async (
     // console.log('Page reloaded after posting.');
     await fbLike(page);
     await sleep(getRandomWaitTime(3000, 6000));
-    // await page.reload({waitUntil: 'networkidle2'});
+    await page.reload({waitUntil: 'networkidle2'});
   } catch (err: any) {
     console.error(`Error in postTrendNewsOnFB: ${err.message}`);
   }
