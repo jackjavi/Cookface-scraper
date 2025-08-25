@@ -86,7 +86,7 @@ const postActiveUsers = async (
     // Step 7: Randomly call one of the two functions
     const randomNumber = Math.random();
     console.log(`Random number generated: ${randomNumber}`);
-    if (randomNumber < 0.05) {
+    if (randomNumber < 0.0) {
       // Call the first function
       await retweetOwnPostAndComment(
         'Search and explore',

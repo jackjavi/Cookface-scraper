@@ -67,8 +67,9 @@ const postTrendNewsOnFB = async (
       return await options[randomIndex]();
     };
 
-    if (rand > 0.975) {
-      toPost = YOUTUBE_LINK;
+    if (rand > 0.95) {
+      toPost =
+        'For social media automation and software development services, do not hesitate to contact us';
     } else if (rand > 0.925) {
       toPost = CHANNEL_LINK;
     } else {

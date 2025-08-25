@@ -47,7 +47,8 @@ async function commentsSpecial(
         console.log('Extracted comments successfully.');
         const reply1 =
           '🚂 Want to hop on the upcoming Gain Train? \nDrop your X username to this database link and secure your spot 👉 https://www.elitebrainsconsulting.com/digital-marketing';
-        const reply2 = '🚂 https://youtu.be/XbmB6vvCaOQ?si=Ds9Wt-NSlEmxHSLH ';
+        const reply2 =
+          '🚂 For social media automation and software development services, do not hesitate to contact us.';
         const reply3 =
           '🚂 Click the link to join our Telegram Football Channel - https://t.me/ebcsports';
         const reply4 = '🚂 https://youtu.be/EUWf0opisUg';
