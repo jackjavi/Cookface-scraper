@@ -4,11 +4,18 @@ import {Comment} from '../types/Comment';
 import * as fs from 'fs';
 import {Post} from '../types/Post';
 
+interface TweetImage {
+  src: string;
+  alt: string | null;
+  articleIndex: number;
+}
+
 class GenerativeAIService {
   private xUsername: string;
   private apiKey: string;
   private genAI: GoogleGenerativeAI;
   private model: GenerativeModel;
+  private visionModel: GenerativeModel;
   private trendsFilePath = 'storage/usedTrends.json';
   private engagementIdeasPath = 'storage/usedIdeas.json';
   private jokesFilePath = 'storage/usedJokes.json';
@@ -20,6 +27,9 @@ class GenerativeAIService {
     this.apiKey = config.generativeAIKey;
     this.genAI = new GoogleGenerativeAI(this.apiKey);
     this.model = this.genAI.getGenerativeModel({model: 'gemini-2.0-flash'});
+    this.visionModel = this.genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash',
+    });
   }
 
   private saveToJson(filePath: string, entry: string) {
@@ -288,6 +298,200 @@ Top Posts: ${examplePosts}
     }
   }
 
+  async selectMostRelevantImage(
+    newsBite: string,
+    comments: Comment[],
+    images: TweetImage[],
+  ): Promise<TweetImage | null> {
+    const RELEVANCE_THRESHOLD = 6; // Minimum score of 6 out of 10 to be considered relevant
+
+    if (!images || images.length === 0) {
+      console.log('No images available for analysis, returning default image');
+      return {
+        src: config.tnkDefaultIMG,
+        alt: 'Default TNK image',
+        articleIndex: -1,
+      };
+    }
+
+    if (images.length === 1) {
+      console.log('Only one image available, analyzing it first...');
+      // Still analyze the single image to check if it meets threshold
+    }
+
+    try {
+      // Function to convert image URL to base64 for Gemini API
+      const imageToGenerativePart = async (imageUrl: string) => {
+        try {
+          const response = await fetch(imageUrl);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch image: ${response.statusText}`);
+          }
+          const buffer = await response.arrayBuffer();
+          const base64String = Buffer.from(buffer).toString('base64');
+
+          // Determine MIME type from URL or default to JPEG
+          let mimeType = 'image/jpeg';
+          if (imageUrl.includes('.png')) mimeType = 'image/png';
+          else if (imageUrl.includes('.gif')) mimeType = 'image/gif';
+          else if (imageUrl.includes('.webp')) mimeType = 'image/webp';
+
+          return {
+            inlineData: {
+              data: base64String,
+              mimeType: mimeType,
+            },
+          };
+        } catch (error) {
+          console.error('Error processing image:', imageUrl, error);
+          return null;
+        }
+      };
+
+      // Analyze each image and get relevance scores
+      const imageAnalyses: Array<{
+        image: TweetImage;
+        score: number;
+        reason: string;
+      }> = [];
+
+      for (let i = 0; i < Math.min(images.length, 5); i++) {
+        // Limit to 5 images to avoid API limits
+        const image = images[i];
+        console.log(
+          `Analyzing image ${i + 1}/${Math.min(images.length, 5)}: ${image.src}`,
+        );
+
+        const imagePart = await imageToGenerativePart(image.src);
+        if (!imagePart) {
+          console.log(`Skipping image ${i + 1} due to processing error`);
+          continue;
+        }
+
+        // Context from comments related to this image's article
+        const relatedComments = comments
+          .slice(0, 5)
+          .map((comment, index) => `Comment ${index + 1}: "${comment.content}"`)
+          .join('\n');
+
+        const prompt = `
+You are analyzing an image to determine its relevance to a news story.
+
+NEWS BITE: "${newsBite}"
+
+CONTEXT FROM COMMENTS:
+${relatedComments}
+
+IMAGE TO ANALYZE: [Image provided]
+
+Your task:
+1. Describe what you see in the image
+2. Assess how relevant this image is to the news bite content
+3. Rate the relevance on a scale of 1-10 (10 = highly relevant, 1 = not relevant)
+4. Provide a brief reason for your rating
+
+Consider:
+- Visual elements that directly relate to the news story
+- People, objects, or scenes mentioned in the news bite
+- Emotional tone and context alignment
+- Overall visual storytelling value
+
+Respond in this exact format:
+DESCRIPTION: [What you see in the image]
+RELEVANCE_SCORE: [Number from 1-10]
+REASON: [Brief explanation of why this score]
+      `;
+
+        try {
+          const result = await this.visionModel.generateContent([
+            prompt,
+            imagePart,
+          ]);
+          const response = result.response.text();
+
+          // Parse the response to extract score and reason
+          const scoreMatch = response.match(/RELEVANCE_SCORE:\s*(\d+)/);
+          const reasonMatch = response.match(/REASON:\s*(.+)/);
+          const descriptionMatch = response.match(
+            /DESCRIPTION:\s*(.+?)(?=RELEVANCE_SCORE:)/s,
+          );
+
+          const score = scoreMatch ? parseInt(scoreMatch[1]) : 0;
+          const reason = reasonMatch
+            ? reasonMatch[1].trim()
+            : 'No reason provided';
+          const description = descriptionMatch
+            ? descriptionMatch[1].trim()
+            : 'No description provided';
+
+          console.log(
+            `Image ${i + 1} analysis - Score: ${score}, Description: ${description}`,
+          );
+
+          imageAnalyses.push({
+            image: image,
+            score: score,
+            reason: `${description} | ${reason}`,
+          });
+
+          // Add delay between API calls to respect rate limits
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } catch (error) {
+          console.error(`Error analyzing image ${i + 1}:`, error);
+          // Add with low score if analysis fails
+          imageAnalyses.push({
+            image: image,
+            score: 1,
+            reason: 'Analysis failed',
+          });
+        }
+      }
+
+      // Select the image with the highest relevance score
+      if (imageAnalyses.length === 0) {
+        console.log('No images could be analyzed, returning default image');
+        return {
+          src: config.tnkDefaultIMG,
+          alt: 'Default TNK image',
+          articleIndex: -1,
+        };
+      }
+
+      const bestImage = imageAnalyses.reduce((best, current) =>
+        current.score > best.score ? current : best,
+      );
+
+      // Check if the best image meets the relevance threshold
+      if (bestImage.score < RELEVANCE_THRESHOLD) {
+        console.log(
+          `Best image score (${bestImage.score}) is below threshold (${RELEVANCE_THRESHOLD}). Using default image.`,
+        );
+        console.log(`Rejected image reason: ${bestImage.reason}`);
+        return {
+          src: config.tnkDefaultIMG,
+          alt: 'Default TNK image',
+          articleIndex: -1,
+        };
+      }
+
+      console.log(
+        `Selected image with score ${bestImage.score}: ${bestImage.reason}`,
+      );
+      console.log(`Selected image URL: ${bestImage.image.src}`);
+
+      return bestImage.image;
+    } catch (error) {
+      console.error('Error in image selection process:', error);
+      // Fallback to default image if analysis fails
+      console.log('Falling back to default image due to error');
+      return {
+        src: config.tnkDefaultIMG,
+        alt: 'Default TNK image',
+        articleIndex: -1,
+      };
+    }
+  }
+
   async generateReply(posts: Post[]): Promise<string> {
     if (!Array.isArray(posts) || posts.length === 0) {
       throw new Error('Posts should be a non-empty array of objects.');
@@ -406,7 +610,7 @@ Let’s go viral.
 
     try {
       const result = await this.model.generateContent(prompt);
-      const response = await result.response;
+      const response = result.response;
       const generatedPost = response.text();
       const cleanPost = generatedPost
         .replace(/\*\*/g, '')

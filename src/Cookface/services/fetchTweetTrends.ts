@@ -14,6 +14,12 @@ interface Comment {
   timestamp: string | null;
 }
 
+interface TweetImage {
+  src: string;
+  alt: string | null;
+  articleIndex: number;
+}
+
 async function fetchTweetTrends(
   label: string,
   trends: Trend[],
@@ -21,6 +27,7 @@ async function fetchTweetTrends(
 ): Promise<{
   randomPhrase: string | null;
   comments: Comment[];
+  images: TweetImage[];
 }> {
   const navSelector = 'nav[aria-label="Primary"] a';
   const genAIService = new GenerativeAIService();
@@ -112,14 +119,16 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     await page.waitForSelector('article[role="article"][data-testid="tweet"]');
 
     const comments: Comment[] = [];
+    const images: TweetImage[] = [];
     let previousHeight = 0;
 
-    while (comments.length < 15) {
-      const newComments = await page.evaluate(() => {
+    while (comments.length < 20) {
+      const {newComments, newImages} = await page.evaluate(() => {
         const articles = document.querySelectorAll(
           'article[role="article"][data-testid="tweet"]',
         );
-        return Array.from(articles).map(article => {
+
+        const newComments = Array.from(articles).map((article, index) => {
           const userSpan = article.querySelector(
             '[data-testid="User-Name"] span',
           );
@@ -132,20 +141,64 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
             article.querySelector('time')?.getAttribute('datetime') || null;
           return {user, content, timestamp};
         });
+
+        // Collect images from articles
+        const newImages: {
+          src: string;
+          alt: string | null;
+          articleIndex: number;
+        }[] = [];
+
+        Array.from(articles).forEach((article, articleIndex) => {
+          // Find all image containers in this article
+          const imageContainers = article.querySelectorAll(
+            'div[aria-label="Image"][data-testid="tweetPhoto"]',
+          );
+
+          imageContainers.forEach(container => {
+            // Look for img tags within the container
+            const imgElements = container.querySelectorAll('img');
+
+            imgElements.forEach(img => {
+              const src = img.getAttribute('src');
+              const alt = img.getAttribute('alt');
+
+              if (src) {
+                newImages.push({
+                  src: src,
+                  alt: alt,
+                  articleIndex: articleIndex,
+                });
+              }
+            });
+          });
+        });
+
+        return {newComments, newImages};
       });
 
+      // Add unique comments
       newComments.forEach(comment => {
         if (
-          comments.length < 15 &&
+          comments.length < 20 &&
           !comments.some(c => c.content === comment.content)
         ) {
           comments.push(comment);
         }
       });
 
-      console.log(`Fetched ${comments.length} comments so far.`);
+      // Add unique images (avoid duplicates by src)
+      newImages.forEach(image => {
+        if (!images.some(img => img.src === image.src)) {
+          images.push(image);
+        }
+      });
 
-      if (comments.length >= 15) break;
+      console.log(
+        `Fetched ${comments.length} comments and ${images.length} images so far.`,
+      );
+
+      if (comments.length >= 20) break;
 
       previousHeight = await page.evaluate(() => document.body.scrollHeight);
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
@@ -159,10 +212,13 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     }
 
     await sleep(1000);
-    return {randomPhrase: selectedTitle, comments};
+    console.log(
+      `Final results: ${comments.length} comments, ${images.length} images collected.`,
+    );
+    return {randomPhrase: selectedTitle, comments, images};
   } catch (err: any) {
     console.error(`Error in fetchTweetTrends function: ${err.message}`);
-    return {randomPhrase: null, comments: []};
+    return {randomPhrase: null, comments: [], images: []};
   }
 }
 
