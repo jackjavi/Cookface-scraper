@@ -2,6 +2,8 @@ import sleep from '../utils/sleep.js';
 import phrases from '../utils/gainPhrases.js';
 import engagementPhrases from '../utils/engagementPhrases.js';
 import {postActiveUsers} from '../utils/postActiveUsers.js';
+import fs from 'fs/promises';
+import config from '../config/index.js';
 import {Page} from 'puppeteer';
 
 async function tagActiveUsers(label: string, page: Page) {
@@ -130,78 +132,8 @@ async function tagActiveUsers(label: string, page: Page) {
     // Add @life_meth_money and @node_brogrammer to the list of active users
 
     // activeUsers.push({ user: '@life_meth_money' });
-    const savedTweeps = [
-      {user: '@snipes_254'},
-      {user: '@Micheal_K10'},
-      {user: '@m_capty'},
-      {user: '@dreamer_the_guy'},
-      {user: '@Famim_01'},
-      {user: '@ndarsteve61'},
-      {user: '@Ajayiadedapo05'},
-      {user: '@oundo_gooner'},
-      {user: '@DanielMwic67030'},
-      {user: '@AyikiP'},
-      {user: '@MosesPhares'},
-      {user: '@UnitedEra6'},
-      {user: '@gatta9707_'},
-      {user: '@yanitted'},
-      {user: '@ja_ramogi'},
-      {user: '@GuenterK13'},
-      {user: '@KVistoh'},
-      {user: '@mekky_ayo'},
-      {user: '@Eliaskaneke'},
-      {user: '@blaqchoppa'},
-      {user: '@weiyswa'},
-      {user: '@Samuel47577643'},
-      {user: '@PriscillaMabaso'},
-      {user: '@burah___'},
-      {user: '@obdo8wdf'},
-      {user: '@grindelKadse'},
-      {user: '@Bellaa254'},
-      {user: '@Sophiia_s1'},
-      {user: '@Kelecypt0'},
-      {user: '@felo_ottroh'},
-      {user: '@PureRiseTv'},
-      {user: '@choosedusername'},
-      {user: '@MaustvanR28695'},
-      {user: '@soste1M'},
-      {user: '@sailopari232A'},
-      {user: '@rpmanish1'},
-      {user: '@OfObj52066'},
-      {user: '@21KAREL'},
-      {user: '@Embassy_of_Mars'},
-      {user: '@StevenWate91203'},
-      {user: '@RhonieNu'},
-      {user: '@Richpasman'},
-      {user: '@MaustvanR28695'},
-      {user: '@Tre_Krayne'},
-      {user: '@NasaipinCollins'},
-      {user: '@JasonMa90104406'},
-      {user: '@ARRESTED41'},
-      {user: '@EssaysInfo'},
-      {user: '@KussAdventures'},
-      {user: '@GauravD85675938'},
-      {user: '@GazanGaslighter'},
-      {user: '@Leipafelix'},
-      {user: '@MidmarkOnsongo'},
-      {user: '@The_good_boy86'},
-      {user: '@LeinLeinGoAway'},
-      {user: '@its_murife'},
-      {user: '@lemaron95'},
-      {user: '@Lattecummer'},
-      {user: '@SportyStacey7'},
-      {user: '@OladokunElisha'},
-      {user: '@_CFC_AY'},
-      {user: '@wrdonthestrit'},
-      {user: '@arap_mamet'},
-      {user: '@iamdcvector15'},
-      {user: '@Gooddlovee'},
-      {user: '@Mike4best'},
-      {user: '@iam____saleem'},
-      {user: '@johnpauldooga'},
-      {user: '@ng14156'},
-      {user: '@arounyoung'},
-    ];
+    const rawData = await fs.readFile(config.savedTweeps, 'utf8');
+    const savedTweeps = JSON.parse(rawData);
 
     // Only get 6 users from savedTweeps and push to activeUsers
     const selectedTweeps = savedTweeps
