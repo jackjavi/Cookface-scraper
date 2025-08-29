@@ -24,7 +24,7 @@ class GenerativeAIService {
 
   constructor() {
     this.xUsername = config.xUsername;
-    this.apiKey = config.generativeAIKey;
+    this.apiKey = config.generativeAIKeyEBCSports;
     this.genAI = new GoogleGenerativeAI(this.apiKey);
     this.model = this.genAI.getGenerativeModel({model: 'gemini-2.0-flash'});
     this.visionModel = this.genAI.getGenerativeModel({

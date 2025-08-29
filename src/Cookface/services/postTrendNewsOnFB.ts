@@ -16,7 +16,6 @@ const CHANNEL_LINK =
 const postTrendNewsOnFB = async (
   page: Page,
   newsBite: string,
-  img: string,
 ): Promise<void> => {
   const postButtonSelector = 'div[dir="ltr"] span.css-1jxf684 > span';
   const genAI = new GenerativeAIService();
@@ -74,7 +73,7 @@ const postTrendNewsOnFB = async (
     } /* else if (rand > 0.925) {
       toPost = CHANNEL_LINK;
     } */ else {
-      toPost = `${newsBite} ${img} `;
+      toPost = `${newsBite} `;
     }
 
     console.log(`Typing content: ${toPost}`);
@@ -103,7 +102,7 @@ const postTrendNewsOnFB = async (
     await sleep(getRandomWaitTime(2000, 5000));
     // console.log('Page reloaded after posting.');
     // await fbLike(page);
-    await sleep(getRandomWaitTime(3000, 6000));
+    // await sleep(getRandomWaitTime(3000, 6000));
     // await page.reload({waitUntil: 'networkidle2'});
   } catch (err: any) {
     console.error(`Error in postTrendNewsOnFB: ${err.message}`);
