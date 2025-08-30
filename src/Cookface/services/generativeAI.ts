@@ -352,7 +352,6 @@ Top Posts: ${examplePosts}
       const imageAnalyses: Array<{
         image: TweetImage;
         score: number;
-        reason: string;
       }> = [];
 
       for (let i = 0; i < Math.min(images.length, 5); i++) {
@@ -375,31 +374,20 @@ Top Posts: ${examplePosts}
           .join('\n');
 
         const prompt = `
-You are analyzing an image to determine its relevance to a news story.
+Rate this image's relevance to the news story on a scale of 1-10.
 
-NEWS BITE: "${newsBite}"
+NEWS STORY: "${newsBite}"
 
 CONTEXT FROM COMMENTS:
 ${relatedComments}
 
-IMAGE TO ANALYZE: [Image provided]
-
-Your task:
-1. Describe what you see in the image
-2. Assess how relevant this image is to the news bite content
-3. Rate the relevance on a scale of 1-10 (10 = highly relevant, 1 = not relevant)
-4. Provide a brief reason for your rating
-
 Consider:
 - Visual elements that directly relate to the news story
-- People, objects, or scenes mentioned in the news bite
+- People, objects, or scenes mentioned in the news
 - Emotional tone and context alignment
 - Overall visual storytelling value
 
-Respond in this exact format:
-DESCRIPTION: [What you see in the image]
-RELEVANCE_SCORE: [Number from 1-10]
-REASON: [Brief explanation of why this score]
+Respond with ONLY a number from 1-10. No other text.
       `;
 
         try {
@@ -407,31 +395,16 @@ REASON: [Brief explanation of why this score]
             prompt,
             imagePart,
           ]);
-          const response = result.response.text();
+          const response = result.response.text().trim();
 
-          // Parse the response to extract score and reason
-          const scoreMatch = response.match(/RELEVANCE_SCORE:\s*(\d+)/);
-          const reasonMatch = response.match(/REASON:\s*(.+)/);
-          const descriptionMatch = response.match(
-            /DESCRIPTION:\s*(.+?)(?=RELEVANCE_SCORE:)/s,
-          );
+          // Parse the response to extract only the score
+          const score = parseInt(response.match(/\d+/)?.[0] || '0');
 
-          const score = scoreMatch ? parseInt(scoreMatch[1]) : 0;
-          const reason = reasonMatch
-            ? reasonMatch[1].trim()
-            : 'No reason provided';
-          const description = descriptionMatch
-            ? descriptionMatch[1].trim()
-            : 'No description provided';
-
-          console.log(
-            `Image ${i + 1} analysis - Score: ${score}, Description: ${description}`,
-          );
+          console.log(`Image ${i + 1} relevance score: ${score}`);
 
           imageAnalyses.push({
             image: image,
             score: score,
-            reason: `${description} | ${reason}`,
           });
 
           // Add delay between API calls to respect rate limits
@@ -442,7 +415,6 @@ REASON: [Brief explanation of why this score]
           imageAnalyses.push({
             image: image,
             score: 1,
-            reason: 'Analysis failed',
           });
         }
       }
@@ -466,7 +438,6 @@ REASON: [Brief explanation of why this score]
         console.log(
           `Best image score (${bestImage.score}) is below threshold (${RELEVANCE_THRESHOLD}). Using default image.`,
         );
-        console.log(`Rejected image reason: ${bestImage.reason}`);
         return {
           src: config.tnkDefaultIMG,
           alt: 'Default TNK image',
@@ -474,9 +445,7 @@ REASON: [Brief explanation of why this score]
         };
       }
 
-      console.log(
-        `Selected image with score ${bestImage.score}: ${bestImage.reason}`,
-      );
+      console.log(`Selected image with score ${bestImage.score}`);
       console.log(`Selected image URL: ${bestImage.image.src}`);
 
       return bestImage.image;

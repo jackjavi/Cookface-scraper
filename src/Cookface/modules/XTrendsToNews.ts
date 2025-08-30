@@ -52,7 +52,7 @@ export const XTrendsToNews = async (
     console.log(`Generated News Bite: ${newsBite}`);
 
     // Analyze and select the most relevant image
-    /** let selectedImage: TweetImage | null = null;
+    let selectedImage: TweetImage | null = null;
     if (images && images.length > 0) {
       console.log('Analyzing images for relevance to news bite...');
       selectedImage = await genAIService.selectMostRelevantImage(
@@ -66,23 +66,24 @@ export const XTrendsToNews = async (
       } else {
         console.log('No relevant image selected');
       }
-    } */
+    }
 
     await sleep(2000);
 
     // Post to X
-    await postTrendNewsOnX('Home', xPage, newsBite);
+    await postTrendNewsOnX('Home', xPage, newsBite, selectedImage?.src!);
+    // await postTrendNewsOnX('Home', xPage, newsBite);
 
     fbPage.bringToFront();
     await sleep(100000);
 
     // Post to Facebook
-    // await postTrendNewsOnFB(fbPage, newsBite, selectedImage?.src!);
-    await postTrendNewsOnFB(fbPage, newsBite);
+    await postTrendNewsOnFB(fbPage, newsBite, selectedImage?.src!);
+    // await postTrendNewsOnFB(fbPage, newsBite);
 
     await sleep(100000);
     // Post to Telegram
-    // await sendArticleToTelegram(newsBite, selectedImage?.src!);
+    await sendArticleToTelegram(newsBite, selectedImage?.src!);
   } catch (error) {
     console.error('XTrendsToNews error:', error);
   }

@@ -13,7 +13,8 @@ const postTrendNewsOnX = async (
   label: string,
   page: Page,
   newsBite: string,
-) => {
+  imgUrl: string,
+): Promise<void> => {
   const navSelector = 'nav[aria-label="Primary"] a';
   const placeholderSelector = '.public-DraftEditorPlaceholder-inner';
   const postButtonSelector = 'div[dir="ltr"] span.css-1jxf684 > span';
@@ -64,10 +65,13 @@ const postTrendNewsOnX = async (
     console.log('Clicked on the "What’s happening?" placeholder successfully.');
     await sleep(2000);
 
+    // Append imgUrl to newsBite
+    const newsBitePlusImage = `${newsBite} ${imgUrl} `;
+
     // Step 3: Type into the editor
-    await page.keyboard.type(newsBite, {delay: 200});
+    await page.keyboard.type(newsBitePlusImage, {delay: 200});
     console.log('Typed the message into the editor successfully.');
-    await sleep(2000);
+    await sleep(3000);
 
     // Step 4: Click the "Post" button
     const isPostClicked = await page.evaluate(postButtonSelector => {

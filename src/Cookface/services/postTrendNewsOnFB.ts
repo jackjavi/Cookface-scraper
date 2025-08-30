@@ -16,6 +16,7 @@ const CHANNEL_LINK =
 const postTrendNewsOnFB = async (
   page: Page,
   newsBite: string,
+  imgUrl: string,
 ): Promise<void> => {
   const postButtonSelector = 'div[dir="ltr"] span.css-1jxf684 > span';
   const genAI = new GenerativeAIService();
@@ -73,7 +74,7 @@ const postTrendNewsOnFB = async (
     } /* else if (rand > 0.925) {
       toPost = CHANNEL_LINK;
     } */ else {
-      toPost = `${newsBite} `;
+      toPost = `${newsBite} ${imgUrl} `;
     }
 
     console.log(`Typing content: ${toPost}`);
