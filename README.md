@@ -20,6 +20,12 @@
 chromium-browser --remote-debugging-port=9222 --start-maximized
 ```
 
+### Microsoft Edge
+
+```bash
+microsoft-edge-stable --remote-debugging-port=9222 --start-maximized
+```
+
 ### Browser Url to access the endpoint url
 
 ```bash
