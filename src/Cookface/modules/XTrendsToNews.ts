@@ -5,9 +5,10 @@ import GenerativeAIService from '../services/generativeAI';
 import {postTrendNewsOnX} from '../services/postTrendNewsOnX';
 import {postTrendNewsOnFB} from '../services/postTrendNewsOnFB';
 import {sendArticleToTelegram} from '../services/postTrendNewsOnTelegram';
+import {cleanupImage} from '../utils/imageUtils';
+import config from '../config/index.js';
 import {Page} from 'puppeteer';
 
-// Interface for TweetImage (should match the one in fetchTweetTrends)
 interface TweetImage {
   src: string;
   alt: string | null;
@@ -15,7 +16,7 @@ interface TweetImage {
 }
 
 /**
- * Processes X trends and posts news to X and Facebook
+ * Processes X trends and posts news to X, Facebook, and Telegram
  * @param xPage Puppeteer page for X.com
  * @param fbPage Puppeteer page for Facebook
  */
@@ -23,6 +24,8 @@ export const XTrendsToNews = async (
   xPage: Page,
   fbPage: Page,
 ): Promise<void> => {
+  let sharedImagePath: string | null = null;
+
   try {
     console.log('Starting XTrendsToNews processing...');
     await xPage.bringToFront();
@@ -65,26 +68,57 @@ export const XTrendsToNews = async (
         console.log(`Selected most relevant image: ${selectedImage.src}`);
       } else {
         console.log('No relevant image selected');
+        selectedImage = {
+          src: config.tnkDefaultIMG,
+          alt: 'Default Image',
+          articleIndex: -1,
+        };
       }
     }
 
     await sleep(2000);
 
     // Post to X
-    await postTrendNewsOnX('Home', xPage, newsBite, selectedImage?.src!);
-    // await postTrendNewsOnX('Home', xPage, newsBite);
+    console.log('Posting to X...');
+    sharedImagePath = await postTrendNewsOnX(
+      'Home',
+      xPage,
+      newsBite,
+      selectedImage?.src || '',
+    );
+    console.log('Successfully posted to X');
 
-    fbPage.bringToFront();
-    await sleep(100000);
+    await fbPage.bringToFront();
+    await sleep(3000);
 
     // Post to Facebook
-    await postTrendNewsOnFB(fbPage, newsBite, selectedImage?.src!);
-    // await postTrendNewsOnFB(fbPage, newsBite);
+    console.log('Posting to Facebook...');
+    await postTrendNewsOnFB(
+      fbPage,
+      newsBite,
+      selectedImage?.src || '',
+      sharedImagePath,
+    );
+    console.log('Successfully posted to Facebook');
 
-    await sleep(100000);
-    // Post to Telegram
-    await sendArticleToTelegram(newsBite, selectedImage?.src!);
+    await sleep(3000);
+
+    // Post to Telegram using the shared image path
+    console.log('Posting to Telegram...');
+    await sendArticleToTelegram(
+      newsBite,
+      selectedImage?.src || '',
+      sharedImagePath,
+    );
+    console.log('Successfully posted to Telegram');
+
+    console.log('All platforms posted successfully!');
   } catch (error) {
     console.error('XTrendsToNews error:', error);
+  } finally {
+    if (sharedImagePath) {
+      console.log('Cleaning up shared image...');
+      await cleanupImage(sharedImagePath);
+    }
   }
 };

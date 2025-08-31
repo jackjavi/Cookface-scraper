@@ -15,6 +15,7 @@ const requiredEnvVars = [
   'EBC_SPORTS_CHANNEL_LINK',
   'TNK_DEFAULT_IMG',
   'SAVED_TWEEPS',
+  'IMAGES_STORE',
 ];
 
 requiredEnvVars.forEach(key => {
@@ -38,6 +39,7 @@ interface Config {
   ebcSportsChannelLink: string;
   tnkDefaultIMG: string;
   savedTweeps: string;
+  imagesStore: string;
 }
 
 const config: Config = {
@@ -58,6 +60,7 @@ const config: Config = {
   ebcSportsChannelLink: process.env.EBC_SPORTS_CHANNEL_LINK as string,
   tnkDefaultIMG: process.env.TNK_DEFAULT_IMG as string,
   savedTweeps: process.env.SAVED_TWEEPS as string,
+  imagesStore: process.env.IMAGES_STORE as string,
 };
 
 export default config;
