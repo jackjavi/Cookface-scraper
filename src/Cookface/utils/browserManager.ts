@@ -49,7 +49,8 @@ export async function visitBrowserPageLink(browser: Browser, link: string) {
   try {
     if (!page) {
       page = await browser.newPage();
-      await page.setViewport({width: 1920, height: 1080});
+      // await page.setViewport({width: 1920, height: 1080}); // Lenovo Legion 6
+      await page.setViewport({width: 1600, height: 900}); // ELiteBook 8470p
       await page.goto(link);
 
       console.log('page initialized.');

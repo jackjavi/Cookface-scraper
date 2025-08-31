@@ -3,7 +3,7 @@ import getRandomWaitTime from './utils/randomWaitTime';
 import {XTrendsToNews} from './modules/XTrendsToNews';
 import {XEngage} from './modules/XEngage';
 // import {TelegramNews} from './modules/TelegramNews';
-import {initializeBrowser} from './utils/browserManager';
+import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
 // import {isWithinSleepWindow} from './utils/sleepWindow';
 
 (async () => {
@@ -16,6 +16,13 @@ import {initializeBrowser} from './utils/browserManager';
     // const TWOHOURS = 60 * 90 * 1000; // 1.5 HRS
 
     const browser = await initializeBrowser();
+
+    const tiktokPage = await visitBrowserPageLink(
+      browser!,
+      'https://www.tiktok.com/',
+    );
+    await sleep(300000);
+
     const xPage = await browser!.newPage();
     await xPage.goto('https://x.com');
     console.log('X.com page initialized.');
