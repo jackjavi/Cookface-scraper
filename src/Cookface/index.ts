@@ -8,6 +8,7 @@ import {initializeBrowser} from './utils/browserManager';
 
 (async () => {
   try {
+    const THREE_MINUTES = 3 * 60 * 1000;
     const SIX_MINUTES = 6 * 60 * 1000;
     // const TWENTY_MINUTES = 20 * 60 * 1000;
     const THIRTY_MINUTES = 30 * 60 * 1000;
@@ -43,7 +44,7 @@ import {initializeBrowser} from './utils/browserManager';
       } */
 
       // Run XEngage every ~6 minutes
-      if (now - lastEngage > SIX_MINUTES) {
+      if (now - lastEngage > THREE_MINUTES) {
         console.log('⏱ Starting XEngage...');
         await XEngage(xPage);
         lastEngage = Date.now();
