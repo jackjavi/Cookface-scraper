@@ -21,11 +21,12 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
       browser!,
       'https://www.tiktok.com/',
     );
-    await sleep(300000);
+    await sleep(1500);
 
     const xPage = await browser!.newPage();
     await xPage.goto('https://x.com');
     console.log('X.com page initialized.');
+    await sleep(1500);
 
     const fbPage = await browser!.newPage();
     await fbPage.goto('https://www.facebook.com/');
