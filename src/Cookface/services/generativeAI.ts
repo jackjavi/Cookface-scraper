@@ -314,11 +314,6 @@ Top Posts: ${examplePosts}
       };
     }
 
-    if (images.length === 1) {
-      console.log('Only one image available, analyzing it first...');
-      // Still analyze the single image to check if it meets threshold
-    }
-
     try {
       // Function to convert image URL to base64 for Gemini API
       const imageToGenerativePart = async (imageUrl: string) => {
@@ -348,95 +343,98 @@ Top Posts: ${examplePosts}
         }
       };
 
-      // Analyze each image and get relevance scores
-      const imageAnalyses: Array<{
-        image: TweetImage;
-        score: number;
-      }> = [];
+      // Process up to 5 images to avoid API limits
+      const imagesToProcess = images.slice(0, 5);
+      console.log(`Processing ${imagesToProcess.length} images in batch...`);
 
-      for (let i = 0; i < Math.min(images.length, 5); i++) {
-        // Limit to 5 images to avoid API limits
-        const image = images[i];
-        console.log(
-          `Analyzing image ${i + 1}/${Math.min(images.length, 5)}: ${image.src}`,
-        );
+      // Convert all images to generative parts
+      const imageParts = [];
+      const validImages = [];
 
-        const imagePart = await imageToGenerativePart(image.src);
-        if (!imagePart) {
-          console.log(`Skipping image ${i + 1} due to processing error`);
-          continue;
+      for (let i = 0; i < imagesToProcess.length; i++) {
+        const imagePart = await imageToGenerativePart(imagesToProcess[i].src);
+        if (imagePart) {
+          imageParts.push(imagePart);
+          validImages.push(imagesToProcess[i]);
         }
+      }
 
-        // Context from comments related to this image's article
-        const relatedComments = comments
-          .slice(0, 5)
-          .map((comment, index) => `Comment ${index + 1}: "${comment.content}"`)
-          .join('\n');
+      if (imageParts.length === 0) {
+        console.log('No images could be processed, returning default image');
+        return {
+          src: config.tnkDefaultIMG,
+          alt: 'Default TNK image',
+          articleIndex: -1,
+        };
+      }
 
-        const prompt = `
-Rate this image's relevance to the news story on a scale of 1-10.
+      // Create prompt for batch analysis
+      const prompt = `
+You are analyzing ${validImages.length} images for relevance to a news story. 
 
 NEWS STORY: "${newsBite}"
 
-CONTEXT FROM COMMENTS:
-${relatedComments}
-
-Consider:
+Rate each image's relevance on a scale of 1-10, considering:
 - Visual elements that directly relate to the news story
 - People, objects, or scenes mentioned in the news
 - Emotional tone and context alignment
 - Overall visual storytelling value
 
-Respond with ONLY a number from 1-10. No other text.
-      `;
+Respond with ONLY the scores in this exact format:
+Image 1: [score]
+Image 2: [score]
+Image 3: [score]
+(etc. for each image)
 
-        try {
-          const result = await this.visionModel.generateContent([
-            prompt,
-            imagePart,
-          ]);
-          const response = result.response.text().trim();
+Use only numbers 1-10. No other text or explanations.
+    `;
 
-          // Parse the response to extract only the score
-          const score = parseInt(response.match(/\d+/)?.[0] || '0');
+      // Build content array with prompt and all images
+      const contentParts = [prompt, ...imageParts];
 
-          console.log(`Image ${i + 1} relevance score: ${score}`);
+      // Make single API call with all images
+      const result = await this.visionModel.generateContent(contentParts);
+      const response = result.response.text().trim();
 
-          imageAnalyses.push({
-            image: image,
-            score: score,
-          });
+      console.log('Batch analysis response:', response);
 
-          // Add delay between API calls to respect rate limits
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        } catch (error) {
-          console.error(`Error analyzing image ${i + 1}:`, error);
-          // Add with low score if analysis fails
-          imageAnalyses.push({
-            image: image,
-            score: 1,
-          });
+      // Parse scores from response
+      const scores: number[] = [];
+      const lines = response.split('\n');
+
+      for (let i = 0; i < validImages.length; i++) {
+        // Look for patterns like "Image 1: 7" or just "7" on separate lines
+        const imagePattern = new RegExp(`Image\\s*${i + 1}:\\s*(\\d+)`, 'i');
+        const match = response.match(imagePattern);
+
+        if (match) {
+          scores.push(parseInt(match[1]));
+        } else if (lines[i]) {
+          // Fallback: try to extract number from corresponding line
+          const numberMatch = lines[i].match(/\d+/);
+          scores.push(numberMatch ? parseInt(numberMatch[0]) : 1);
+        } else {
+          scores.push(1); // Default low score
         }
       }
 
-      // Select the image with the highest relevance score
-      if (imageAnalyses.length === 0) {
-        console.log('No images could be analyzed, returning default image');
-        return {
-          src: config.tnkDefaultIMG,
-          alt: 'Default TNK image',
-          articleIndex: -1,
-        };
+      console.log('Extracted scores:', scores);
+
+      // Find the image with the highest score
+      let bestIndex = 0;
+      let bestScore = scores[0] || 1;
+
+      for (let i = 1; i < scores.length; i++) {
+        if (scores[i] > bestScore) {
+          bestScore = scores[i];
+          bestIndex = i;
+        }
       }
 
-      const bestImage = imageAnalyses.reduce((best, current) =>
-        current.score > best.score ? current : best,
-      );
-
       // Check if the best image meets the relevance threshold
-      if (bestImage.score < RELEVANCE_THRESHOLD) {
+      if (bestScore < RELEVANCE_THRESHOLD) {
         console.log(
-          `Best image score (${bestImage.score}) is below threshold (${RELEVANCE_THRESHOLD}). Using default image.`,
+          `Best image score (${bestScore}) is below threshold (${RELEVANCE_THRESHOLD}). Using default image.`,
         );
         return {
           src: config.tnkDefaultIMG,
@@ -445,12 +443,13 @@ Respond with ONLY a number from 1-10. No other text.
         };
       }
 
-      console.log(`Selected image with score ${bestImage.score}`);
-      console.log(`Selected image URL: ${bestImage.image.src}`);
+      const selectedImage = validImages[bestIndex];
+      console.log(`Selected image ${bestIndex + 1} with score ${bestScore}`);
+      console.log(`Selected image URL: ${selectedImage.src}`);
 
-      return bestImage.image;
+      return selectedImage;
     } catch (error) {
-      console.error('Error in image selection process:', error);
+      console.error('Error in batch image selection process:', error);
       // Fallback to default image if analysis fails
       console.log('Falling back to default image due to error');
       return {
