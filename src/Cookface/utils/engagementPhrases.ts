@@ -6,7 +6,7 @@ const engagementPhrases = [
   'Connect & Grow 📈 FFF:',
   'Network Boost 🚀 Follow chain:',
   "Community Power 💜 Let's link:",
-  'Follow Friday vibes ✨ FFF:',
+  'Follow vibes ✨ FFF:',
   'Growth Mode ON 🔥 Connect below:',
   'Building connections 🤝 FFF:',
   'Boost Squad activated 💯 Follow train:',
