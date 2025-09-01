@@ -10,9 +10,9 @@ import {
 import config from '../config/index.js';
 import GenerativeAIService from '../services/generativeAI';
 
-const YOUTUBE_LINK = 'https://youtu.be/XbmB6vvCaOQ?si=DpYmCd67nrlG3gxI';
+const YOUTUBE_LINK = 'https://youtu.be/dnY2p2whjk8?si=3eBCaHP9GKlwUEUI';
 const CHANNEL_LINK =
-  'Click the link to join our Telegram Football Channel - https://t.me/ebcsports';
+  'Click the link to join our Telegram Channel - https://t.me/tnk254';
 
 /**
  * Posts trend news on Facebook with image
@@ -92,8 +92,9 @@ const postTrendNewsOnFB = async (
     let toPost: string;
 
     if (rand > 0.95) {
-      toPost =
-        'For social media automation and software development services, do not hesitate to contact us';
+      toPost = `${YOUTUBE_LINK} `;
+    } else if (rand > 0.9) {
+      toPost = `${CHANNEL_LINK} `;
     } else {
       toPost = newsBite;
     }
