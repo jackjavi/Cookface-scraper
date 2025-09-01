@@ -10,9 +10,10 @@ import {
 import config from '../config/index.js';
 import GenerativeAIService from '../services/generativeAI';
 
-const YOUTUBE_LINK = 'https://youtu.be/dnY2p2whjk8?si=3eBCaHP9GKlwUEUI';
+const YOUTUBE_LINK =
+  'For social media automation and software development services, do not hesitate to contact us. https://youtu.be/dnY2p2whjk8?si=3eBCaHP9GKlwUEUI';
 const CHANNEL_LINK =
-  'Click the link to join our Telegram Channel - https://t.me/tnk254';
+  '🚂 Join our Telegram channel for uninterrupted news content https://t.me/tnk254';
 
 /**
  * Posts trend news on Facebook with image
@@ -53,7 +54,8 @@ const postTrendNewsOnFB = async (
     console.log('Page reloaded successfully.');
 
     // Step 2: Upload image if available
-    if (imagePath) {
+    const rand = Math.random();
+    if (imagePath && rand <= 0.9) {
       await uploadImageToFacebook(page, imagePath);
       await sleep(3000);
     }
@@ -88,7 +90,7 @@ const postTrendNewsOnFB = async (
     await sleep(3000); */
 
     // Step 3: Determine what to post
-    const rand = Math.random();
+
     let toPost: string;
 
     if (rand > 0.95) {
