@@ -45,8 +45,7 @@ async function commentsSpecial(
 
       if (comments.length > 0) {
         console.log('Extracted comments successfully.');
-        const reply1 =
-          '🚂 Want to hop on the upcoming Gain Train? \nDrop your X username to this database link and secure your spot 👉 https://www.elitebrainsconsulting.com/digital-marketing';
+        const reply1 = '🚂 https://youtu.be/dnY2p2whjk8?si=5yIJetxJtY0P1-jf';
         const reply2 =
           '🚂 For social media automation and software development services, do not hesitate to contact us.';
         const reply3 =
