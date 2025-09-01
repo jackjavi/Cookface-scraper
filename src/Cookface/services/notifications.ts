@@ -44,14 +44,29 @@ const notifications = async (label: string, page: Page) => {
         );
 
         for (const cellDiv of cellDivs) {
-          const spans = Array.from(cellDiv.querySelectorAll('span'));
-          const targetSpan = spans.find(
-            span =>
-              span.innerText && span.innerText.includes(' others followed you'),
+          // Look for the specific nested structure
+          const targetSpan = cellDiv.querySelector(
+            'span.css-1jxf684.r-bcqeeo.r-1ttztb7.r-qvutc0.r-poiln3 > span.css-1jxf684.r-bcqeeo.r-1ttztb7.r-qvutc0.r-poiln3',
           );
 
-          if (targetSpan) {
+          if (
+            targetSpan &&
+            targetSpan.textContent &&
+            targetSpan.textContent.includes(' others followed you')
+          ) {
             return cellDiv; // Return the cellDiv that contains the target span
+          }
+
+          // Alternative approach: search all spans within the cell
+          const allSpans = Array.from(cellDiv.querySelectorAll('span'));
+          const foundSpan = allSpans.find(
+            span =>
+              span.textContent &&
+              span.textContent.includes(' others followed you'),
+          );
+
+          if (foundSpan) {
+            return cellDiv;
           }
         }
         return null;
@@ -89,21 +104,32 @@ const notifications = async (label: string, page: Page) => {
         targetCellDiv.scrollIntoView({behavior: 'smooth', block: 'center'});
         await sleep(800);
 
-        // Click on the span in the cellDiv to open the followers list
-        const spans = Array.from(targetCellDiv.querySelectorAll('span'));
-        const targetSpan = spans.find(
-          span =>
-            span.innerText && span.innerText.includes(' others followed you'),
+        // Try to find and click the span with the text
+        let targetSpan = targetCellDiv.querySelector(
+          'span.css-1jxf684.r-bcqeeo.r-1ttztb7.r-qvutc0.r-poiln3 > span.css-1jxf684.r-bcqeeo.r-1ttztb7.r-qvutc0.r-poiln3',
         );
 
-        targetSpan!.click();
-        console.log('Clicked on "others followed you" notification');
-        return true;
-      } else {
-        console.log(
-          'Could not find "others followed you" notification after scrolling',
-        );
-        return false;
+        // Fallback: search all spans if the specific selector doesn't work
+        if (!targetSpan) {
+          const allSpans = Array.from(targetCellDiv.querySelectorAll('span'));
+          targetSpan =
+            allSpans.find(
+              span =>
+                span.textContent &&
+                span.textContent.includes(' others followed you'),
+            ) || null;
+        }
+
+        if (targetSpan && targetSpan instanceof HTMLElement) {
+          targetSpan.click();
+          console.log('Clicked on "others followed you" notification');
+          return true;
+        } else {
+          console.log(
+            'Could not find clickable span with "others followed you" text',
+          );
+          return false;
+        }
       }
     });
 
