@@ -45,9 +45,10 @@ async function commentsSpecial(
 
       if (comments.length > 0) {
         console.log('Extracted comments successfully.');
-        const reply1 = '🚂 https://youtu.be/dnY2p2whjk8?si=5yIJetxJtY0P1-jf';
+        const reply1 =
+          'For social media automation and software development services, do not hesitate to contact us.🚂 https://youtu.be/dnY2p2whjk8?si=5yIJetxJtY0P1-jf';
         const reply2 =
-          '🚂 For social media automation and software development services, do not hesitate to contact us.';
+          '🚂 Join our Telegram channel for uninterrupted news content https://t.me/tnk254';
         const reply3 =
           '🚂 Click the link to join our Telegram Football Channel - https://t.me/ebcsports';
         const reply4 = '🚂 https://youtu.be/EUWf0opisUg';
