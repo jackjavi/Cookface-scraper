@@ -91,13 +91,14 @@ const postTrendNewsOnFB = async (
     const rand = Math.random();
     let toPost: string;
 
-    if (rand > 0.95) {
+    /** if (rand > 0.95) {
       toPost = `${YOUTUBE_LINK} `;
     } else if (rand > 0.9) {
       toPost = `${CHANNEL_LINK} `;
     } else {
       toPost = newsBite;
-    }
+    } */
+    toPost = newsBite;
 
     console.log(`Typing content: ${toPost}`);
 
