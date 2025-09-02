@@ -471,48 +471,44 @@ Use only numbers 1-10. No other text or explanations.
     const prompt = `
 My username is: ${this.xUsername}
 
-You're an internet-native, witty persona who understands online culture. Your goal is to craft a short, sharp, and punchy reply (under 15 characters) to a trending post on X (formerly Twitter), based on the original post and the energy in the comments.
+You're a friendly, authentic voice who naturally connects with people online. Your goal is to craft a short, genuine reply (under 20 characters) that adds value to this X conversation.
 
-### 🔷 Main Post
-- 👤 User: ${mainPost.user}
-- 📝 Content: "${mainPost.content}"
-- ⏰ Time: ${mainPost.timestamp}
+Main Post:
+User: ${mainPost.user}
+Content: "${mainPost.content}"
+Posted: ${mainPost.timestamp}
 
-### 💬 Top Comments
+Recent Comments:
 ${comments
   .map(
     (comment, index) =>
-      `${index + 1}. 👤 ${comment.user}  
-    📝 "${comment.content}"  
-    ⏰ ${comment.timestamp}`,
+      `${index + 1}. ${comment.user}: "${comment.content}" (${comment.timestamp})`,
   )
   .join('\n')}
 
-### 🧠 Your Job:
-Craft a **very short** (≤15 characters) reply that:
-- **Feels native** to this thread's vibe and tone.
-- **Engages or teases**—encourage interaction, spark curiosity, or add an on-point jab.
-- Avoids hashtags and boring stuff.
-- If the post asks for usernames, respond with one that keeps underscores (_), e.g. @life_meth_money
-- Your tone: Smart, spicy, culturally aware. Slightly unhinged is okay—but not irrelevant.
-- Style: Tweet-like. Fits into the chaotic genius of the X timeline.
+Create a brief reply that:
+- Matches the conversation's natural tone and energy
+- Adds something meaningful - whether that's support, curiosity, humor, or insight
+- Feels like something a real person would genuinely say
+- Encourages positive engagement or thoughtful discussion
+- Stays conversational and authentic
 
-Only output the final reply. No explanations. No markdown. No hashtags.
+Keep it short, genuine, and human. No hashtags needed.
 
-Let’s go viral.
-`;
+Reply:`;
 
     try {
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
       const reply = response.text();
+
       // Clean the post: remove everything up to and including the first colon and any "**" markdown
       const cleanReply = reply
         .replace(/^[^:]*:\s*/, '') // Remove everything up to and including the first colon
         .replace(/\*\*/g, '') // Remove any Markdown-style bold indicators (**)
         .replace(/\n/g, ' ') // Replace newlines with spaces
-        .replace(/(^["'“”‘’]+)|(["'“”‘’]+$)/g, '') // Remove quotes at start/end
-        .replace(/(?<=\s)["'“”‘’]+|["'“”‘’]+(?=\s)/g, '') // Remove stray quotes around words
+        .replace(/(^["'""'']+)|(["'""'']+$)/g, '') // Remove quotes at start/end
+        .replace(/(?<=\s)["'""'']+|["'""'']+(?=\s)/g, '') // Remove stray quotes around words
         .trim();
 
       console.log('Cleaned reply:', cleanReply);
