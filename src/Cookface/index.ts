@@ -24,13 +24,15 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
     );
     await sleep(1500);
 
-    const xPage = await visitBrowserPageLink(browser!, 'https://x.com');
+    const xPage = await browser!.newPage();
+    await xPage.goto('https://x.com');
+    console.log('X.com page initialized.');
     await sleep(1500);
 
-    const fbPage = await visitBrowserPageLink(
-      browser!,
-      'https://www.facebook.com/',
-    );
+    const fbPage = await browser!.newPage();
+    await fbPage.goto('https://www.facebook.com/');
+    console.log('Facebook page initialized.');
+
     await sleep(1500);
 
     // Initialize timers
