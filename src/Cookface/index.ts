@@ -21,7 +21,7 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
 
     const tiktokPage = await visitBrowserPageLink(
       browser!,
-      'https://www.tiktok.com/following',
+      'https://www.tiktok.com/',
     );
     await sleep(1500);
 
