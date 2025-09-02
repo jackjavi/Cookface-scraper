@@ -143,7 +143,7 @@ async function tagActiveUsers(label: string, page: Page) {
 
     // Randomize the order of active users and select the first 17 users if more than 17 users are found
     activeUsers.sort(() => Math.random() - 0.5);
-    activeUsers.splice(14);
+    activeUsers.splice(13);
     // vary the number of users to tag btwn 5 and 10 so instead of
     // activeUsers.splice(15);
     // we can do something like this
@@ -153,7 +153,7 @@ async function tagActiveUsers(label: string, page: Page) {
     // }
 
     // activeUsers.push({ user: '@KVistoh' }, { user: '@wrdonthestrit' }, { user: '@celebishere' }, { user: '@DavidPolycap' }, { user: '@mekky_ayo' }, { user: '@Eliaskaneke' },);
-    activeUsers.push({user: '@TnkTrending'});
+    activeUsers.push({user: '@TnkTrending'}, {user: '@EBCDEVS'});
     activeUsers.sort(() => Math.random() - 0.5);
     const randomEngagementPhrase = getRandomEngagementPhrase();
     const formattedString =
