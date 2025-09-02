@@ -114,7 +114,7 @@ export async function likeSingleArticle(
 
     // Check if already liked and should skip
     if (isAlreadyLiked && skipAlreadyLiked) {
-      console.log(`ℹ️ Article ${index} already liked`);
+      console.log(`ℹ️ Article ${index} already liked - skipping`);
       return {
         success: true,
         articleIndex: index,
@@ -196,30 +196,40 @@ export async function likeMultipleArticles(
   let totalSkipped = 0;
   let totalAlreadyLiked = 0;
   let totalErrors = 0;
+  let articlesChecked = 0;
 
   console.log(`🚀 Starting to like up to ${maxArticles} articles`);
 
-  for (let i = 0; i < maxArticles; i++) {
-    console.log(`\n📱 Processing article ${i + 1}/${maxArticles}`);
+  while (totalLiked < maxArticles) {
+    articlesChecked++;
+    console.log(
+      `\n📱 Checking article ${articlesChecked} (target: ${totalLiked + 1}/${maxArticles} likes)`,
+    );
 
     // Like the current article
     const result = await likeSingleArticle(page, options);
     results.push(result);
-    totalProcessed++;
 
-    // Update counters
+    // Update counters based on action
     switch (result.action) {
       case 'liked':
         totalLiked++;
+        totalProcessed++;
         break;
       case 'skipped':
         totalSkipped++;
+        totalProcessed++;
         break;
       case 'already_liked':
         totalAlreadyLiked++;
+        // Don't increment totalProcessed for already liked articles
+        console.log(
+          `⏭️ Article already liked, continuing to find next article to like...`,
+        );
         break;
       case 'error':
         totalErrors++;
+        totalProcessed++;
         break;
     }
 
@@ -229,20 +239,29 @@ export async function likeMultipleArticles(
       await sleep(randomDelay);
     }
 
-    // Navigate to next article if not the last iteration
-    if (i < maxArticles - 1) {
-      console.log(`🧭 Navigating to next article...`);
-      const navigationSuccess = await navigateToNextArticle(
-        page,
-        delayAfterNavigation,
-      );
+    // Check if we've reached our target or hit too many errors
+    if (totalLiked >= maxArticles) {
+      console.log(`🎯 Target of ${maxArticles} likes reached!`);
+      break;
+    }
 
-      if (!navigationSuccess) {
-        console.log(
-          `⚠️ Failed to navigate to next article, stopping bulk like operation`,
-        );
-        break;
-      }
+    if (totalErrors >= maxArticles) {
+      console.log(`⚠️ Too many errors encountered, stopping operation`);
+      break;
+    }
+
+    // Navigate to next article
+    console.log(`🧭 Navigating to next article...`);
+    const navigationSuccess = await navigateToNextArticle(
+      page,
+      delayAfterNavigation,
+    );
+
+    if (!navigationSuccess) {
+      console.log(
+        `⚠️ Failed to navigate to next article, stopping bulk like operation`,
+      );
+      break;
     }
   }
 
@@ -256,10 +275,11 @@ export async function likeMultipleArticles(
   };
 
   console.log(`\n📊 Bulk like operation completed:`);
-  console.log(`   Total processed: ${totalProcessed}`);
+  console.log(`   Articles checked: ${articlesChecked}`);
+  console.log(`   Total processed (counted): ${totalProcessed}`);
   console.log(`   Total liked: ${totalLiked}`);
   console.log(`   Total skipped: ${totalSkipped}`);
-  console.log(`   Total already liked: ${totalAlreadyLiked}`);
+  console.log(`   Total already liked (not counted): ${totalAlreadyLiked}`);
   console.log(`   Total errors: ${totalErrors}`);
 
   return bulkResult;
