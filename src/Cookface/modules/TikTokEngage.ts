@@ -24,12 +24,17 @@ export const TikTokEngage = async (tiktokPage: Page): Promise<void> => {
     await tiktokPage.bringToFront();
 
     // Wait for the base container to load
-    await tiktokPage.waitForSelector(
+    /** await tiktokPage.waitForSelector(
       '.css-420tiu-5e6d46e3--BaseBodyContainer.e1pgfmdu0',
       {timeout: 10000},
     );
 
-    console.log('✅ TikTok base container found');
+    console.log('✅ TikTok base container found'); */
+
+    // Reload the page
+    // await tiktokPage.reload({waitUntil: 'networkidle2'});
+    // console.log('Page reloaded successfully.');
+    // await sleep(5000);
 
     // Weights: [likeSingle, likeMultiple, justNavigate]
     // likeSingle: 50%, likeMultiple: 35%, justNavigate: 15%
