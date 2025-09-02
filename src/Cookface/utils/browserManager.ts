@@ -44,21 +44,20 @@ export async function getNewXPage(): Promise<Page> {
   return xPage;
 }
 
-export async function visitBrowserPageLink(browser: Browser, link: string) {
+export async function visitBrowserPageLink(
+  browser: Browser,
+  link: string,
+): Promise<Page> {
   let page = null;
-  try {
-    if (!page) {
-      page = await browser.newPage();
-      // await page.setViewport({width: 1920, height: 1080}); // Lenovo Legion 6
-      await page.setViewport({width: 1366, height: 768}); // ELiteBook 8470p
-      await page.goto(link);
+  if (!page) {
+    page = await browser.newPage();
+    // await page.setViewport({width: 1920, height: 1080}); // Lenovo Legion 6
+    await page.setViewport({width: 1366, height: 768}); // ELiteBook 8470p
+    await page.goto(link);
 
-      console.log('page initialized.');
-    }
-    return page;
-  } catch (error: any) {
-    console.log('Error Initializing page', error.message);
+    console.log('page initialized.');
   }
+  return page;
 }
 
 // Half Page width

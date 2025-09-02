@@ -2,15 +2,16 @@ import sleep from './utils/sleep';
 import getRandomWaitTime from './utils/randomWaitTime';
 import {XTrendsToNews} from './modules/XTrendsToNews';
 import {XEngage} from './modules/XEngage';
-// import {TelegramNews} from './modules/TelegramNews';
+import {TikTokEngage} from './modules/TikTokEngage'; // Updated import
+// import { TelegramNews } from './modules/TelegramNews';
 import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
-// import {isWithinSleepWindow} from './utils/sleepWindow';
+// import { isWithinSleepWindow } from './utils/sleepWindow';
 
 (async () => {
   try {
     const THREE_MINUTES = 3 * 60 * 1000;
     // const SIX_MINUTES = 6 * 60 * 1000;
-    // const TWENTY_MINUTES = 20 * 60 * 1000;
+    const TWENTY_MINUTES = 20 * 60 * 1000;
     const THIRTY_MINUTES = 30 * 60 * 1000;
     // const ONEHOUR = 60 * 60 * 1000;
     // const TWOHOURS = 60 * 90 * 1000; // 1.5 HRS
@@ -23,20 +24,19 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
     );
     await sleep(1500);
 
-    const xPage = await browser!.newPage();
-    await xPage.goto('https://x.com');
-    console.log('X.com page initialized.');
+    const xPage = await visitBrowserPageLink(browser!, 'https://x.com');
     await sleep(1500);
 
-    const fbPage = await browser!.newPage();
-    await fbPage.goto('https://www.facebook.com/');
-    console.log('Facebook page initialized.');
-
+    const fbPage = await visitBrowserPageLink(
+      browser!,
+      'https://www.facebook.com/',
+    );
     await sleep(1500);
 
     // Initialize timers
     let lastEngage = 0;
     let lastTrends = 0;
+    let lastTikTok = 0;
     // let lastTelegram = 0;
 
     while (true) {
@@ -51,7 +51,16 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
         continue;
       } */
 
-      // Run XEngage every ~6 minutes
+      // Run TikTokEngage every ~20 minutes
+      if (now - lastTikTok > TWENTY_MINUTES) {
+        console.log('🎵 Starting TikTokEngage...');
+        await TikTokEngage(tiktokPage); // Updated function call
+        lastTikTok = Date.now();
+        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
+        continue;
+      }
+
+      // Run XEngage every ~3 minutes
       if (now - lastEngage > THREE_MINUTES) {
         console.log('⏱ Starting XEngage...');
         await XEngage(xPage);
@@ -60,7 +69,7 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
         continue;
       }
 
-      // Run XTrendsToNews every ~20 minutes
+      // Run XTrendsToNews every ~30 minutes
       if (now - lastTrends > THIRTY_MINUTES) {
         console.log('📊 Starting XTrendsToNews...');
         await XTrendsToNews(xPage, fbPage);
@@ -69,7 +78,7 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
         continue;
       }
 
-      // Run TelegramNews every ~1 hour
+      // Run TelegramNews every ~1.5 hours
       /* if (now - lastTelegram > TWOHOURS) {
         console.log('📊 Starting TelegramNews...');
         await TelegramNews();
