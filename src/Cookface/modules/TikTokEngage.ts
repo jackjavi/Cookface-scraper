@@ -72,6 +72,7 @@ export const TikTokEngage = async (tiktokPage: Page): Promise<void> => {
  */
 async function executeLikeSingle(page: Page): Promise<void> {
   try {
+    await navigateToNextArticle(page, 1500);
     // Random minimum like count between 1-10
     const minLikeCount = Math.floor(Math.random() * 10) + 1;
 
@@ -99,6 +100,7 @@ async function executeLikeSingle(page: Page): Promise<void> {
  */
 async function executeLikeMultiple(page: Page): Promise<void> {
   try {
+    await navigateToNextArticle(page, 1500);
     // Random settings
     const maxArticles = Math.floor(Math.random() * 4) + 2; // 2-5 articles
     const minLikeCount = Math.floor(Math.random() * 8) + 1; // 1-8 likes minimum
