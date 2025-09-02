@@ -2,7 +2,8 @@ import sleep from './utils/sleep';
 import getRandomWaitTime from './utils/randomWaitTime';
 import {XTrendsToNews} from './modules/XTrendsToNews';
 import {XEngage} from './modules/XEngage';
-import {TikTokEngage} from './modules/TikTokEngage'; // Updated import
+import {TikTokEngage} from './modules/TikTokEngage';
+import {fbEngage} from './modules/fbEngage';
 // import { TelegramNews } from './modules/TelegramNews';
 import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
 // import { isWithinSleepWindow } from './utils/sleepWindow';
@@ -30,6 +31,7 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
     await sleep(1500);
 
     const fbPage = await browser!.newPage();
+    // await fbPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
     await fbPage.goto('https://www.facebook.com/');
     console.log('Facebook page initialized.');
 
@@ -39,6 +41,7 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
     let lastEngage = 0;
     let lastTrends = 0;
     let lastTikTok = 0;
+    let lastFbEngage = 0;
     // let lastTelegram = 0;
 
     while (true) {
@@ -76,6 +79,15 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
         console.log('📊 Starting XTrendsToNews...');
         await XTrendsToNews(xPage, fbPage);
         lastTrends = Date.now();
+        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
+        continue;
+      }
+
+      // Run fbEngage every ~30 minutes
+      if (now - lastFbEngage > THIRTY_MINUTES) {
+        console.log('🎵 Starting fbEngage...');
+        await fbEngage(fbPage);
+        lastFbEngage = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
       }
