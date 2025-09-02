@@ -24,16 +24,16 @@ export async function navigateArticle(
     console.log(`🧭 Navigating ${direction}`);
 
     // Find the main content container
-    const mainElement = await page.$(
+    /** const mainElement = await page.$(
       '#main-content-homepage_hot.css-p8ufe6-5e6d46e3--DivMainContainer.e14hpjes0',
     );
     if (!mainElement) {
       console.log('❌ Main content element not found');
       return false;
-    }
+    } */
 
     // Find the aside navigation container
-    const asideElement = await mainElement.$(
+    const asideElement = await page.$(
       'aside.css-1oaoh7-5e6d46e3--AsideOneColumnSidebar.e1xmvfos0',
     );
     if (!asideElement) {
