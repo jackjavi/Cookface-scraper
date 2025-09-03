@@ -13,7 +13,9 @@ interface TweetImage {
 class GenerativeAIService {
   private xUsername: string;
   private apiKey: string;
+  private apiKeyImages: string;
   private genAI: GoogleGenerativeAI;
+  private genAIImages: GoogleGenerativeAI;
   private model: GenerativeModel;
   private visionModel: GenerativeModel;
   private trendsFilePath = 'storage/usedTrends.json';
@@ -25,9 +27,11 @@ class GenerativeAIService {
   constructor() {
     this.xUsername = config.xUsername;
     this.apiKey = config.generativeAIKeyEBCSports;
+    this.apiKeyImages = config.generativeAIKey;
     this.genAI = new GoogleGenerativeAI(this.apiKey);
+    this.genAIImages = new GoogleGenerativeAI(this.apiKeyImages);
     this.model = this.genAI.getGenerativeModel({model: 'gemini-2.0-flash'});
-    this.visionModel = this.genAI.getGenerativeModel({
+    this.visionModel = this.genAIImages.getGenerativeModel({
       model: 'gemini-2.0-flash',
     });
   }
