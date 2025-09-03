@@ -3,10 +3,16 @@ import fetchTweetTrends from '../services/fetchTweetTrends';
 import scrapeTrends24 from '../services/scrapeTrends24';
 import GenerativeAIService from '../services/generativeAI';
 import GenerativeAIAudioService from '../services/GenAI/genAIAudioService';
+import GenerativeAIVideoService from '../services/GenAI/genAIVideoService';
 import {postTrendNewsOnX} from '../services/postTrendNewsOnX';
 import {postTrendNewsOnFB} from '../services/postTrendNewsOnFB';
 import {sendArticleToTelegram} from '../services/postTrendNewsOnTelegram';
-import {cleanupImage} from '../utils/imageUtils';
+import {
+  downloadImage,
+  cleanupImage,
+  generateMultiPlatformImageFilename,
+} from '../utils/imageUtils';
+import {cleanupVideo} from '../utils/videoUtils';
 import config from '../config/index.js';
 import {Page} from 'puppeteer';
 
@@ -27,12 +33,17 @@ export const XTrendsToNews = async (
 ): Promise<void> => {
   let sharedImagePath: string | null = null;
   let audioFilePath: string | null = null;
+  let videoFilePath: string | null = null;
 
   try {
     console.log('Starting XTrendsToNews processing...');
     await xPage.bringToFront();
+
+    // Initialize services
     const genAIService = new GenerativeAIService();
     const genAIAudioService = new GenerativeAIAudioService();
+    const genAIVideoService = new GenerativeAIVideoService();
+
     const trends = await scrapeTrends24();
 
     if (!trends || trends.length === 0) {
@@ -70,13 +81,37 @@ export const XTrendsToNews = async (
       if (selectedImage) {
         console.log(`Selected most relevant image: ${selectedImage.src}`);
       } else {
-        console.log('No relevant image selected');
+        console.log('No relevant image selected, using default');
         selectedImage = {
           src: config.tnkDefaultIMG,
           alt: 'Default Image',
           articleIndex: -1,
         };
       }
+    } else {
+      console.log('No images available, using default');
+      selectedImage = {
+        src: config.tnkDefaultIMG,
+        alt: 'Default Image',
+        articleIndex: -1,
+      };
+    }
+
+    // Download image centrally for multi-platform use
+    console.log('Downloading image for multi-platform use...');
+    try {
+      const imageFilename = generateMultiPlatformImageFilename(
+        newsBite,
+        'multiplatform',
+      );
+      sharedImagePath = `${config.imagesStore}${imageFilename}`;
+
+      await downloadImage(selectedImage.src, sharedImagePath);
+      console.log(`Image downloaded successfully: ${sharedImagePath}`);
+    } catch (imageError) {
+      console.error('Failed to download image:', imageError);
+      // Continue without image if download fails
+      sharedImagePath = null;
     }
 
     await sleep(2000);
@@ -97,15 +132,41 @@ export const XTrendsToNews = async (
       // Continue with the process even if audio generation fails
     }
 
+    // Generate video from image and audio
+    console.log('Generating video from image and audio...');
+    try {
+      if (audioFilePath && sharedImagePath) {
+        videoFilePath = await genAIVideoService.generateVideoFromImageAndAudio(
+          sharedImagePath,
+          audioFilePath,
+          newsBite, // Pass newsBite for future use (subtitles, metadata, etc.)
+        );
+        console.log(`Generated video file: ${videoFilePath}`);
+
+        // Clean up audio file since it's now embedded in video
+        await genAIAudioService.cleanupAudio(audioFilePath);
+        audioFilePath = null; // Mark as cleaned up
+      } else {
+        console.log('Skipping video generation - missing audio or image');
+      }
+    } catch (videoError) {
+      console.error(
+        'Video generation failed, continuing without video:',
+        videoError,
+      );
+      // Continue with the process even if video generation fails
+    }
+
     await sleep(2000);
 
     // Post to X
     console.log('Posting to X...');
-    sharedImagePath = await postTrendNewsOnX(
+    await postTrendNewsOnX(
       'Home',
       xPage,
       newsBite,
-      selectedImage?.src || '',
+      selectedImage.src,
+      sharedImagePath!, // Pass the shared image path as the last parameter
     );
     console.log('Successfully posted to X');
 
@@ -117,8 +178,8 @@ export const XTrendsToNews = async (
     await postTrendNewsOnFB(
       fbPage,
       newsBite,
-      selectedImage?.src || '',
-      sharedImagePath,
+      selectedImage.src,
+      sharedImagePath!,
     );
     console.log('Successfully posted to Facebook');
 
@@ -126,17 +187,23 @@ export const XTrendsToNews = async (
 
     // Post to Telegram using the shared image path
     console.log('Posting to Telegram...');
-    await sendArticleToTelegram(
-      newsBite,
-      selectedImage?.src || '',
-      sharedImagePath,
-    );
+    await sendArticleToTelegram(newsBite, selectedImage.src, sharedImagePath!);
     console.log('Successfully posted to Telegram');
 
     console.log('All platforms posted successfully!');
 
-    // Can also send the audio file to Telegram #Implement Later
-    if (audioFilePath) {
+    // Log available media files for future use
+    if (videoFilePath) {
+      console.log('Video file available for future use:', videoFilePath);
+      const videoService = new GenerativeAIVideoService();
+      const duration = await videoService.getVideoDuration(videoFilePath);
+      const fileSize = await videoService.getFormattedFileSize(videoFilePath);
+      console.log(
+        `Video stats: Duration: ${duration.toFixed(1)}s, Size: ${fileSize}`,
+      );
+      // TODO: Implement video sharing to platforms in future updates
+      // Example: await sendVideoToTelegram(videoFilePath);
+    } else if (audioFilePath) {
       console.log('Audio file available for future use:', audioFilePath);
       // TODO: Implement audio sharing to platforms in future updates
     }
@@ -144,6 +211,8 @@ export const XTrendsToNews = async (
     console.error('XTrendsToNews error:', error);
   } finally {
     // Cleanup temporary files/Resources
+    console.log('Starting cleanup process...');
+
     if (sharedImagePath) {
       console.log('Cleaning up shared image...');
       await cleanupImage(sharedImagePath);
@@ -153,6 +222,13 @@ export const XTrendsToNews = async (
       console.log('Cleaning up audio file...');
       const genAIAudioService = new GenerativeAIAudioService();
       await genAIAudioService.cleanupAudio(audioFilePath);
+    }
+
+    if (videoFilePath) {
+      console.log('Cleaning up video file...');
+      await cleanupVideo(videoFilePath);
     } */
+
+    console.log('Cleanup process completed');
   }
 };

@@ -19,6 +19,7 @@ const requiredEnvVars = [
   'GENERATIVE_AI_API_KEY_TTS',
   'AUDIO_STORE',
   'GENERATIVE_AI_API_KEY_AUDIO_TRANSCRIPTS',
+  'VIDEO_STORE',
 ];
 
 requiredEnvVars.forEach(key => {
@@ -46,6 +47,7 @@ interface Config {
   imagesStore: string;
   audioStore: string;
   audioTranscriptsKey: string;
+  videoStore: string;
 }
 
 const config: Config = {
@@ -71,6 +73,7 @@ const config: Config = {
   savedTweeps: process.env.SAVED_TWEEPS as string,
   imagesStore: process.env.IMAGES_STORE as string,
   audioStore: process.env.AUDIO_STORE as string,
+  videoStore: process.env.VIDEO_STORE as string,
 };
 
 export default config;

@@ -32,6 +32,10 @@ microsoft-edge-stable --remote-debugging-port=9222 --start-maximized
 http://127.0.0.1:9222/json/version
 ```
 
+### FFMPEG SETUP (WINDOWS, MAC, LINUX)
+
+Docs - [FFMPEG](https://www.npmjs.com/package/fluent-ffmpeg)
+
 ### Run
 
 ```bash
