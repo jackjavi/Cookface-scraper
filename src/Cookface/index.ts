@@ -56,6 +56,15 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
         continue;
       } */
 
+      // Run XTrendsToNews every ~30 minutes
+      if (now - lastTrends > THIRTY_MINUTES) {
+        console.log('📊 Starting XTrendsToNews...');
+        await XTrendsToNews(xPage, fbPage);
+        lastTrends = Date.now();
+        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
+        continue;
+      }
+
       // Run TikTokEngage every ~20 minutes
       if (now - lastTikTok > TWENTY_MINUTES) {
         console.log('🎵 Starting TikTokEngage...');
@@ -70,15 +79,6 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
         console.log('⏱ Starting XEngage...');
         await XEngage(xPage);
         lastEngage = Date.now();
-        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
-        continue;
-      }
-
-      // Run XTrendsToNews every ~30 minutes
-      if (now - lastTrends > THIRTY_MINUTES) {
-        console.log('📊 Starting XTrendsToNews...');
-        await XTrendsToNews(xPage, fbPage);
-        lastTrends = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
       }

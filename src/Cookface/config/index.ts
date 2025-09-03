@@ -16,6 +16,9 @@ const requiredEnvVars = [
   'TNK_DEFAULT_IMG',
   'SAVED_TWEEPS',
   'IMAGES_STORE',
+  'GENERATIVE_AI_API_KEY_TTS',
+  'AUDIO_STORE',
+  'GENERATIVE_AI_API_KEY_AUDIO_TRANSCRIPTS',
 ];
 
 requiredEnvVars.forEach(key => {
@@ -30,6 +33,7 @@ interface Config {
   xUsername: string;
   xPassword: string;
   generativeAIKeyEBCSports: string;
+  generativeAIKeyTTS: string;
   articlesStore: string;
   fullArticlesStore: string;
   paraphrasedForTelegramStore: string;
@@ -40,6 +44,8 @@ interface Config {
   tnkDefaultIMG: string;
   savedTweeps: string;
   imagesStore: string;
+  audioStore: string;
+  audioTranscriptsKey: string;
 }
 
 const config: Config = {
@@ -49,6 +55,9 @@ const config: Config = {
   xPassword: process.env.X_PASSWORD as string,
   generativeAIKeyEBCSports: process.env
     .GENERATIVE_AI_API_KEY_EBC_SPORTS as string,
+  generativeAIKeyTTS: process.env.GENERATIVE_AI_API_KEY_TTS as string,
+  audioTranscriptsKey: process.env
+    .GENERATIVE_AI_API_KEY_AUDIO_TRANSCRIPTS as string,
   articlesStore: process.env.ARTICLES_STORE as string,
   fullArticlesStore: process.env.FULL_ARTICLES_STORE as string,
   paraphrasedForTelegramStore: process.env
@@ -61,6 +70,7 @@ const config: Config = {
   tnkDefaultIMG: process.env.TNK_DEFAULT_IMG as string,
   savedTweeps: process.env.SAVED_TWEEPS as string,
   imagesStore: process.env.IMAGES_STORE as string,
+  audioStore: process.env.AUDIO_STORE as string,
 };
 
 export default config;

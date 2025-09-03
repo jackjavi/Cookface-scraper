@@ -2,6 +2,7 @@ import sleep from '../utils/sleep';
 import fetchTweetTrends from '../services/fetchTweetTrends';
 import scrapeTrends24 from '../services/scrapeTrends24';
 import GenerativeAIService from '../services/generativeAI';
+import GenerativeAIAudioService from '../services/GenAI/genAIAudioService';
 import {postTrendNewsOnX} from '../services/postTrendNewsOnX';
 import {postTrendNewsOnFB} from '../services/postTrendNewsOnFB';
 import {sendArticleToTelegram} from '../services/postTrendNewsOnTelegram';
@@ -25,11 +26,13 @@ export const XTrendsToNews = async (
   fbPage: Page,
 ): Promise<void> => {
   let sharedImagePath: string | null = null;
+  let audioFilePath: string | null = null;
 
   try {
     console.log('Starting XTrendsToNews processing...');
     await xPage.bringToFront();
     const genAIService = new GenerativeAIService();
+    const genAIAudioService = new GenerativeAIAudioService();
     const trends = await scrapeTrends24();
 
     if (!trends || trends.length === 0) {
@@ -78,6 +81,24 @@ export const XTrendsToNews = async (
 
     await sleep(2000);
 
+    // Generate audio for the news bite
+    console.log('Generating audio for news bite...');
+    try {
+      audioFilePath = await genAIAudioService.generateNewsAudio(
+        newsBite,
+        comments,
+      );
+      console.log(`Generated audio file: ${audioFilePath}`);
+    } catch (audioError) {
+      console.error(
+        'Audio generation failed, continuing without audio:',
+        audioError,
+      );
+      // Continue with the process even if audio generation fails
+    }
+
+    await sleep(2000);
+
     // Post to X
     console.log('Posting to X...');
     sharedImagePath = await postTrendNewsOnX(
@@ -113,12 +134,25 @@ export const XTrendsToNews = async (
     console.log('Successfully posted to Telegram');
 
     console.log('All platforms posted successfully!');
+
+    // Can also send the audio file to Telegram #Implement Later
+    if (audioFilePath) {
+      console.log('Audio file available for future use:', audioFilePath);
+      // TODO: Implement audio sharing to platforms in future updates
+    }
   } catch (error) {
     console.error('XTrendsToNews error:', error);
   } finally {
+    // Cleanup temporary files/Resources
     if (sharedImagePath) {
       console.log('Cleaning up shared image...');
       await cleanupImage(sharedImagePath);
     }
+
+    /** if (audioFilePath) {
+      console.log('Cleaning up audio file...');
+      const genAIAudioService = new GenerativeAIAudioService();
+      await genAIAudioService.cleanupAudio(audioFilePath);
+    } */
   }
 };
