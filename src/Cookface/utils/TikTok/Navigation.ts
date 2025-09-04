@@ -45,6 +45,11 @@ export async function navigateToTikTokPage(
       actualHref = `/@${config.TikTokUsername}`;
     }
 
+    // Special handling for upload route - use direct URL navigation
+    if (actualHref === TIKTOK_ROUTES.UPLOAD) {
+      return await navigateToUploadDirect(page);
+    }
+
     // Wait for the main navigation container
     await page.waitForSelector(
       '.css-1ymoeiy-5e6d46e3--DivMainNavContainer.e1s4651v4',
@@ -124,6 +129,47 @@ export async function navigateToTikTokPage(
     return false;
   } catch (error) {
     console.error('❌ Error in navigateToTikTokPage:', error);
+    return false;
+  }
+}
+
+/**
+ * Navigate directly to TikTok upload page using URL
+ * @param page - The Puppeteer page instance
+ * @returns Promise<boolean> - Success status of navigation
+ */
+async function navigateToUploadDirect(page: Page): Promise<boolean> {
+  try {
+    console.log('🔄 Using direct URL navigation for upload page...');
+
+    const currentUrl = page.url();
+    const baseUrl = 'https://www.tiktok.com';
+    const uploadUrl = `${baseUrl}${TIKTOK_ROUTES.UPLOAD}`;
+
+    console.log(`📍 Current URL: ${currentUrl}`);
+    console.log(`🎯 Navigating to: ${uploadUrl}`);
+
+    await page.goto(uploadUrl, {waitUntil: 'networkidle2', timeout: 30000});
+
+    // Wait a moment for the page to fully load
+    await sleep(3000);
+
+    // Verify we're on the upload page by checking for upload-specific elements
+    try {
+      await page.waitForSelector('input[type="file"][accept="video/*"]', {
+        timeout: 10000,
+      });
+      console.log('✅ Successfully navigated to upload page via direct URL');
+      return true;
+    } catch (verifyError) {
+      console.warn(
+        '⚠️ Upload page loaded but file input not immediately visible',
+      );
+      // Still return true as the navigation succeeded, file input might take time to appear
+      return true;
+    }
+  } catch (error) {
+    console.error('❌ Direct upload navigation failed:', error);
     return false;
   }
 }

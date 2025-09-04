@@ -11,10 +11,11 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
 (async () => {
   try {
     const THREE_MINUTES = 3 * 60 * 1000;
-    // const SIX_MINUTES = 6 * 60 * 1000;
+    const SIX_MINUTES = 6 * 60 * 1000;
     const TWENTY_MINUTES = 20 * 60 * 1000;
     const THIRTY_MINUTES = 30 * 60 * 1000;
-    // const ONEHOUR = 60 * 60 * 1000;
+    const FORTY_FIVE_MINUTES = 45 * 60 * 1000;
+    const ONEHOUR = 60 * 60 * 1000;
     // const TWOHOURS = 60 * 90 * 1000; // 1.5 HRS
 
     const browser = await initializeBrowser();
@@ -26,13 +27,14 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
     await sleep(1500);
 
     const xPage = await browser!.newPage();
-    await xPage.goto('https://x.com');
+    // await xPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
+    await xPage.goto('https://x.com', {waitUntil: 'networkidle2'});
     console.log('X.com page initialized.');
     await sleep(1500);
 
     const fbPage = await browser!.newPage();
     // await fbPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
-    await fbPage.goto('https://www.facebook.com/');
+    await fbPage.goto('https://www.facebook.com/', {waitUntil: 'networkidle2'});
     console.log('Facebook page initialized.');
 
     await sleep(1500);
@@ -56,26 +58,26 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
         continue;
       } */
 
-      // Run XTrendsToNews every ~30 minutes
-      if (now - lastTrends > THIRTY_MINUTES) {
-        console.log('📊 Starting XTrendsToNews...');
-        await XTrendsToNews(xPage, fbPage);
-        lastTrends = Date.now();
-        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
-        continue;
-      }
-
       // Run TikTokEngage every ~20 minutes
-      if (now - lastTikTok > TWENTY_MINUTES) {
+      /** if (now - lastTikTok > TWENTY_MINUTES) {
         console.log('🎵 Starting TikTokEngage...');
         await TikTokEngage(tiktokPage); // Updated function call
         lastTikTok = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
+      } */
+
+      // Run XTrendsToNews every ~30 minutes
+      if (now - lastTrends > getRandomWaitTime(FORTY_FIVE_MINUTES, ONEHOUR)) {
+        console.log('📊 Starting XTrendsToNews...');
+        await XTrendsToNews(xPage, fbPage, tiktokPage);
+        lastTrends = Date.now();
+        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
+        continue;
       }
 
       // Run XEngage every ~3 minutes
-      if (now - lastEngage > THREE_MINUTES) {
+      if (now - lastEngage > getRandomWaitTime(THREE_MINUTES, SIX_MINUTES)) {
         console.log('⏱ Starting XEngage...');
         await XEngage(xPage);
         lastEngage = Date.now();
@@ -84,13 +86,13 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
       }
 
       // Run fbEngage every ~30 minutes
-      if (now - lastFbEngage > THIRTY_MINUTES) {
+      /** if (now - lastFbEngage > THIRTY_MINUTES) {
         console.log('🎵 Starting fbEngage...');
         await fbEngage(fbPage);
         lastFbEngage = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      }
+      } */
 
       // Run TelegramNews every ~1.5 hours
       /* if (now - lastTelegram > TWOHOURS) {

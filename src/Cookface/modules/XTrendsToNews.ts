@@ -7,6 +7,7 @@ import GenerativeAIVideoService from '../services/GenAI/genAIVideoService';
 import {postTrendNewsOnX} from '../services/postTrendNewsOnX';
 import {postTrendNewsOnFB} from '../services/postTrendNewsOnFB';
 import {sendArticleToTelegram} from '../services/postTrendNewsOnTelegram';
+import {TikTokUpload, validateVideoFile} from '../services/TikTok/upload';
 import {
   downloadImage,
   cleanupImage,
@@ -15,6 +16,7 @@ import {
 import {cleanupVideo} from '../utils/videoUtils';
 import config from '../config/index.js';
 import {Page} from 'puppeteer';
+import path from 'path';
 
 interface TweetImage {
   src: string;
@@ -23,17 +25,19 @@ interface TweetImage {
 }
 
 /**
- * Processes X trends and posts news to X, Facebook, and Telegram
+ * Processes X trends and posts news to X, Facebook, TikTok, and Telegram
  * @param xPage Puppeteer page for X.com
  * @param fbPage Puppeteer page for Facebook
+ * @param tiktokPage Puppeteer page for TikTok
  */
 export const XTrendsToNews = async (
   xPage: Page,
   fbPage: Page,
+  tiktokPage?: Page, // Optional TikTok page for video upload
 ): Promise<void> => {
   let sharedImagePath: string | null = null;
-  // let audioFilePath: string | null = null;
-  // let videoFilePath: string | null = null;
+  let audioFilePath: string | null = null;
+  let videoFilePath: string | null = null;
 
   try {
     console.log('Starting XTrendsToNews processing...');
@@ -41,8 +45,8 @@ export const XTrendsToNews = async (
 
     // Initialize services
     const genAIService = new GenerativeAIService();
-    // const genAIAudioService = new GenerativeAIAudioService();
-    // const genAIVideoService = new GenerativeAIVideoService();
+    const genAIAudioService = new GenerativeAIAudioService();
+    const genAIVideoService = new GenerativeAIVideoService();
 
     const trends = await scrapeTrends24();
 
@@ -117,7 +121,7 @@ export const XTrendsToNews = async (
     await sleep(2000);
 
     // Generate audio for the news bite
-    /** console.log('Generating audio for news bite...');
+    console.log('Generating audio for news bite...');
     try {
       audioFilePath = await genAIAudioService.generateNewsAudio(
         newsBite,
@@ -130,10 +134,10 @@ export const XTrendsToNews = async (
         audioError,
       );
       // Continue with the process even if audio generation fails
-    } */
+    }
 
     // Generate video from image and audio
-    /** console.log('Generating video from image and audio...');
+    console.log('Generating video from image and audio...');
     try {
       if (audioFilePath && sharedImagePath) {
         videoFilePath = await genAIVideoService.generateVideoFromImageAndAudio(
@@ -157,7 +161,7 @@ export const XTrendsToNews = async (
       // Continue with the process even if video generation fails
     }
 
-    await sleep(2000); */
+    await sleep(2000);
 
     // Post to X
     console.log('Posting to X...');
@@ -171,6 +175,8 @@ export const XTrendsToNews = async (
     console.log('Successfully posted to X');
 
     await fbPage.bringToFront();
+    await fbPage.reload({waitUntil: 'networkidle2'});
+    console.log('Page reloaded successfully.');
     await sleep(3000);
 
     // Post to Facebook
@@ -190,10 +196,49 @@ export const XTrendsToNews = async (
     await sendArticleToTelegram(newsBite, selectedImage.src, sharedImagePath!);
     console.log('Successfully posted to Telegram');
 
+    // Upload to TikTok if video was generated and TikTok page is available
+    if (videoFilePath && tiktokPage) {
+      console.log('Uploading to TikTok...');
+
+      // Validate video file before upload
+      const validation = validateVideoFile(path.resolve(videoFilePath));
+      if (!validation.isValid) {
+        console.error('Video validation failed:', validation.error);
+      } else {
+        console.log(
+          `Video validated: ${(validation.fileSize! / 1024 / 1024).toFixed(1)}MB ${validation.extension}`,
+        );
+
+        try {
+          const uploadSuccess = await TikTokUpload(
+            tiktokPage,
+            videoFilePath,
+            newsBite,
+            {TikTokUsername: config.TikTokUsername},
+          );
+
+          if (uploadSuccess) {
+            console.log('Successfully uploaded to TikTok!');
+          } else {
+            console.error('TikTok upload failed');
+          }
+        } catch (tiktokError) {
+          console.error('TikTok upload error:', tiktokError);
+        }
+      }
+    } else {
+      if (!videoFilePath) {
+        console.log('Skipping TikTok upload - no video file generated');
+      }
+      if (!tiktokPage) {
+        console.log('Skipping TikTok upload - no TikTok page provided');
+      }
+    }
+
     console.log('All platforms posted successfully!');
 
     // Log available media files for future use
-    /** if (videoFilePath) {
+    if (videoFilePath) {
       console.log('Video file available for future use:', videoFilePath);
       const videoService = new GenerativeAIVideoService();
       const duration = await videoService.getVideoDuration(videoFilePath);
@@ -201,12 +246,9 @@ export const XTrendsToNews = async (
       console.log(
         `Video stats: Duration: ${duration.toFixed(1)}s, Size: ${fileSize}`,
       );
-      // TODO: Implement video sharing to platforms in future updates
-      // Example: await sendVideoToTelegram(videoFilePath);
     } else if (audioFilePath) {
       console.log('Audio file available for future use:', audioFilePath);
-      // TODO: Implement audio sharing to platforms in future updates
-    } */
+    }
   } catch (error) {
     console.error('XTrendsToNews error:', error);
   } finally {
@@ -218,7 +260,10 @@ export const XTrendsToNews = async (
       await cleanupImage(sharedImagePath);
     }
 
-    /** if (audioFilePath) {
+    // Keep video file for now since it was uploaded to TikTok
+    // You might want to clean it up later or keep it for archives
+    /** 
+    if (audioFilePath) {
       console.log('Cleaning up audio file...');
       const genAIAudioService = new GenerativeAIAudioService();
       await genAIAudioService.cleanupAudio(audioFilePath);
@@ -227,7 +272,8 @@ export const XTrendsToNews = async (
     if (videoFilePath) {
       console.log('Cleaning up video file...');
       await cleanupVideo(videoFilePath);
-    } */
+    } 
+    */
 
     console.log('Cleanup process completed');
   }

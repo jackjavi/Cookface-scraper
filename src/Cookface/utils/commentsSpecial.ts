@@ -1,6 +1,7 @@
 import GenerativeAIService from '../services/generativeAI.js';
 import sleep from './sleep.js';
 import {ElementHandle, Page} from 'puppeteer';
+import {getRandomEngagementPhrase} from '../utils/x/engagementPhrasesReply.js';
 
 const generativeAIService = new GenerativeAIService();
 
@@ -52,7 +53,9 @@ async function commentsSpecial(
         const reply3 =
           '🚂 Click the link to join our Telegram Football Channel - https://t.me/ebcsports';
         const reply4 = '🚂 https://youtu.be/EUWf0opisUg';
-        const reply5 = '🚂@life_meth_money';
+
+        // Get random engagement phrase instead of fixed reply5
+        const reply5 = getRandomEngagementPhrase();
 
         const randomNumber = Math.random();
 
@@ -67,7 +70,7 @@ async function commentsSpecial(
           reply = reply5;
         }
 
-        // console.log("Generated reply:", reply);
+        console.log('Generated reply:', reply);
 
         // Type the reply
         const replyBox = await page.$(

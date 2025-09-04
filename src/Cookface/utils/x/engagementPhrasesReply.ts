@@ -1,0 +1,128 @@
+// engagementPhrases.ts
+// Collection of engagement phrases for X comment replies (1-7 words, with optional emoji)
+
+const engagementPhrases: string[] = [
+  "Let's go! 🚀",
+  'Pump it up',
+  'Follow for follow guys',
+  'Follow train activated',
+  'Gain mode on 📈',
+  "Let's grow together",
+  'Engagement train 🚂',
+  'Drop a follow',
+  'Follow back active',
+  'Growth mode activated',
+  "Let's connect",
+  'Building the community',
+  'Follow spree time',
+  'Network expansion 💪',
+  'Growing strong',
+  "Let's boost this",
+  'Community vibes',
+  'Follow game strong',
+  'Connection time',
+  'Building networks',
+  'Growth mindset 🔥',
+  "Let's elevate",
+  'Engagement boost',
+  'Follow train rolling',
+  'Community building',
+  'Network growing',
+  "Let's rise up",
+  'Growth energy ⚡',
+  'Connect and grow',
+  'Follow back squad',
+  'Building momentum',
+  "Let's expand",
+  'Growth vibes only',
+  'Network building time',
+  'Follow for growth',
+  'Community first 🤝',
+  "Let's climb together",
+  'Engagement mode on',
+  'Growing daily',
+  'Connection building',
+  'Follow back crew',
+  'Building bridges',
+  'Growth trajectory 📊',
+  "Let's network",
+  'Community growth',
+  'Following back',
+  'Building connections',
+  'Growth oriented 🎯',
+  "Let's collaborate",
+  'Network effects',
+  'Growing organically',
+  'Connection first',
+  'Follow back team',
+  'Building together',
+  'Growth focused 💯',
+  "Let's unite",
+  'Community power',
+  'Network building',
+  'Growing steadily',
+  'Connection mode',
+  'Follow back active',
+  'Building strength',
+  'Growth pathway 🛤️',
+  "Let's connect all",
+  'Community driven',
+  'Network expansion',
+  'Growing upward',
+  'Connection building',
+  'Follow back ready',
+  'Building upward',
+  'Growth unlimited ♾️',
+  "Let's network more",
+  'Community spirit',
+  'Network growing',
+  'Growing together',
+  'Connection time',
+  'Follow back now',
+  'Building networks',
+  'Growth mindset active',
+  "Let's build up",
+  'Community engagement',
+  'Network building',
+  'Growing connections',
+  'Connection focused',
+  'Follow back mode',
+  'Building community',
+  'Growth energy high',
+  "Let's expand network",
+  'Community building',
+  'Network growth',
+  'Growing networks',
+  'Connection ready',
+  'Follow back squad',
+  'Building growth',
+  'Growth mode active',
+  "Let's network together",
+  'Community first',
+  'Network expansion',
+  'Growing strong',
+  'Connection building',
+  'Follow back team',
+  'Building momentum',
+  'Growth focused',
+  "Let's grow networks",
+];
+
+/**
+ * Returns a random engagement phrase from the collection
+ * @returns {string} A random engagement phrase
+ */
+export function getRandomEngagementPhrase(): string {
+  const randomIndex = Math.floor(Math.random() * engagementPhrases.length);
+  return engagementPhrases[randomIndex];
+}
+
+/**
+ * Get the total number of available phrases
+ * @returns {number} Total count of engagement phrases
+ */
+export function getPhrasesCount(): number {
+  return engagementPhrases.length;
+}
+
+export default engagementPhrases;

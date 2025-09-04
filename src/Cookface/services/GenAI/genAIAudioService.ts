@@ -71,7 +71,8 @@ Guidelines:
 - Use Kenyan context where relevant
 - Don't read the comments verbatim, but reference the general sentiment
 
-Format the output as a clean script ready for text-to-speech conversion.
+Format the output as a clean script ready for text-to-speech conversion without any additional like "Here is your podcast script".
+Only the script text is needed.
     `;
 
     try {

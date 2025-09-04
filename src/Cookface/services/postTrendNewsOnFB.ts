@@ -49,10 +49,6 @@ const postTrendNewsOnFB = async (
       imagePath = sharedImagePath;
     }
 
-    // Reload the page
-    await page.reload({waitUntil: 'networkidle2'});
-    console.log('Page reloaded successfully.');
-
     // Step 2: Upload image if available
     const rand = Math.random();
     if (imagePath && rand <= 0.9) {
