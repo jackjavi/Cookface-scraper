@@ -67,20 +67,20 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
         continue;
       } */
 
-      // Run XTrendsToNews every ~30 minutes
-      if (now - lastTrends > getRandomWaitTime(FORTY_FIVE_MINUTES, ONEHOUR)) {
-        console.log('📊 Starting XTrendsToNews...');
-        await XTrendsToNews(xPage, fbPage, tiktokPage);
-        lastTrends = Date.now();
-        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
-        continue;
-      }
-
       // Run XEngage every ~3 minutes
       if (now - lastEngage > getRandomWaitTime(THREE_MINUTES, SIX_MINUTES)) {
         console.log('⏱ Starting XEngage...');
         await XEngage(xPage);
         lastEngage = Date.now();
+        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
+        continue;
+      }
+
+      // Run XTrendsToNews every ~30 minutes
+      if (now - lastTrends > getRandomWaitTime(FORTY_FIVE_MINUTES, ONEHOUR)) {
+        console.log('📊 Starting XTrendsToNews...');
+        await XTrendsToNews(xPage, fbPage, tiktokPage);
+        lastTrends = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
       }

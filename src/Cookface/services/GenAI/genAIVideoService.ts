@@ -8,6 +8,27 @@ class GenerativeAIVideoService {
 
   constructor() {
     this.videoStore = config.videoStore;
+
+    // Set explicit paths to your FFmpeg installation
+    const ffmpegPath = 'C:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe';
+    const ffprobePath = 'C:\\Program Files\\ffmpeg\\bin\\ffprobe.exe';
+
+    // Verify both executables exist
+    if (fs.existsSync(ffmpegPath) && fs.existsSync(ffprobePath)) {
+      ffmpeg.setFfmpegPath(ffmpegPath);
+      ffmpeg.setFfprobePath(ffprobePath);
+      console.log(`FFmpeg configured at: ${ffmpegPath}`);
+      console.log(`FFprobe configured at: ${ffprobePath}`);
+    } else {
+      console.error('FFmpeg or FFprobe not found at expected paths:');
+      console.error(
+        `FFmpeg: ${ffmpegPath} - ${fs.existsSync(ffmpegPath) ? 'EXISTS' : 'NOT FOUND'}`,
+      );
+      console.error(
+        `FFprobe: ${ffprobePath} - ${fs.existsSync(ffprobePath) ? 'EXISTS' : 'NOT FOUND'}`,
+      );
+      throw new Error('FFmpeg installation not found');
+    }
   }
 
   /**
