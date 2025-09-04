@@ -32,8 +32,8 @@ export const XTrendsToNews = async (
   fbPage: Page,
 ): Promise<void> => {
   let sharedImagePath: string | null = null;
-  let audioFilePath: string | null = null;
-  let videoFilePath: string | null = null;
+  // let audioFilePath: string | null = null;
+  // let videoFilePath: string | null = null;
 
   try {
     console.log('Starting XTrendsToNews processing...');
@@ -41,8 +41,8 @@ export const XTrendsToNews = async (
 
     // Initialize services
     const genAIService = new GenerativeAIService();
-    const genAIAudioService = new GenerativeAIAudioService();
-    const genAIVideoService = new GenerativeAIVideoService();
+    // const genAIAudioService = new GenerativeAIAudioService();
+    // const genAIVideoService = new GenerativeAIVideoService();
 
     const trends = await scrapeTrends24();
 
@@ -117,7 +117,7 @@ export const XTrendsToNews = async (
     await sleep(2000);
 
     // Generate audio for the news bite
-    console.log('Generating audio for news bite...');
+    /** console.log('Generating audio for news bite...');
     try {
       audioFilePath = await genAIAudioService.generateNewsAudio(
         newsBite,
@@ -130,10 +130,10 @@ export const XTrendsToNews = async (
         audioError,
       );
       // Continue with the process even if audio generation fails
-    }
+    } */
 
     // Generate video from image and audio
-    console.log('Generating video from image and audio...');
+    /** console.log('Generating video from image and audio...');
     try {
       if (audioFilePath && sharedImagePath) {
         videoFilePath = await genAIVideoService.generateVideoFromImageAndAudio(
@@ -157,7 +157,7 @@ export const XTrendsToNews = async (
       // Continue with the process even if video generation fails
     }
 
-    await sleep(2000);
+    await sleep(2000); */
 
     // Post to X
     console.log('Posting to X...');
@@ -193,7 +193,7 @@ export const XTrendsToNews = async (
     console.log('All platforms posted successfully!');
 
     // Log available media files for future use
-    if (videoFilePath) {
+    /** if (videoFilePath) {
       console.log('Video file available for future use:', videoFilePath);
       const videoService = new GenerativeAIVideoService();
       const duration = await videoService.getVideoDuration(videoFilePath);
@@ -206,7 +206,7 @@ export const XTrendsToNews = async (
     } else if (audioFilePath) {
       console.log('Audio file available for future use:', audioFilePath);
       // TODO: Implement audio sharing to platforms in future updates
-    }
+    } */
   } catch (error) {
     console.error('XTrendsToNews error:', error);
   } finally {
