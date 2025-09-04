@@ -20,6 +20,8 @@ const requiredEnvVars = [
   'AUDIO_STORE',
   'GENERATIVE_AI_API_KEY_AUDIO_TRANSCRIPTS',
   'VIDEO_STORE',
+  'TIKTOK_USERNAME',
+  'TIKTOK_PASSWORD',
 ];
 
 requiredEnvVars.forEach(key => {
@@ -48,6 +50,8 @@ interface Config {
   audioStore: string;
   audioTranscriptsKey: string;
   videoStore: string;
+  TikTokUsername: string;
+  TikTokPassword: string;
 }
 
 const config: Config = {
@@ -74,6 +78,8 @@ const config: Config = {
   imagesStore: process.env.IMAGES_STORE as string,
   audioStore: process.env.AUDIO_STORE as string,
   videoStore: process.env.VIDEO_STORE as string,
+  TikTokUsername: process.env.TIKTOK_USERNAME as string,
+  TikTokPassword: process.env.TIKTOK_PASSWORD as string,
 };
 
 export default config;
