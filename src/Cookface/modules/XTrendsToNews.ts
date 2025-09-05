@@ -170,7 +170,8 @@ export const XTrendsToNews = async (
       xPage,
       newsBite,
       selectedImage.src,
-      sharedImagePath!, // Pass the shared image path as the last parameter
+      sharedImagePath ? sharedImagePath : undefined,
+      videoFilePath ? videoFilePath : undefined,
     );
     console.log('Successfully posted to X');
 

@@ -25,6 +25,7 @@ const postTrendNewsOnX = async (
   newsBite: string,
   imgUrl: string,
   sharedImagePath?: string,
+  videoFilePath?: string,
 ): Promise<string> => {
   const navSelector = 'nav[aria-label="Primary"] a';
   const placeholderSelector = '.public-DraftEditorPlaceholder-inner';
@@ -99,31 +100,46 @@ const postTrendNewsOnX = async (
     await sleep(1000);
 
     // Step 5: Upload the image using the existing file input
-    await uploadImageToX(page, imagePath);
+    await uploadImageToX(
+      page,
+      imagePath,
+      videoFilePath ? videoFilePath : undefined,
+    );
     await sleep(3000);
 
-    // Step 6: Click the "Post" button
-    const isPostClicked = await page.evaluate(postButtonSelector => {
-      const postButton = Array.from(
-        document.querySelectorAll(postButtonSelector),
-      ).find(span => {
-        const el = span as HTMLElement;
-        return el.innerText === 'Post';
-      });
+    // Step 6: Press Ctrl+Enter to post
+    console.log('Pressing Ctrl+Enter to post...');
+    await page.keyboard.down('Control');
+    await page.keyboard.press('Enter');
+    await page.keyboard.up('Control');
+    console.log('Posted successfully using Ctrl+Enter.');
 
-      if (postButton) {
-        postButton.scrollIntoView({behavior: 'smooth', block: 'center'});
-        (postButton as HTMLElement).click();
-        return true;
-      }
-      return false;
-    }, postButtonSelector);
+    /**
+     * Alternative method using button click
+     *
+     * const isPostClicked = await page.evaluate(postButtonSelector => {
+     *   const postButton = Array.from(
+     *     document.querySelectorAll(postButtonSelector),
+     *   ).find(span => {
+     *     const el = span as HTMLElement;
+     *     return el.innerText === 'Post';
+     *   });
+     *
+     *   if (postButton) {
+     *     postButton.scrollIntoView({behavior: 'smooth', block: 'center'});
+     *     (postButton as HTMLElement).click();
+     *     return true;
+     *   }
+     *   return false;
+     * }, postButtonSelector);
+     *
+     * if (!isPostClicked) {
+     *   throw new Error('Failed to find or click the "Post" button.');
+     * }
+     *
+     * console.log('Clicked on the "Post" button successfully.');
+     */
 
-    if (!isPostClicked) {
-      throw new Error('Failed to find or click the "Post" button.');
-    }
-
-    console.log('Clicked on the "Post" button successfully.');
     await sleep(getRandomWaitTime(3000, 5000));
 
     // Retweet and Later Like
@@ -141,10 +157,15 @@ const postTrendNewsOnX = async (
  * Upload image to X using the existing file input
  * @param page Puppeteer page instance
  * @param imagePath Local path to the image file
+ * @param videoFilePath Optional path to video file
  */
-const uploadImageToX = async (page: Page, imagePath: string): Promise<void> => {
+const uploadImageToX = async (
+  page: Page,
+  imagePath: string,
+  videoFilePath: string | undefined,
+): Promise<void> => {
   try {
-    console.log('Starting image upload to X...');
+    console.log('Starting file upload to X...');
 
     // Find the file input - it should already be there based on your HTML
     const fileInput = await page.waitForSelector('[data-testid="fileInput"]', {
@@ -155,46 +176,167 @@ const uploadImageToX = async (page: Page, imagePath: string): Promise<void> => {
       throw new Error('File input with data-testid="fileInput" not found');
     }
 
-    console.log('Found file input, uploading image...');
+    console.log('Found file input, uploading file...');
 
     // Upload the file directly - this bypasses the file explorer
-    const absolutePath = path.resolve(imagePath);
-    await (fileInput as ElementHandle<HTMLInputElement>).uploadFile(
-      absolutePath,
-    );
-    console.log(`Image uploaded successfully: ${absolutePath}`);
+    let absolutePath: string;
+    const isVideo = !!videoFilePath;
 
-    // Wait for the image to be processed and appear in the tweet composer
-    // Look for the remove media button which indicates successful upload
-    try {
-      await page.waitForSelector('[data-testid="removeMedia"]', {
-        timeout: 15000,
-      });
-      console.log('Image upload confirmed - remove media button appeared');
-    } catch (e) {
-      // Alternative confirmation: look for media preview
-      try {
-        await page.waitForSelector('[data-testid="media-item"]', {
-          timeout: 5000,
-        });
-        console.log('Image upload confirmed - media item detected');
-      } catch (e2) {
-        // Another alternative: look for any image with blob URL
-        try {
-          await page.waitForSelector('img[src*="blob:"]', {timeout: 5000});
-          console.log('Image upload confirmed - blob image detected');
-        } catch (e3) {
-          console.log(
-            'Warning: Could not confirm image upload, but it may have succeeded',
+    if (videoFilePath) {
+      absolutePath = path.resolve(videoFilePath);
+      await (fileInput as ElementHandle<HTMLInputElement>).uploadFile(
+        absolutePath,
+      );
+      console.log(`Video uploaded successfully: ${absolutePath}`);
+    } else {
+      absolutePath = path.resolve(imagePath);
+      await (fileInput as ElementHandle<HTMLInputElement>).uploadFile(
+        absolutePath,
+      );
+      console.log(`Image uploaded successfully: ${absolutePath}`);
+    }
+
+    // Different confirmation methods for video vs image
+    if (isVideo) {
+      // For videos: Wait for the upload confirmation span to appear
+      console.log('Waiting for video upload confirmation via text...');
+
+      await page.waitForFunction(
+        () => {
+          const attachmentsDiv = document.querySelector(
+            'div[data-testid="attachments"].css-175oi2r.r-9aw3ui.r-15zivkp.r-14gqq1x.r-184en5c',
           );
-          await sleep(3000); // Give it some time anyway
+          if (!attachmentsDiv) {
+            return false;
+          }
+
+          const spans = Array.from(attachmentsDiv.querySelectorAll('span'));
+          return spans.some(span => {
+            const text = span.innerText || span.textContent || '';
+            return text.includes(': Uploaded (100%)');
+          });
+        },
+        {
+          timeout: 120000, // 120 seconds timeout for video upload completion
+          polling: 1000, // Check every 1 second
+        },
+      );
+
+      console.log(
+        '✅ Video upload confirmed - found span with ": Uploaded (100%)" text in attachments div',
+      );
+
+      // Optional: Log the exact span text for debugging
+      const uploadedSpanText = await page.evaluate(() => {
+        const attachmentsDiv = document.querySelector(
+          'div[data-testid="attachments"].css-175oi2r.r-9aw3ui.r-15zivkp.r-14gqq1x.r-184en5c',
+        );
+        if (!attachmentsDiv) {
+          return null;
         }
+
+        const spans = Array.from(attachmentsDiv.querySelectorAll('span'));
+        const uploadedSpan = spans.find(span => {
+          const text = span.innerText || span.textContent || '';
+          return text.includes(': Uploaded (100%)');
+        });
+        return uploadedSpan
+          ? uploadedSpan.innerText || uploadedSpan.textContent
+          : null;
+      });
+
+      if (uploadedSpanText) {
+        console.log(`Video upload confirmation text: "${uploadedSpanText}"`);
+      }
+    } else {
+      // For images: Wait for img tag with blob src to appear in attachments div
+      console.log('Waiting for image upload confirmation via img element...');
+
+      await page.waitForFunction(
+        () => {
+          const attachmentsDiv = document.querySelector(
+            'div[data-testid="attachments"].css-175oi2r.r-9aw3ui.r-15zivkp.r-14gqq1x.r-184en5c',
+          );
+          if (!attachmentsDiv) {
+            return false;
+          }
+
+          const images = Array.from(attachmentsDiv.querySelectorAll('img'));
+          return images.some(img => {
+            const src = img.getAttribute('src') || '';
+            return (
+              src.startsWith('blob:https://x.com/') || src.startsWith('blob:')
+            );
+          });
+        },
+        {
+          timeout: 30000, // 30 seconds timeout for image upload completion
+          polling: 1000, // Check every 1 second
+        },
+      );
+
+      console.log(
+        '✅ Image upload confirmed - found img element with blob src in attachments div',
+      );
+
+      // Optional: Log the image src for debugging
+      const uploadedImageSrc = await page.evaluate(() => {
+        const attachmentsDiv = document.querySelector(
+          'div[data-testid="attachments"].css-175oi2r.r-9aw3ui.r-15zivkp.r-14gqq1x.r-184en5c',
+        );
+        if (!attachmentsDiv) {
+          return null;
+        }
+
+        const images = Array.from(attachmentsDiv.querySelectorAll('img'));
+        const uploadedImg = images.find(img => {
+          const src = img.getAttribute('src') || '';
+          return (
+            src.startsWith('blob:https://x.com/') || src.startsWith('blob:')
+          );
+        });
+        return uploadedImg ? uploadedImg.getAttribute('src') : null;
+      });
+
+      if (uploadedImageSrc) {
+        console.log(`Image upload confirmation src: "${uploadedImageSrc}"`);
       }
     }
 
-    console.log('Image upload process completed');
+    console.log('File upload process completed successfully');
   } catch (error) {
-    console.error('Error uploading image to X:', error);
+    console.error('Error uploading file to X:', error);
+
+    // Additional debugging: check what's currently in the attachments div
+    try {
+      const debugInfo = await page.evaluate(() => {
+        const attachmentsDiv = document.querySelector(
+          'div[data-testid="attachments"].css-175oi2r.r-9aw3ui.r-15zivkp.r-14gqq1x.r-184en5c',
+        );
+        if (!attachmentsDiv) {
+          return {found: false, spans: [], images: []};
+        }
+
+        const spans = Array.from(attachmentsDiv.querySelectorAll('span'));
+        const spanTexts = spans
+          .map(span => span.innerText || span.textContent || '')
+          .filter(text => text.trim().length > 0)
+          .slice(0, 10);
+
+        const images = Array.from(attachmentsDiv.querySelectorAll('img'));
+        const imageSrcs = images
+          .map(img => img.getAttribute('src') || '')
+          .filter(src => src.length > 0)
+          .slice(0, 5);
+
+        return {found: true, spans: spanTexts, images: imageSrcs};
+      });
+
+      console.log('Debug info from attachments div:', debugInfo);
+    } catch (debugError) {
+      console.log('Could not retrieve debug info from attachments div');
+    }
+
     throw error;
   }
 };

@@ -56,9 +56,9 @@ async function fetchTweetTrends(
       const timeDifference = currentTime - commentTime;
       const isRecent = timeDifference <= fiveHoursInMs && timeDifference >= 0;
 
-      console.log(
+      /** console.log(
         `📅 Comment time: ${new Date(timestamp).toISOString()}, Current time: ${new Date(currentTime).toISOString()}, Difference: ${Math.round(timeDifference / (60 * 1000))} minutes, Recent: ${isRecent}`,
-      );
+      ); */
 
       return isRecent;
     } catch (error) {
@@ -206,6 +206,8 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
             const timestamp =
               article.querySelector('time')?.getAttribute('datetime') || null;
 
+            console.log('Extracted comment:', {user, content, timestamp});
+
             return {user, content, timestamp};
           } catch (error) {
             console.warn(
@@ -309,12 +311,6 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     // Wait for search results to load
     await waitForPageContentLoad();
 
-    // Wait for the "live" filter link and click
-    /** const linkSelector = 'a[href*="&f=live"]';
-    await page.waitForSelector(linkSelector);
-    await page.click(linkSelector);
-    console.log("Selected 'Live' filter."); */
-
     // Wait for filtered results to load completely
     await waitForPageContentLoad();
 
@@ -326,6 +322,7 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     let scrollAttempts = 0;
     const maxScrollAttempts = 15; // Increased max attempts since we're looking for recent content
     const targetCommentCount = 15; // Changed from 20 to 15
+    let switchedToLive = false;
 
     console.log(
       '🚀 Starting content extraction (looking for comments within last 5 hours)...',
@@ -335,6 +332,38 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
       comments.length < targetCommentCount &&
       scrollAttempts < maxScrollAttempts
     ) {
+      // Check if we should switch to Live filter after 5 scrolls without enough comments
+      if (
+        scrollAttempts >= 5 &&
+        comments.length < targetCommentCount &&
+        !switchedToLive
+      ) {
+        console.log(
+          '⚡ Switching to Live filter to find more recent comments...',
+        );
+        try {
+          const linkSelector = 'a[href*="&f=live"]';
+          await page.waitForSelector(linkSelector, {timeout: 5000});
+          await page.click(linkSelector);
+          console.log("✅ Selected 'Live' filter.");
+          switchedToLive = true;
+
+          // Wait for filtered results to load completely
+          await waitForPageContentLoad();
+
+          // Reset scroll tracking since we have new content
+          previousHeight = 0;
+          console.log(
+            '🔄 Live filter applied, continuing search for recent comments...',
+          );
+        } catch (error) {
+          console.warn(
+            '⚠️ Could not switch to Live filter, continuing with current feed:',
+            error,
+          );
+        }
+      }
+
       // Extract content with enhanced error handling
       const {newComments, newImages} = await extractContentFromPage();
 
@@ -344,7 +373,7 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
       );
 
       console.log(
-        `🕐 Found ${newComments.length} total comments, ${recentComments.length} are recent (within 5 hours)`,
+        `🕐 Found ${newComments.length} total comments, ${recentComments.length} are recent (within 5 hours)${switchedToLive ? ' [Live Filter Active]' : ''}`,
       );
 
       // Add unique recent comments (avoid duplicates)
@@ -381,7 +410,7 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
       });
 
       console.log(
-        `📊 Scroll ${scrollAttempts + 1}: ${comments.length}/${targetCommentCount} recent comments, ${images.length} images collected.`,
+        `📊 Scroll ${scrollAttempts + 1}: ${comments.length}/${targetCommentCount} recent comments, ${images.length} images collected.${switchedToLive ? ' [Live Filter]' : ''}`,
       );
 
       if (comments.length >= targetCommentCount) {
