@@ -45,11 +45,6 @@ export async function navigateToTikTokPage(
       actualHref = `/@${config.TikTokUsername}`;
     }
 
-    // Special handling for upload route - use direct URL navigation
-    if (actualHref === TIKTOK_ROUTES.UPLOAD) {
-      return await navigateToUploadDirect(page);
-    }
-
     // Wait for the main navigation container
     await page.waitForSelector(
       '.css-1ymoeiy-5e6d46e3--DivMainNavContainer.e1s4651v4',
@@ -69,9 +64,21 @@ export async function navigateToTikTokPage(
       return false;
     }
 
-    // Find all h2 elements within the navigation container
+    // First, look for upload button in TUXTooltip-reference divs
+    if (actualHref === TIKTOK_ROUTES.UPLOAD) {
+      const uploadSuccess = await handleUploadNavigation(
+        page,
+        navContainer,
+        actualHref,
+      );
+      if (uploadSuccess) {
+        return true;
+      }
+    }
+
+    // Find all h2 elements within the navigation container for regular navigation
     const h2Elements = await navContainer.$$('h2');
-    console.log(`📝 Found ${h2Elements.length} navigation items`);
+    console.log(`📝 Found ${h2Elements.length} h2 navigation items`);
 
     // Look for the matching href in h2 > a elements
     for (let i = 0; i < h2Elements.length; i++) {
@@ -134,42 +141,115 @@ export async function navigateToTikTokPage(
 }
 
 /**
- * Navigate directly to TikTok upload page using URL
+ * Handle navigation to upload page using TUXTooltip-reference structure
+ * @param page - The Puppeteer page instance
+ * @param navContainer - The navigation container element
+ * @param targetHref - The target href for upload
+ * @returns Promise<boolean> - Success status
+ */
+async function handleUploadNavigation(
+  page: Page,
+  navContainer: any,
+  targetHref: string,
+): Promise<boolean> {
+  try {
+    console.log('🔍 Looking for upload button in TUXTooltip-reference divs...');
+
+    // Find all TUXTooltip-reference divs within the navigation container
+    const tooltipDivs = await navContainer.$$('.TUXTooltip-reference');
+    console.log(`📝 Found ${tooltipDivs.length} TUXTooltip-reference elements`);
+
+    for (const tooltipDiv of tooltipDivs) {
+      // Look for anchor tag with data-e2e="nav-upload" or matching href
+      const anchorElement = await tooltipDiv.$('a[data-e2e="nav-upload"]');
+      if (!anchorElement) {
+        // Fallback: check any anchor with matching href
+        const anyAnchor = await tooltipDiv.$('a');
+        if (anyAnchor) {
+          const href = await page.evaluate(
+            el => el.getAttribute('href'),
+            anyAnchor,
+          );
+          if (href === targetHref) {
+            console.log(
+              `🎯 Found matching upload link via href: ${targetHref}`,
+            );
+            await anyAnchor.click();
+            console.log('✅ Successfully clicked upload navigation link');
+            await sleep(2000);
+            return true;
+          }
+        }
+        continue;
+      }
+
+      // Verify this is the upload button by checking href
+      const href = await page.evaluate(
+        el => el.getAttribute('href'),
+        anchorElement,
+      );
+
+      if (href === targetHref) {
+        console.log(
+          `🎯 Found upload button with data-e2e="nav-upload": ${targetHref}`,
+        );
+        await anchorElement.click();
+        console.log('✅ Successfully clicked upload navigation link');
+        await sleep(2000);
+        return true;
+      }
+    }
+
+    console.log('❌ Upload button not found in TUXTooltip-reference divs');
+    return false;
+  } catch (error) {
+    console.error('❌ Error in handleUploadNavigation:', error);
+    return false;
+  }
+}
+
+/**
+ * Navigate back to previous page using browser history
  * @param page - The Puppeteer page instance
  * @returns Promise<boolean> - Success status of navigation
  */
-async function navigateToUploadDirect(page: Page): Promise<boolean> {
+export async function navigateToPreviousPage(page: Page): Promise<boolean> {
   try {
-    console.log('🔄 Using direct URL navigation for upload page...');
+    console.log('🔙 Navigating back to previous page using browser history...');
 
-    const currentUrl = page.url();
-    const baseUrl = 'https://www.tiktok.com';
-    const uploadUrl = `${baseUrl}${TIKTOK_ROUTES.UPLOAD}`;
+    // Use browser's back functionality
+    await page.goBack({waitUntil: 'networkidle2', timeout: 15000});
 
-    console.log(`📍 Current URL: ${currentUrl}`);
-    console.log(`🎯 Navigating to: ${uploadUrl}`);
+    console.log('✅ Successfully navigated back to previous page');
+    await sleep(2000);
 
-    await page.goto(uploadUrl, {waitUntil: 'networkidle2', timeout: 30000});
-
-    // Wait a moment for the page to fully load
-    await sleep(3000);
-
-    // Verify we're on the upload page by checking for upload-specific elements
-    try {
-      await page.waitForSelector('input[type="file"][accept="video/*"]', {
-        timeout: 10000,
-      });
-      console.log('✅ Successfully navigated to upload page via direct URL');
-      return true;
-    } catch (verifyError) {
-      console.warn(
-        '⚠️ Upload page loaded but file input not immediately visible',
-      );
-      // Still return true as the navigation succeeded, file input might take time to appear
-      return true;
-    }
+    return true;
   } catch (error) {
-    console.error('❌ Direct upload navigation failed:', error);
+    console.error('❌ Error navigating back:', error);
+    return false;
+  }
+}
+
+/**
+ * Navigate back to home page (fallback method)
+ * @param page - The Puppeteer page instance
+ * @returns Promise<boolean> - Success status of navigation
+ */
+export async function navigateToHomeDirectly(page: Page): Promise<boolean> {
+  try {
+    console.log('🏠 Navigating directly to home page...');
+
+    await page.goto('https://www.tiktok.com/', {
+      waitUntil: 'networkidle2',
+      timeout: 15000,
+    });
+
+    console.log('✅ Successfully navigated to home page directly');
+    await sleep(2000);
+
+    return true;
+  } catch (error) {
+    console.error('❌ Error navigating to home directly:', error);
     return false;
   }
 }

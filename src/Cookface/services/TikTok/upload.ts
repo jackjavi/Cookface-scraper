@@ -2,6 +2,8 @@ import {Page} from 'puppeteer';
 import {
   navigateToTikTokPage,
   navigateToHome,
+  navigateToPreviousPage,
+  navigateToHomeDirectly,
   TIKTOK_ROUTES,
 } from '../../utils/TikTok/Navigation';
 import sleep from '../../utils/sleep';
@@ -36,7 +38,7 @@ export async function TikTokUpload(
     await page.bringToFront();
     await sleep(2000);
 
-    // Navigate to TikTok upload page
+    // Navigate to TikTok upload page using the improved navigation
     console.log('🔄 Navigating to TikTok upload page...');
     const navSuccess = await navigateToTikTokPage(
       page,
@@ -66,7 +68,7 @@ export async function TikTokUpload(
     );
     if (!fileInput) {
       console.error('❌ File input not found');
-      await navigateToHomeAfterUpload(page);
+      await navigateBackAfterUpload(page);
       return false;
     }
 
@@ -83,7 +85,7 @@ export async function TikTokUpload(
       console.log('✅ Video upload confirmed!');
     } catch (uploadError) {
       console.error('❌ Upload confirmation timeout or failed');
-      await navigateToHomeAfterUpload(page);
+      await navigateBackAfterUpload(page);
       return false;
     }
 
@@ -105,7 +107,7 @@ export async function TikTokUpload(
     const editorContainer = await page.$('.DraftEditor-editorContainer');
     if (!editorContainer) {
       console.error('❌ Description editor container not found');
-      await navigateToHomeAfterUpload(page);
+      await navigateBackAfterUpload(page);
       return false;
     }
 
@@ -113,9 +115,14 @@ export async function TikTokUpload(
     const textSpan = await editorContainer.$('span[data-text="true"]');
     if (!textSpan) {
       console.error('❌ Text span not found in editor');
-      await navigateToHomeAfterUpload(page);
+      await navigateBackAfterUpload(page);
       return false;
     }
+
+    // Scroll the text span into view before interacting with it
+    console.log('📜 Scrolling text span into view...');
+    await textSpan.scrollIntoView();
+    await sleep(1000);
 
     // Clear existing text and type new description
     console.log('✏️ Clearing existing text and typing new description...');
@@ -145,7 +152,7 @@ export async function TikTokUpload(
     const buttonGroup = await page.$('.jsx-3335848873.button-group');
     if (!buttonGroup) {
       console.error('❌ Button group not found');
-      await navigateToHomeAfterUpload(page);
+      await navigateBackAfterUpload(page);
       return false;
     }
 
@@ -164,7 +171,11 @@ export async function TikTokUpload(
         const innerText = await page.evaluate(el => el.innerText?.trim(), div);
 
         if (innerText === 'Post') {
-          console.log('🎯 Found Post button, clicking...');
+          console.log('🎯 Found Post button, scrolling into view...');
+          await button.scrollIntoView();
+          await sleep(1000);
+
+          console.log('🎯 Clicking Post button...');
           await button.click();
           postButtonFound = true;
           break;
@@ -176,7 +187,7 @@ export async function TikTokUpload(
 
     if (!postButtonFound) {
       console.error('❌ Post button not found');
-      await navigateToHomeAfterUpload(page);
+      await navigateBackAfterUpload(page);
       return false;
     }
 
@@ -237,49 +248,60 @@ export async function TikTokUpload(
     console.log('🚀 Video posted successfully to TikTok!');
     await sleep(2000);
 
-    // Navigate back to home page after successful upload
-    console.log('🏠 Navigating back to home page...');
-    await navigateToHomeAfterUpload(page);
+    // Navigate back after successful upload
+    console.log('🔄 Navigating back after successful upload...');
+    await navigateBackAfterUpload(page);
 
     return true;
   } catch (error) {
     console.error('❌ Error in TikTokUpload:', error);
 
-    // Always try to navigate back to home on error
-    await navigateToHomeAfterUpload(page);
+    // Always try to navigate back on error
+    await navigateBackAfterUpload(page);
     return false;
   }
 }
 
 /**
- * Navigate back to home page after upload (success or failure)
+ * Navigate back after upload (success or failure) using multiple fallback strategies
  * @param page - The Puppeteer page instance
  */
-async function navigateToHomeAfterUpload(page: Page): Promise<void> {
+async function navigateBackAfterUpload(page: Page): Promise<void> {
   try {
-    console.log('🔄 Attempting to navigate back to home page...');
+    console.log('🔄 Attempting to navigate back after upload...');
 
+    // Strategy 1: Try browser back (most natural)
+    console.log('📍 Strategy 1: Trying browser back...');
+    const backSuccess = await navigateToPreviousPage(page);
+
+    if (backSuccess) {
+      console.log('✅ Successfully navigated back using browser history');
+      return;
+    }
+
+    // Strategy 2: Try navigating to home using sidebar navigation
+    console.log('📍 Strategy 2: Trying sidebar navigation to home...');
     const homeNavSuccess = await navigateToHome(page);
 
     if (homeNavSuccess) {
-      console.log('✅ Successfully navigated back to home page');
-    } else {
-      console.warn(
-        '⚠️ Navigation to home failed, trying direct URL navigation...',
-      );
+      console.log('✅ Successfully navigated to home using sidebar navigation');
+      return;
+    }
 
-      // Fallback: Direct navigation to TikTok home
-      await page.goto('https://www.tiktok.com/', {
-        waitUntil: 'networkidle2',
-        timeout: 15000,
-      });
+    // Strategy 3: Direct URL navigation to home (last resort)
+    console.log('📍 Strategy 3: Trying direct URL navigation to home...');
+    const directSuccess = await navigateToHomeDirectly(page);
+
+    if (directSuccess) {
       console.log('✅ Successfully navigated to home via direct URL');
+    } else {
+      console.warn('⚠️ All navigation strategies failed');
     }
 
     await sleep(2000);
   } catch (error) {
-    console.error('❌ Error navigating back to home:', error);
-    // Continue execution even if navigation back to home fails
+    console.error('❌ Error in navigateBackAfterUpload:', error);
+    // Continue execution even if navigation fails
   }
 }
 
