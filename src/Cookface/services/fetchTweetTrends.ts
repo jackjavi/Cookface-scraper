@@ -40,6 +40,33 @@ async function fetchTweetTrends(
     return JSON.parse(fs.readFileSync(path, 'utf-8')).slice(0, 8);
   }
 
+  /**
+   * Check if a comment is within the last 5 hours
+   * @param timestamp - ISO timestamp string
+   * @returns boolean indicating if comment is recent
+   */
+  function isCommentRecent(timestamp: string | null): boolean {
+    if (!timestamp) return false;
+
+    try {
+      const commentTime = new Date(timestamp).getTime();
+      const currentTime = Date.now();
+      const fiveHoursInMs = 5 * 60 * 60 * 1000; // 5 hours in milliseconds
+
+      const timeDifference = currentTime - commentTime;
+      const isRecent = timeDifference <= fiveHoursInMs && timeDifference >= 0;
+
+      console.log(
+        `📅 Comment time: ${new Date(timestamp).toISOString()}, Current time: ${new Date(currentTime).toISOString()}, Difference: ${Math.round(timeDifference / (60 * 1000))} minutes, Recent: ${isRecent}`,
+      );
+
+      return isRecent;
+    } catch (error) {
+      console.warn(`⚠️ Error parsing timestamp: ${timestamp}`, error);
+      return false;
+    }
+  }
+
   async function getBestTitleFromTopTrends(): Promise<{
     title: string;
     index: number;
@@ -149,7 +176,7 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
   }
 
   /**
-   * Enhanced function to extract comments and images with better error handling
+   * Enhanced function to extract comments and images with time-based filtering
    */
   async function extractContentFromPage(): Promise<{
     newComments: Comment[];
@@ -283,10 +310,10 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     await waitForPageContentLoad();
 
     // Wait for the "live" filter link and click
-    const linkSelector = 'a[href*="&f=live"]';
+    /** const linkSelector = 'a[href*="&f=live"]';
     await page.waitForSelector(linkSelector);
     await page.click(linkSelector);
-    console.log("Selected 'Live' filter.");
+    console.log("Selected 'Live' filter."); */
 
     // Wait for filtered results to load completely
     await waitForPageContentLoad();
@@ -297,39 +324,68 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     const images: TweetImage[] = [];
     let previousHeight = 0;
     let scrollAttempts = 0;
-    const maxScrollAttempts = 10;
+    const maxScrollAttempts = 15; // Increased max attempts since we're looking for recent content
+    const targetCommentCount = 15; // Changed from 20 to 15
 
-    console.log('🚀 Starting content extraction...');
+    console.log(
+      '🚀 Starting content extraction (looking for comments within last 5 hours)...',
+    );
 
-    while (comments.length < 20 && scrollAttempts < maxScrollAttempts) {
+    while (
+      comments.length < targetCommentCount &&
+      scrollAttempts < maxScrollAttempts
+    ) {
       // Extract content with enhanced error handling
       const {newComments, newImages} = await extractContentFromPage();
 
-      // Add unique comments (avoid duplicates)
-      newComments.forEach(comment => {
+      // Filter and add only recent comments (within last 5 hours)
+      const recentComments = newComments.filter(comment =>
+        isCommentRecent(comment.timestamp),
+      );
+
+      console.log(
+        `🕐 Found ${newComments.length} total comments, ${recentComments.length} are recent (within 5 hours)`,
+      );
+
+      // Add unique recent comments (avoid duplicates)
+      recentComments.forEach(comment => {
         if (
-          comments.length < 20 &&
+          comments.length < targetCommentCount &&
           comment.content &&
           comment.content.length > 0 &&
           !comments.some(c => c.content === comment.content)
         ) {
           comments.push(comment);
+          console.log(
+            `✅ Added recent comment from ${comment.user}: "${comment.content?.substring(0, 50)}..."`,
+          );
         }
       });
 
-      // Add unique images (avoid duplicates by src)
+      // Add unique images (avoid duplicates by src) - only from articles with recent comments
+      const recentCommentArticleIndices = new Set(
+        recentComments.map(comment => {
+          // Find the article index for this comment
+          return newComments.findIndex(c => c.content === comment.content);
+        }),
+      );
+
       newImages.forEach(image => {
-        if (image.src && !images.some(img => img.src === image.src)) {
+        if (
+          image.src &&
+          !images.some(img => img.src === image.src) &&
+          recentCommentArticleIndices.has(image.articleIndex)
+        ) {
           images.push(image);
         }
       });
 
       console.log(
-        `📊 Scroll ${scrollAttempts + 1}: ${comments.length} comments, ${images.length} images collected.`,
+        `📊 Scroll ${scrollAttempts + 1}: ${comments.length}/${targetCommentCount} recent comments, ${images.length} images collected.`,
       );
 
-      if (comments.length >= 20) {
-        console.log('✅ Target comment count reached!');
+      if (comments.length >= targetCommentCount) {
+        console.log('✅ Target recent comment count reached!');
         break;
       }
 
@@ -352,8 +408,9 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
     }
 
     await sleep(2000);
+
     console.log(
-      `🎉 Final results: ${comments.length} comments, ${images.length} images collected in ${scrollAttempts} scroll attempts.`,
+      `🎉 Final results: ${comments.length}/${targetCommentCount} recent comments, ${images.length} images collected in ${scrollAttempts} scroll attempts.`,
     );
 
     // Log some stats about collected content
@@ -361,9 +418,26 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
       c => c.content && c.content.length > 10,
     );
     const validImages = images.filter(i => i.src && i.src.startsWith('http'));
+
     console.log(
-      `📈 Quality check: ${validComments.length} substantial comments, ${validImages.length} valid images`,
+      `📈 Quality check: ${validComments.length} substantial recent comments, ${validImages.length} valid images`,
     );
+
+    // Log time range of collected comments
+    if (comments.length > 0) {
+      const commentTimes = comments
+        .filter(c => c.timestamp)
+        .map(c => new Date(c.timestamp!).getTime())
+        .sort((a, b) => b - a); // Sort newest first
+
+      if (commentTimes.length > 0) {
+        const newest = new Date(commentTimes[0]);
+        const oldest = new Date(commentTimes[commentTimes.length - 1]);
+        console.log(
+          `⏰ Comment time range: ${oldest.toISOString()} to ${newest.toISOString()}`,
+        );
+      }
+    }
 
     return {randomPhrase: selectedTitle, comments, images};
   } catch (err: any) {
