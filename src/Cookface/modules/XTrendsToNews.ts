@@ -176,6 +176,7 @@ export const XTrendsToNews = async (
     console.log('Successfully posted to X');
 
     await fbPage.bringToFront();
+    await sleep(2000);
     await fbPage.reload({waitUntil: 'networkidle2'});
     console.log('Page reloaded successfully.');
     await sleep(3000);
@@ -186,7 +187,8 @@ export const XTrendsToNews = async (
       fbPage,
       newsBite,
       selectedImage.src,
-      sharedImagePath!,
+      sharedImagePath ? sharedImagePath : undefined,
+      videoFilePath ? videoFilePath : undefined,
     );
     console.log('Successfully posted to Facebook');
 

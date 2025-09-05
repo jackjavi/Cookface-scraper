@@ -28,6 +28,7 @@ const postTrendNewsOnFB = async (
   newsBite: string,
   imgUrl: string,
   sharedImagePath?: string,
+  videoFilePath?: string,
 ): Promise<string> => {
   const genAI = new GenerativeAIService();
   let imagePath = sharedImagePath;
@@ -52,7 +53,7 @@ const postTrendNewsOnFB = async (
     // Step 2: Upload image if available
     const rand = Math.random();
     if (imagePath && rand <= 0.9) {
-      await uploadImageToFacebook(page, imagePath);
+      await uploadImageToFacebook(page, imagePath, videoFilePath);
       await sleep(3000);
     }
 
@@ -106,7 +107,28 @@ const postTrendNewsOnFB = async (
 
     await sleep(2000);
 
-    // Step 5: Click "Post" button
+    // Step 5: Click "Post" button using keyboard shortcuts
+    console.log('Using keyboard shortcuts to click Post button...');
+
+    // Hold Shift key and press Tab 4 times
+    await page.keyboard.down('Shift');
+
+    for (let i = 0; i < 4; i++) {
+      await page.keyboard.press('Tab');
+      await sleep(1000); // Wait 1 second after each tab
+    }
+
+    // Release Shift key
+    await page.keyboard.up('Shift');
+    await sleep(1000); // Wait 1 second
+
+    // Hit Enter button
+    await page.keyboard.press('Enter');
+
+    console.log('Post button clicked using keyboard shortcuts successfully.');
+
+    /* 
+    // Original logic commented out
     const postClicked = await page.evaluate(() => {
       const spans = Array.from(document.querySelectorAll('span'));
       const postBtn = spans.find(span => span.textContent?.trim() === 'Post');
@@ -122,6 +144,7 @@ const postTrendNewsOnFB = async (
     } else {
       console.warn('"Post" button not found.');
     }
+    */
 
     await sleep(getRandomWaitTime(2000, 5000));
 
@@ -140,6 +163,7 @@ const postTrendNewsOnFB = async (
 const uploadImageToFacebook = async (
   page: Page,
   imagePath: string,
+  videoFilePath?: string,
 ): Promise<void> => {
   try {
     console.log('Starting image upload to Facebook...');
@@ -238,12 +262,19 @@ const uploadImageToFacebook = async (
     }
 
     // Upload the file
-    const absolutePath = path.resolve(imagePath);
+    let absolutePath: string;
+    if (videoFilePath) {
+      absolutePath = path.resolve(videoFilePath);
+    } else {
+      absolutePath = path.resolve(imagePath);
+    }
+
     await fileInput.uploadFile(absolutePath);
-    console.log(`Image uploaded successfully: ${absolutePath}`);
+    console.log(`File uploaded successfully: ${absolutePath}`);
+    await sleep(5000);
 
     // Wait for image upload confirmation
-    const confirmationSelectors = [
+    /** const confirmationSelectors = [
       'img[src*="blob:"]',
       '[data-testid="media-preview"]',
       '.x1i10hfl img',
@@ -268,11 +299,11 @@ const uploadImageToFacebook = async (
         'Warning: Could not confirm image upload, but it may have succeeded',
       );
       await sleep(3000);
-    }
+    } */
 
     console.log('Facebook image upload process completed');
-  } catch (error) {
-    console.error('Error uploading image to Facebook:', error);
+  } catch (error: any) {
+    console.error('Error uploading image to Facebook:', error.message);
     throw error;
   }
 };

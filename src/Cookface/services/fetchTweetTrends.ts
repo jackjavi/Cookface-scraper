@@ -347,6 +347,11 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
           await page.click(linkSelector);
           console.log("✅ Selected 'Live' filter.");
           switchedToLive = true;
+          await sleep(3000);
+
+          // Reload Page
+          await page.reload({waitUntil: 'networkidle2'});
+          await sleep(3000);
 
           // Wait for filtered results to load completely
           await waitForPageContentLoad();
