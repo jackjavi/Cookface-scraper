@@ -11,6 +11,7 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
 (async () => {
   try {
     const THREE_MINUTES = 3 * 60 * 1000;
+    const FOUR_MINUTES = 4 * 60 * 1000;
     const SIX_MINUTES = 6 * 60 * 1000;
     const TWENTY_MINUTES = 20 * 60 * 1000;
     const THIRTY_MINUTES = 30 * 60 * 1000;
@@ -30,13 +31,13 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
     await sleep(1500);
 
     const xPage = await browser!.newPage();
-    // await xPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
+    await xPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
     await xPage.goto('https://x.com', {waitUntil: 'networkidle2'});
     console.log('X.com page initialized.');
     await sleep(1500);
 
     const fbPage = await browser!.newPage();
-    // await fbPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
+    await fbPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
     await fbPage.goto('https://www.facebook.com/', {waitUntil: 'networkidle2'});
     console.log('Facebook page initialized.');
 
@@ -71,7 +72,7 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
       } */
 
       // Run XEngage every ~3 minutes
-      if (now - lastEngage > getRandomWaitTime(THREE_MINUTES, SIX_MINUTES)) {
+      if (now - lastEngage > getRandomWaitTime(FOUR_MINUTES, SIX_MINUTES)) {
         console.log('⏱ Starting XEngage...');
         await XEngage(xPage);
         lastEngage = Date.now();
@@ -80,7 +81,7 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
       }
 
       // Run XTrendsToNews every ~30 minutes
-      if (now - lastTrends > getRandomWaitTime(ONEHOUR, ONEHOURFORTYFIVE)) {
+      if (now - lastTrends > getRandomWaitTime(THIRTY_MINUTES, ONEHOUR)) {
         console.log('📊 Starting XTrendsToNews...');
         await XTrendsToNews(xPage, fbPage, tiktokPage);
         lastTrends = Date.now();

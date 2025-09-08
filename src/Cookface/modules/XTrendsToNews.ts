@@ -163,8 +163,8 @@ export const XTrendsToNews = async (
 
     await sleep(2000);
 
-    // Post to X
-    console.log('Posting to X...');
+    // Post to X [PAUSE NEWSBITES POSTING TO X FOR NOW]
+    /** console.log('Posting to X...');
     await postTrendNewsOnX(
       'Home',
       xPage,
@@ -173,7 +173,7 @@ export const XTrendsToNews = async (
       sharedImagePath ? sharedImagePath : undefined,
       // videoFilePath ? videoFilePath : undefined,
     );
-    console.log('Successfully posted to X');
+    console.log('Successfully posted to X'); */
 
     await fbPage.bringToFront();
     await sleep(2000);
