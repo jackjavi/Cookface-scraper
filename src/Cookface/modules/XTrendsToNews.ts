@@ -265,7 +265,6 @@ export const XTrendsToNews = async (
 
     // Keep video file for now since it was uploaded to TikTok
     // You might want to clean it up later or keep it for archives
-    /** 
     if (audioFilePath) {
       console.log('Cleaning up audio file...');
       const genAIAudioService = new GenerativeAIAudioService();
@@ -275,8 +274,7 @@ export const XTrendsToNews = async (
     if (videoFilePath) {
       console.log('Cleaning up video file...');
       await cleanupVideo(videoFilePath);
-    } 
-    */
+    }
 
     console.log('Cleanup process completed');
   }

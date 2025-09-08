@@ -21,7 +21,7 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
     const browser = await initializeBrowser();
 
     const tiktokPage = await browser!.newPage();
-    // await xPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
+    await tiktokPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
     await tiktokPage.goto('https://www.tiktok.com/', {
       waitUntil: 'networkidle2',
     });
