@@ -393,7 +393,8 @@ async function navigateBackAfterUpload(page: Page): Promise<void> {
 
     // Strategy 1: Try browser back (most natural)
     console.log('📍 Strategy 1: Trying browser back...');
-    const backSuccess = await navigateToPreviousPage(page);
+    let backSuccess = await navigateToPreviousPage(page);
+    backSuccess = await navigateToPreviousPage(page);
 
     if (backSuccess) {
       console.log('✅ Successfully navigated back using browser history');
