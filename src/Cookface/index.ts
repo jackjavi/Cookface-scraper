@@ -16,7 +16,8 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
     const THIRTY_MINUTES = 30 * 60 * 1000;
     const FORTY_FIVE_MINUTES = 45 * 60 * 1000;
     const ONEHOUR = 60 * 60 * 1000;
-    // const TWOHOURS = 60 * 90 * 1000; // 1.5 HRS
+    const ONEHOURFORTYFIVE = 105 * 60 * 1000;
+    const TWOHOURS = 2 * 60 * 60 * 1000;
 
     const browser = await initializeBrowser();
 
@@ -79,7 +80,7 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
       }
 
       // Run XTrendsToNews every ~30 minutes
-      if (now - lastTrends > getRandomWaitTime(FORTY_FIVE_MINUTES, ONEHOUR)) {
+      if (now - lastTrends > getRandomWaitTime(ONEHOUR, ONEHOURFORTYFIVE)) {
         console.log('📊 Starting XTrendsToNews...');
         await XTrendsToNews(xPage, fbPage, tiktokPage);
         lastTrends = Date.now();
