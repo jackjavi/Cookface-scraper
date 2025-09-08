@@ -22,6 +22,12 @@ chromium-browser --remote-debugging-port=9222 --start-maximized
 
 ### Microsoft Edge
 
+#### Windows on Git bash
+
+```bash
+"/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" --remote-debugging-port=9333 --disable-web-security --user-data-dir="C:\temp\edge-debug"
+```
+
 ```bash
 microsoft-edge-stable --remote-debugging-port=9222 --start-maximized
 ```

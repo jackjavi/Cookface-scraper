@@ -11,7 +11,7 @@ import path from 'path';
 import fs from 'fs';
 
 /**
- * Upload video to TikTok with description
+ * Upload video to TikTok with description and AI content settings
  * @param page - The Puppeteer page instance
  * @param videoFilePath - Path to the video file to upload
  * @param description - Description/caption for the video (newsBite)
@@ -141,6 +141,16 @@ export async function TikTokUpload(
     await page.keyboard.type(description, {delay: 50});
     console.log('✅ Description updated successfully');
 
+    // Handle advanced settings for AI content
+    console.log('🔧 Configuring AI content settings...');
+    const advancedSettingsSuccess = await handleAdvancedSettings(page);
+
+    if (!advancedSettingsSuccess) {
+      console.warn(
+        '⚠️ Could not configure advanced settings, continuing with upload...',
+      );
+    }
+
     await sleep(20000); // Wait for checks to complete. Update later to check for specific indicators
 
     // Find the button group and post the video
@@ -263,6 +273,117 @@ export async function TikTokUpload(
 }
 
 /**
+ * Handle advanced settings configuration for AI content
+ * @param page - The Puppeteer page instance
+ * @returns Promise<boolean> - Success status of advanced settings configuration
+ */
+async function handleAdvancedSettings(page: Page): Promise<boolean> {
+  try {
+    console.log('🔧 Starting advanced settings configuration...');
+
+    // Step 1: Locate the advanced settings container
+    console.log('🔍 Looking for advanced settings container...');
+    await page.waitForSelector(
+      'div[data-e2e="advanced_settings_container"].jsx-3335848873.more-collapse.collapsed',
+      {
+        timeout: 10000,
+      },
+    );
+
+    const advancedSettingsContainer = await page.$(
+      'div[data-e2e="advanced_settings_container"].jsx-3335848873.more-collapse.collapsed',
+    );
+    if (!advancedSettingsContainer) {
+      console.error('❌ Advanced settings container not found');
+      return false;
+    }
+
+    // Step 2: Find and click the "Show more" span
+    console.log('🔍 Looking for "Show more" span...');
+    const showMoreSpan = await advancedSettingsContainer.$(
+      'span.jsx-3335848873',
+    );
+    if (!showMoreSpan) {
+      console.error('❌ "Show more" span not found');
+      return false;
+    }
+
+    // Verify the span contains "Show more" text
+    const spanText = await page.evaluate(
+      el => el.innerText?.trim(),
+      showMoreSpan,
+    );
+    if (spanText !== 'Show more') {
+      console.error(`❌ Expected "Show more" but found: "${spanText}"`);
+      return false;
+    }
+
+    // Scroll the "Show more" span into view and click it
+    console.log('📜 Scrolling "Show more" span into view...');
+    await showMoreSpan.scrollIntoView();
+    await sleep(1000);
+
+    console.log('🎯 Clicking "Show more" span...');
+    await showMoreSpan.click();
+    console.log('✅ "Show more" clicked successfully');
+
+    // Step 3: Wait for the options form to appear
+    console.log('⏳ Waiting for options form to appear...');
+    await sleep(3000); // Wait a few seconds for expansion
+
+    await page.waitForSelector('div.jsx-3335848873.options-form', {
+      timeout: 10000,
+    });
+
+    const optionsForm = await page.$('div.jsx-3335848873.options-form');
+    if (!optionsForm) {
+      console.error('❌ Options form not found');
+      return false;
+    }
+
+    // Step 4: Find the AI content container within the options form
+    console.log('🔍 Looking for AI content container...');
+    const aiContentContainer = await optionsForm.$(
+      'div[data-e2e="aigc_container"].jsx-1157814305.container',
+    );
+    if (!aiContentContainer) {
+      console.error('❌ AI content container not found');
+      return false;
+    }
+
+    // Step 5: Find the AI content switch input and click it
+    console.log('🔍 Looking for AI content switch input...');
+    const aiSwitchInput = await aiContentContainer.$(
+      'input[role="switch"][type="checkbox"][id=":r49:"]',
+    );
+    if (!aiSwitchInput) {
+      console.error('❌ AI content switch input not found');
+      return false;
+    }
+
+    // Scroll the AI switch input into view
+    console.log('📜 Scrolling AI content switch into view...');
+    await aiSwitchInput.scrollIntoView();
+    await sleep(1000);
+
+    console.log('🎯 Clicking AI content switch...');
+    await aiSwitchInput.click();
+    console.log('✅ AI content switch clicked successfully');
+
+    // Step 6: Wait for initial 20 seconds before continuing
+    console.log(
+      '⏳ Waiting 20 seconds before continuing with post button logic...',
+    );
+    await sleep(20000);
+
+    return true;
+  } catch (error) {
+    console.error('❌ Error in handleAdvancedSettings:', error);
+    return false;
+  }
+}
+
+/**
  * Navigate back after upload (success or failure) using multiple fallback strategies
  * @param page - The Puppeteer page instance
  */
@@ -272,7 +393,8 @@ async function navigateBackAfterUpload(page: Page): Promise<void> {
 
     // Strategy 1: Try browser back (most natural)
     console.log('📍 Strategy 1: Trying browser back...');
-    const backSuccess = await navigateToPreviousPage(page);
+    let backSuccess = await navigateToPreviousPage(page);
+    backSuccess = await navigateToPreviousPage(page);
 
     if (backSuccess) {
       console.log('✅ Successfully navigated back using browser history');
