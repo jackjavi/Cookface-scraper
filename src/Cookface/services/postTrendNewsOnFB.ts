@@ -105,10 +105,10 @@ const postTrendNewsOnFB = async (
     await page.keyboard.type(toPost, {delay: 200});
     console.log('Typed the message into the editor successfully.');
 
-    await sleep(2000);
+    await sleep(10000);
 
-    // Step 5: Click "Post" button using keyboard shortcuts
-    console.log('Using keyboard shortcuts to click Post button...');
+    // Step 5: Click "Next" button using keyboard shortcuts
+    console.log('Using keyboard shortcuts to click Next button...');
 
     // Hold Shift key and press Tab 4 times
     await page.keyboard.down('Shift');
@@ -117,6 +117,25 @@ const postTrendNewsOnFB = async (
       await page.keyboard.press('Tab');
       await sleep(1000); // Wait 1 second after each tab
     }
+
+    // Release Shift key
+    await page.keyboard.up('Shift');
+    await sleep(1000); // Wait 1 second
+
+    // Hit Enter button
+    await page.keyboard.press('Enter');
+
+    console.log('Next button clicked using keyboard shortcuts successfully.');
+
+    await sleep(getRandomWaitTime(2000, 5000));
+
+    // Step 6: Click "Post" button using keyboard shortcuts
+    console.log('Using keyboard shortcuts to click Post button...');
+
+    // Hold Shift key and press Tab once
+    await page.keyboard.down('Shift');
+
+    await page.keyboard.press('Tab');
 
     // Release Shift key
     await page.keyboard.up('Shift');
