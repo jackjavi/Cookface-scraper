@@ -171,7 +171,7 @@ export const XTrendsToNews = async (
       newsBite,
       selectedImage.src,
       sharedImagePath ? sharedImagePath : undefined,
-      videoFilePath ? videoFilePath : undefined,
+      // videoFilePath ? videoFilePath : undefined,
     );
     console.log('Successfully posted to X');
 
@@ -188,7 +188,7 @@ export const XTrendsToNews = async (
       newsBite,
       selectedImage.src,
       sharedImagePath ? sharedImagePath : undefined,
-      videoFilePath ? videoFilePath : undefined,
+      // videoFilePath ? videoFilePath : undefined,
     );
     console.log('Successfully posted to Facebook');
 
