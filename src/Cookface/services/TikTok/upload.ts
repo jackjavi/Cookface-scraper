@@ -351,24 +351,110 @@ async function handleAdvancedSettings(page: Page): Promise<boolean> {
       return false;
     }
 
-    // Step 5: Find the AI content switch input and click it
+    // Step 5: Find the AI content switch input and click it (with multiple fallback strategies)
     console.log('🔍 Looking for AI content switch input...');
-    const aiSwitchInput = await aiContentContainer.$(
-      'input[role="switch"][type="checkbox"][id=":r49:"]',
+    let aiSwitchInput = null;
+
+    // Option 1: Try the specific selector within AI content container
+    aiSwitchInput = await page.$(
+      'div[data-e2e="aigc_container"] input[type="checkbox"]',
     );
+
+    // Option 2: If not found, try any switch input with dynamic ID pattern
     if (!aiSwitchInput) {
-      console.error('❌ AI content switch input not found');
+      console.log('🔍 Trying with dynamic ID pattern...');
+      aiSwitchInput = await page.$(
+        'input[role="switch"][type="checkbox"][id*=":r"]',
+      );
+    }
+
+    // Option 3: Look for any checkbox within the AI content area using page selector
+    if (!aiSwitchInput) {
+      console.log('🔍 Looking for any switch input on page...');
+      aiSwitchInput = await page.$('input[role="switch"][type="checkbox"]');
+    }
+
+    // Option 4: Use a more comprehensive search for switches near AI content
+    if (!aiSwitchInput) {
+      console.log('🔍 Looking for switch near AI-related content...');
+      const switches = await page.$$('input[role="switch"][type="checkbox"]');
+      for (const switchEl of switches) {
+        // Check if this switch is in an AI-related context
+        const isAIRelated = await page.evaluate(el => {
+          const container = el.closest('div[data-e2e="aigc_container"]');
+          const parentText =
+            el.closest('div')?.textContent?.toLowerCase() || '';
+          return (
+            container !== null ||
+            parentText.includes('ai') ||
+            parentText.includes('generated') ||
+            parentText.includes('aigc')
+          );
+        }, switchEl);
+
+        if (isAIRelated) {
+          aiSwitchInput = switchEl;
+          console.log('✅ Found AI-related switch input');
+          break;
+        }
+      }
+    }
+
+    // Option 5: Last resort - wait for any switch to appear and use the first/last one
+    if (!aiSwitchInput) {
+      console.log('🔍 Last resort: waiting for any switch inputs...');
+      try {
+        await page.waitForSelector('input[role="switch"][type="checkbox"]', {
+          timeout: 5000,
+        });
+        const allSwitches = await page.$$(
+          'input[role="switch"][type="checkbox"]',
+        );
+        console.log(`📋 Found ${allSwitches.length} switch inputs on page`);
+
+        if (allSwitches.length === 1) {
+          aiSwitchInput = allSwitches[0];
+          console.log('✅ Using the only available switch input');
+        } else if (allSwitches.length > 1) {
+          // Use the last one (often the most recently added/AI-related)
+          aiSwitchInput = allSwitches[allSwitches.length - 1];
+          console.log(
+            `✅ Using switch ${allSwitches.length} of ${allSwitches.length}`,
+          );
+        }
+      } catch (waitError) {
+        console.log('⚠️ No switch inputs found after waiting');
+      }
+    }
+
+    if (!aiSwitchInput) {
+      console.error('❌ AI content switch input not found with any method');
       return false;
     }
 
-    // Scroll the AI switch input into view
-    console.log('📜 Scrolling AI content switch into view...');
-    await aiSwitchInput.scrollIntoView();
-    await sleep(1000);
+    // Check if the switch is already enabled
+    const isChecked = await page.evaluate(el => el.checked, aiSwitchInput);
+    console.log(
+      `🔍 Switch current state: ${isChecked ? 'enabled' : 'disabled'}`,
+    );
 
-    console.log('🎯 Clicking AI content switch...');
-    await aiSwitchInput.click();
-    console.log('✅ AI content switch clicked successfully');
+    if (isChecked) {
+      console.log('ℹ️ AI content switch is already enabled, skipping click');
+    } else {
+      // Scroll the AI switch input into view
+      console.log('📜 Scrolling AI content switch into view...');
+      await aiSwitchInput.scrollIntoView();
+      await sleep(1000);
+
+      console.log('🎯 Clicking AI content switch...');
+      await aiSwitchInput.click();
+      console.log('✅ AI content switch clicked successfully');
+
+      // Verify the switch was actually toggled
+      await sleep(1000);
+      const newState = await page.evaluate(el => el.checked, aiSwitchInput);
+      console.log(`🔍 Switch new state: ${newState ? 'enabled' : 'disabled'}`);
+    }
 
     // Step 6: Wait for initial 20 seconds before continuing
     console.log(
