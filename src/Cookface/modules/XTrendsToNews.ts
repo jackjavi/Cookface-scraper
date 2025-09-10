@@ -179,7 +179,7 @@ export const XTrendsToNews = async (
     await sleep(2000);
     await fbPage.reload({waitUntil: 'networkidle2'});
     console.log('Page reloaded successfully.');
-    await sleep(3000);
+    await sleep(10000);
 
     // Post to Facebook
     console.log('Posting to Facebook...');
