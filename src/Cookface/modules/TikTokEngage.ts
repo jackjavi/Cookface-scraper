@@ -65,14 +65,14 @@ export const TikTokEngage = async (tiktokPage: Page): Promise<void> => {
  */
 async function executeLikeSingle(page: Page): Promise<void> {
   try {
-    // Navigate to Home first (as requested)
-    const navSuccess = await navigateToTikTokPage(
-      page,
-      TIKTOK_ROUTES.FRIENDS,
-      CONFIG,
-    );
+    // Randomly choose a page to navigate to for variety
+    const pages = [TIKTOK_ROUTES.HOME, TIKTOK_ROUTES.FOLLOWING];
+    const randomPage = pages[Math.floor(Math.random() * pages.length)];
+
+    const navSuccess = await navigateToTikTokPage(page, randomPage, CONFIG);
     if (!navSuccess) {
-      console.log('Failed to navigate to Home, continuing anyway...');
+      console.log('Failed to navigate to random page, using Home...');
+      await navigateToTikTokPage(page, TIKTOK_ROUTES.HOME, CONFIG);
     }
 
     await navigateToNextArticle(page, 1500);
@@ -93,6 +93,9 @@ async function executeLikeSingle(page: Page): Promise<void> {
       console.log('Navigating to next article after single like...');
       await navigateToNextArticle(page, 1500);
     }
+
+    // Navigate back to Home after operation.
+    await navigateToTikTokPage(page, TIKTOK_ROUTES.HOME, CONFIG);
   } catch (error) {
     console.error('Error in executeLikeSingle:', error);
   }
@@ -103,14 +106,14 @@ async function executeLikeSingle(page: Page): Promise<void> {
  */
 async function executeLikeMultiple(page: Page): Promise<void> {
   try {
-    // Navigate to Home first (as requested)
-    const navSuccess = await navigateToTikTokPage(
-      page,
-      TIKTOK_ROUTES.HOME,
-      CONFIG,
-    );
+    // Randomly choose a page to navigate to for variety
+    const pages = [TIKTOK_ROUTES.HOME, TIKTOK_ROUTES.FOLLOWING];
+    const randomPage = pages[Math.floor(Math.random() * pages.length)];
+
+    const navSuccess = await navigateToTikTokPage(page, randomPage, CONFIG);
     if (!navSuccess) {
-      console.log('Failed to navigate to Home, continuing anyway...');
+      console.log('Failed to navigate to random page, using Home...');
+      await navigateToTikTokPage(page, TIKTOK_ROUTES.HOME, CONFIG);
     }
 
     await sleep(3000);
@@ -136,6 +139,9 @@ async function executeLikeMultiple(page: Page): Promise<void> {
     console.log(
       `Multiple like completed: ${results.totalLiked} liked, ${results.totalSkipped} skipped`,
     );
+
+    // Navigate back to Home after operation.
+    await navigateToTikTokPage(page, TIKTOK_ROUTES.HOME, CONFIG);
   } catch (error) {
     console.error('Error in executeLikeMultiple:', error);
   }
@@ -147,11 +153,7 @@ async function executeLikeMultiple(page: Page): Promise<void> {
 async function executeJustNavigate(page: Page): Promise<void> {
   try {
     // Randomly choose a page to navigate to for variety
-    const pages = [
-      TIKTOK_ROUTES.HOME,
-      TIKTOK_ROUTES.EXPLORE,
-      TIKTOK_ROUTES.FOLLOWING,
-    ];
+    const pages = [TIKTOK_ROUTES.HOME, TIKTOK_ROUTES.FOLLOWING];
     const randomPage = pages[Math.floor(Math.random() * pages.length)];
 
     const navSuccess = await navigateToTikTokPage(page, randomPage, CONFIG);
@@ -186,6 +188,9 @@ async function executeJustNavigate(page: Page): Promise<void> {
     }
 
     console.log('Navigation session completed');
+
+    // Navigate back to Home after operation.
+    await navigateToTikTokPage(page, TIKTOK_ROUTES.HOME, CONFIG);
   } catch (error) {
     console.error('Error in executeJustNavigate:', error);
   }

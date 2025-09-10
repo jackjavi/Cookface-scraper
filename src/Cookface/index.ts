@@ -31,13 +31,13 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
     await sleep(1500);
 
     const xPage = await browser!.newPage();
-    await xPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
+    // await xPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
     await xPage.goto('https://x.com', {waitUntil: 'networkidle2'});
     console.log('X.com page initialized.');
     await sleep(1500);
 
     const fbPage = await browser!.newPage();
-    await fbPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
+    // await fbPage.setViewport({width: 1366, height: 768}); // ELiteBook 8470p to work with on Lenovo when testing/coding
     await fbPage.goto('https://www.facebook.com/', {waitUntil: 'networkidle2'});
     console.log('Facebook page initialized.');
 
@@ -63,13 +63,16 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
       } */
 
       // Run TikTokEngage every ~20 minutes
-      /** if (now - lastTikTok > TWENTY_MINUTES) {
+      if (
+        now - lastTikTok >
+        getRandomWaitTime(TWENTY_MINUTES, THIRTY_MINUTES)
+      ) {
         console.log('🎵 Starting TikTokEngage...');
         await TikTokEngage(tiktokPage); // Updated function call
         lastTikTok = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      } */
+      }
 
       // Run XEngage every ~3 minutes
       if (now - lastEngage > getRandomWaitTime(FOUR_MINUTES, SIX_MINUTES)) {
