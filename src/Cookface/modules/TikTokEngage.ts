@@ -1,11 +1,16 @@
 import sleep from '../utils/sleep';
+import getRandomWaitTime from '../utils/randomWaitTime';
 import {
   likeSingleArticle,
   likeMultipleArticles,
 } from '../services/TikTok/likeArticle';
 import {navigateToNextArticle} from '../services/TikTok/navigationControls';
 import {selectActiveArticle} from '../utils/TikTok/selectActiveArticle';
-import {navigateToTikTokPage, TIKTOK_ROUTES} from '../utils/TikTok/Navigation';
+import {
+  navigateToTikTokPage,
+  TIKTOK_ROUTES,
+  navigateToPreviousPage,
+} from '../utils/TikTok/Navigation';
 import {Page} from 'puppeteer';
 import config from '../config/index';
 
@@ -91,11 +96,13 @@ async function executeLikeSingle(page: Page): Promise<void> {
     // 30% chance to navigate to next article after liking
     if (Math.random() < 0.3) {
       console.log('Navigating to next article after single like...');
-      await navigateToNextArticle(page, 1500);
+      await navigateToNextArticle(page, getRandomWaitTime(1500, 3000));
     }
 
+    await sleep(getRandomWaitTime(3000, 7000));
+
     // Navigate back to Home after operation.
-    await navigateToTikTokPage(page, TIKTOK_ROUTES.HOME, CONFIG);
+    await navigateToPreviousPage(page);
   } catch (error) {
     console.error('Error in executeLikeSingle:', error);
   }
@@ -139,9 +146,10 @@ async function executeLikeMultiple(page: Page): Promise<void> {
     console.log(
       `Multiple like completed: ${results.totalLiked} liked, ${results.totalSkipped} skipped`,
     );
+    await sleep(getRandomWaitTime(3000, 7000));
 
     // Navigate back to Home after operation.
-    await navigateToTikTokPage(page, TIKTOK_ROUTES.HOME, CONFIG);
+    await navigateToPreviousPage(page);
   } catch (error) {
     console.error('Error in executeLikeMultiple:', error);
   }
@@ -188,9 +196,10 @@ async function executeJustNavigate(page: Page): Promise<void> {
     }
 
     console.log('Navigation session completed');
+    await sleep(getRandomWaitTime(3000, 7000));
 
     // Navigate back to Home after operation.
-    await navigateToTikTokPage(page, TIKTOK_ROUTES.HOME, CONFIG);
+    await navigateToPreviousPage(page);
   } catch (error) {
     console.error('Error in executeJustNavigate:', error);
   }
