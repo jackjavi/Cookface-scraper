@@ -31,8 +31,8 @@ export const TikTokEngage = async (tiktokPage: Page): Promise<void> => {
 
     // Weights: [likeSingle, likeMultiple, justNavigate]
     // likeSingle: 50%, likeMultiple: 35%, justNavigate: 15%
-    const weights = [100, 0, 0];
-    // const weights = [50, 35, 15];
+    // const weights = [100, 0, 0];
+    const weights = [50, 35, 15];
     const choice = getWeightedChoice(weights);
 
     switch (choice) {
@@ -66,7 +66,7 @@ export const TikTokEngage = async (tiktokPage: Page): Promise<void> => {
 async function executeLikeSingle(page: Page): Promise<void> {
   try {
     // Randomly choose a page to navigate to for variety
-    const pages = [TIKTOK_ROUTES.HOME, TIKTOK_ROUTES.FOLLOWING];
+    const pages = [TIKTOK_ROUTES.FRIENDS, TIKTOK_ROUTES.FOLLOWING];
     const randomPage = pages[Math.floor(Math.random() * pages.length)];
 
     const navSuccess = await navigateToTikTokPage(page, randomPage, CONFIG);
@@ -107,7 +107,7 @@ async function executeLikeSingle(page: Page): Promise<void> {
 async function executeLikeMultiple(page: Page): Promise<void> {
   try {
     // Randomly choose a page to navigate to for variety
-    const pages = [TIKTOK_ROUTES.HOME, TIKTOK_ROUTES.FOLLOWING];
+    const pages = [TIKTOK_ROUTES.FRIENDS, TIKTOK_ROUTES.FOLLOWING];
     const randomPage = pages[Math.floor(Math.random() * pages.length)];
 
     const navSuccess = await navigateToTikTokPage(page, randomPage, CONFIG);
@@ -121,7 +121,7 @@ async function executeLikeMultiple(page: Page): Promise<void> {
     // Random settings
     const maxArticles = Math.floor(Math.random() * 4) + 2; // 2-5 articles
     const minLikeCount = Math.floor(Math.random() * 8) + 1; // 1-8 likes minimum
-    const delayBetweenLikes = Math.floor(Math.random() * 3000) + 2000; // 2-5 seconds
+    const delayBetweenLikes = Math.floor(Math.random() * 5000) + 5000; // 5-10 seconds
     const delayAfterNavigation = Math.floor(Math.random() * 2000) + 1000; // 1-3 seconds
 
     console.log(
@@ -153,7 +153,7 @@ async function executeLikeMultiple(page: Page): Promise<void> {
 async function executeJustNavigate(page: Page): Promise<void> {
   try {
     // Randomly choose a page to navigate to for variety
-    const pages = [TIKTOK_ROUTES.HOME, TIKTOK_ROUTES.FOLLOWING];
+    const pages = [TIKTOK_ROUTES.FRIENDS, TIKTOK_ROUTES.FOLLOWING];
     const randomPage = pages[Math.floor(Math.random() * pages.length)];
 
     const navSuccess = await navigateToTikTokPage(page, randomPage, CONFIG);
