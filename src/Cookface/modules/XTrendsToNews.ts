@@ -45,8 +45,8 @@ export const XTrendsToNews = async (
 
     // Initialize services
     const genAIService = new GenerativeAIService();
-    const genAIAudioService = new GenerativeAIAudioService();
-    const genAIVideoService = new GenerativeAIVideoService();
+    // const genAIAudioService = new GenerativeAIAudioService();
+    // const genAIVideoService = new GenerativeAIVideoService();
 
     const trends = await scrapeTrends24();
 
@@ -121,7 +121,7 @@ export const XTrendsToNews = async (
     await sleep(2000);
 
     // Generate audio for the news bite
-    console.log('Generating audio for news bite...');
+    /** console.log('Generating audio for news bite...');
     try {
       audioFilePath = await genAIAudioService.generateNewsAudio(
         newsBite,
@@ -134,10 +134,10 @@ export const XTrendsToNews = async (
         audioError,
       );
       // Continue with the process even if audio generation fails
-    }
+    } */
 
     // Generate video from image and audio
-    console.log('Generating video from image and audio...');
+    /** console.log('Generating video from image and audio...');
     try {
       if (audioFilePath && sharedImagePath) {
         videoFilePath = await genAIVideoService.generateVideoFromImageAndAudio(
@@ -159,7 +159,7 @@ export const XTrendsToNews = async (
         videoError,
       );
       // Continue with the process even if video generation fails
-    }
+    } */
 
     await sleep(2000);
 

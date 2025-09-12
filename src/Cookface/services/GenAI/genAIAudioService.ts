@@ -1,10 +1,9 @@
 import config from '../../config';
 import {Comment} from '../../types/Comment';
 import {GoogleGenAI} from '@google/genai';
-import wav from 'wav';
 import * as fs from 'fs';
 import * as path from 'path';
-import sleep from '../../utils/sleep';
+import {execSync} from 'child_process';
 
 class GenerativeAIAudioService {
   private genAITranscripts: GoogleGenAI;
@@ -23,9 +22,6 @@ class GenerativeAIAudioService {
 
   /**
    * Generate a podcast-style transcript from news bite and comments
-   * @param newsBite - The generated news bite content
-   * @param comments - Array of comments related to the trend
-   * @returns Promise<string> - Generated transcript
    */
   async generatePodcastTranscript(
     newsBite: string,
@@ -37,7 +33,6 @@ class GenerativeAIAudioService {
       );
     }
 
-    // Get sample comments for context
     const sampleComments = comments
       .slice(0, 8)
       .map(
@@ -71,8 +66,7 @@ Guidelines:
 - Use Kenyan context where relevant
 - Don't read the comments verbatim, but reference the general sentiment
 
-Format the output as a clean script ready for text-to-speech conversion without any additional like "Here is your podcast script".
-Only the script text is needed.
+Format the output as a clean script ready for text-to-speech conversion.
     `;
 
     try {
@@ -105,75 +99,82 @@ Only the script text is needed.
 
   /**
    * Generate audio filename for storage
-   * @param newsBite - The news bite content to base filename on
-   * @returns string - Generated filename
    */
   private generateAudioFilename(newsBite: string): string {
-    // Clean the news bite for filename
     const cleanTitle = newsBite
-      .replace(/[^\w\s-]/g, '') // Remove special characters
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
       .toLowerCase()
-      .substring(0, 40); // Limit length
+      .substring(0, 40);
 
     const timestamp = Date.now();
     return `tnk-news-${cleanTitle}-${timestamp}.wav`;
   }
 
   /**
-   * Save wave file from PCM data
-   * @param filename - Full path to save the file
-   * @param pcmData - PCM audio data buffer
-   * @param channels - Number of audio channels (default: 1)
-   * @param rate - Sample rate (default: 24000)
-   * @param sampleWidth - Sample width in bytes (default: 2)
-   * @returns Promise<void>
+   * Save audio data as properly formatted WAV file using FFmpeg
    */
-  private async saveWaveFile(
-    filename: string,
-    pcmData: Buffer,
-    channels: number = 1,
-    rate: number = 24000,
-    sampleWidth: number = 2,
+  private async saveAudioWithFFmpeg(
+    audioData: Buffer,
+    outputPath: string,
   ): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        // Ensure directory exists
-        const dir = path.dirname(filename);
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir, {recursive: true});
-        }
+    const tempRawPath = outputPath.replace('.wav', '.raw');
 
-        const writer = new wav.FileWriter(filename, {
-          channels,
-          sampleRate: rate,
-          bitDepth: sampleWidth * 8,
-        });
-
-        writer.on('finish', () => {
-          console.log(`Audio file saved successfully: ${filename}`);
-          resolve();
-        });
-
-        writer.on('error', error => {
-          console.error('Error writing wave file:', error);
-          reject(error);
-        });
-
-        writer.write(pcmData);
-        writer.end();
-      } catch (error) {
-        console.error('Error in saveWaveFile:', error);
-        reject(error);
+    try {
+      // Ensure directory exists
+      const dir = path.dirname(outputPath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, {recursive: true});
       }
-    });
+
+      // Write raw audio data to temporary file
+      fs.writeFileSync(tempRawPath, audioData);
+
+      // Convert raw audio to proper WAV format using FFmpeg
+      // Assuming the TTS returns 24kHz mono 16-bit PCM (common for Gemini TTS)
+      const ffmpegCmd = [
+        'ffmpeg',
+        '-y', // Overwrite output
+        '-f s16le', // Input format: 16-bit little-endian PCM
+        '-ar 24000', // Sample rate: 24kHz (adjust if needed)
+        '-ac 1', // Mono audio
+        `-i "${tempRawPath}"`,
+        '-c:a pcm_s16le', // Output codec
+        '-ar 44100', // Convert to standard 44.1kHz
+        '-ac 1', // Keep mono
+        `"${outputPath}"`,
+      ].join(' ');
+
+      console.log('Converting audio with FFmpeg...');
+      execSync(ffmpegCmd, {stdio: 'pipe', timeout: 30000});
+
+      // Verify the output file
+      if (!fs.existsSync(outputPath)) {
+        throw new Error('FFmpeg failed to create output file');
+      }
+
+      const stats = fs.statSync(outputPath);
+      if (stats.size === 0) {
+        throw new Error('FFmpeg created empty output file');
+      }
+
+      console.log(
+        `Audio file saved successfully: ${outputPath} (${stats.size} bytes)`,
+      );
+    } finally {
+      // Cleanup temporary raw file
+      try {
+        if (fs.existsSync(tempRawPath)) {
+          fs.unlinkSync(tempRawPath);
+        }
+      } catch (cleanupError) {
+        console.warn('Failed to cleanup temporary raw file:', cleanupError);
+      }
+    }
   }
 
   /**
-   * Generate audio from transcript using Gemini TTS
-   * @param transcript - The text transcript to convert to speech
-   * @param newsBite - The news bite for filename generation
-   * @returns Promise<string> - Path to the generated audio file
+   * Generate audio from transcript using Gemini TTS with improved error handling
    */
   async generateAudioFromTranscript(
     transcript: string,
@@ -184,7 +185,6 @@ Only the script text is needed.
     }
 
     try {
-      // Generate filename and full path
       const filename = this.generateAudioFilename(newsBite);
       const audioFilePath = path.join(this.audioStore, filename);
 
@@ -192,15 +192,24 @@ Only the script text is needed.
       console.log('Transcript length:', transcript.length);
       console.log('Output path:', audioFilePath);
 
-      // Configure TTS request with a professional news voice
-      // Using 'Kore' (Firm) voice which is good for news content
+      // Clean transcript for better TTS results
+      const cleanTranscript = transcript
+        .replace(/[^\w\s.,!?;:'"()-]/g, '') // Remove special characters
+        .replace(/\s+/g, ' ') // Normalize whitespace
+        .trim();
+
+      console.log(
+        'Cleaned transcript:',
+        cleanTranscript.substring(0, 100) + '...',
+      );
+
       const response = await this.genAIAudio.models.generateContent({
         model: 'gemini-2.5-flash-preview-tts',
         contents: [
           {
             parts: [
               {
-                text: `Read this news podcast script in a clear, professional news presenter voice with appropriate pacing for broadcast: ${transcript}`,
+                text: `Read this news podcast script in a clear, professional news presenter voice: ${cleanTranscript}`,
               },
             ],
           },
@@ -210,7 +219,7 @@ Only the script text is needed.
           speechConfig: {
             voiceConfig: {
               prebuiltVoiceConfig: {
-                voiceName: 'Kore', // Firm voice, good for news
+                voiceName: 'Kore', // Professional voice
               },
             },
           },
@@ -229,8 +238,35 @@ Only the script text is needed.
       const audioBuffer = Buffer.from(audioData, 'base64');
       console.log('Audio buffer size:', audioBuffer.length, 'bytes');
 
-      // Save the audio file
-      await this.saveWaveFile(audioFilePath, audioBuffer);
+      if (audioBuffer.length === 0) {
+        throw new Error('Received empty audio data from TTS API');
+      }
+
+      // Save using FFmpeg for proper format
+      await this.saveAudioWithFFmpeg(audioBuffer, audioFilePath);
+
+      // Verify the final file works with FFmpeg
+      try {
+        const verifyCmd = `ffprobe -v quiet -print_format json -show_format "${audioFilePath}"`;
+        const verifyOutput = execSync(verifyCmd, {
+          encoding: 'utf8',
+          timeout: 10000,
+        });
+        const formatData = JSON.parse(verifyOutput);
+
+        if (!formatData.format || !formatData.format.duration) {
+          throw new Error('Generated audio file has invalid format');
+        }
+
+        console.log(
+          `Audio verification passed. Duration: ${formatData.format.duration}s`,
+        );
+      } catch (verifyError) {
+        console.error('Audio verification failed:', verifyError);
+        throw new Error(
+          'Generated audio file is not valid for video processing',
+        );
+      }
 
       console.log('Audio generation completed successfully');
       return audioFilePath;
@@ -242,9 +278,6 @@ Only the script text is needed.
 
   /**
    * Generate complete audio for news bite (transcript + audio generation)
-   * @param newsBite - The news bite content
-   * @param comments - Related comments for context
-   * @returns Promise<string> - Path to the generated audio file
    */
   async generateNewsAudio(
     newsBite: string,
@@ -277,7 +310,6 @@ Only the script text is needed.
 
   /**
    * Cleanup audio file after use
-   * @param audioFilePath - Path to the audio file to cleanup
    */
   async cleanupAudio(audioFilePath: string): Promise<void> {
     try {
@@ -287,7 +319,6 @@ Only the script text is needed.
       }
     } catch (error) {
       console.error(`Error cleaning up audio file ${audioFilePath}:`, error);
-      // Don't throw error - cleanup failure shouldn't stop the process
     }
   }
 }

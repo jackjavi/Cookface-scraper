@@ -18,11 +18,12 @@ import fs from 'fs';
  * @param config - Configuration object containing TikTok username
  * @returns Promise<boolean> - Success status of upload
  */
+
 export async function TikTokUpload(
   page: Page,
   videoFilePath: string,
   description: string,
-  config?: {TikTokUsername?: string},
+  config?: {TikTokUsername?: string; isGainTrain?: boolean},
 ): Promise<boolean> {
   try {
     console.log('🎬 Starting TikTok video upload...');

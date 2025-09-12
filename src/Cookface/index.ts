@@ -3,6 +3,7 @@ import getRandomWaitTime from './utils/randomWaitTime';
 import {XTrendsToNews} from './modules/XTrendsToNews';
 import {XEngage} from './modules/XEngage';
 import {TikTokEngage} from './modules/TikTokEngage';
+import {TikTokGainTrainModule} from './modules/TikTokGainTrainModule';
 import {fbEngage} from './modules/fbEngage';
 // import { TelegramNews } from './modules/TelegramNews';
 import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
@@ -47,6 +48,7 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
     let lastEngage = 0;
     let lastTrends = 0;
     let lastTikTok = 0;
+    let lastGainTrain = 0;
     let lastFbEngage = 0;
     // let lastTelegram = 0;
 
@@ -61,6 +63,20 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
         await sleep(15 * 60 * 1000);
         continue;
       } */
+
+      // Run TikTok Gain Train every ~15 minutes (high frequency for growth)
+      if (now - lastGainTrain > getRandomWaitTime(ONEHOUR, TWOHOURS)) {
+        console.log('🚂 Starting TikTok Gain Train Module...');
+        try {
+          await TikTokGainTrainModule(tiktokPage);
+          console.log('✅ TikTok Gain Train completed successfully');
+        } catch (gainTrainError) {
+          console.error('❌ TikTok Gain Train error:', gainTrainError);
+        }
+        lastGainTrain = Date.now();
+        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
+        continue;
+      }
 
       // Run TikTokEngage every ~20 minutes
       if (
