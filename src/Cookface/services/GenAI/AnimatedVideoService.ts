@@ -31,28 +31,6 @@ class AnimatedVideoService {
   }
 
   /**
-   * Find available system font for text overlay
-   */
-  private findSystemFont(): string {
-    const possibleFonts = [
-      '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
-      '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf',
-      '/usr/share/fonts/TTF/arial.ttf',
-      '/System/Library/Fonts/Arial.ttf', // macOS
-      'C:\\Windows\\Fonts\\arial.ttf', // Windows
-    ];
-
-    for (const font of possibleFonts) {
-      if (fs.existsSync(font)) {
-        return font;
-      }
-    }
-
-    // Fallback - FFmpeg will use default system font
-    return '';
-  }
-
-  /**
    * Validate audio file format and fix if necessary
    */
   private async validateAndFixAudio(audioPath: string): Promise<string> {
@@ -227,7 +205,7 @@ class AnimatedVideoService {
   }
 
   /**
-   * Build simplified, stable FFMPEG command with minimal effects
+   * Build FFMPEG command without specifying fontfile (uses system default)
    */
   private buildSimplifiedFFMPEGCommand(
     audioPath: string,
@@ -245,51 +223,40 @@ class AnimatedVideoService {
     let currentStream = '[bg]';
     let streamCounter = 1;
 
-    // Apply only simple, stable zoom effect
+    // Apply zoom effect
     if (effects.zoom) {
       filterComplex += `${currentStream}zoompan=z='min(1.05,1.2)':d=25:s=${width}x${height}:fps=${fps}[zoom${streamCounter}];`;
       currentStream = `[zoom${streamCounter}]`;
       streamCounter++;
     }
 
-    // Apply simple color adjustment (no time-based expressions)
+    // Apply color adjustment
     if (effects.colorShift) {
       filterComplex += `${currentStream}hue=h=10:s=1.1[color${streamCounter}];`;
       currentStream = `[color${streamCounter}]`;
       streamCounter++;
     }
 
-    // Remove pulse effect entirely - it's causing the parsing issues
-    // The pad filter with mathematical expressions is not stable
-
-    // Add title text with safe font handling
+    // Add title text WITHOUT fontfile parameter - let FFmpeg use system default
     if (title) {
-      const escapedTitle = title.replace(/['"🚂]/g, ''); // Remove emoji and quotes
-      const fontPath = this.findSystemFont();
+      const cleanTitle = title
+        .replace(/['"🚂]/g, '') // Remove quotes and emojis
+        .replace(/:/g, '\\:') // Escape colons
+        .replace(/\\/g, '\\\\') // Escape backslashes
+        .replace(/,/g, '\\,') // Escape commas
+        .replace(/=/g, '\\=') // Escape equals
+        .trim();
 
-      let textFilter = `${currentStream}drawtext=`;
-      if (fontPath) {
-        textFilter += `fontfile='${fontPath}':`;
-      }
-      textFilter += [
-        `text='${escapedTitle}'`,
-        `fontsize=60`,
-        `fontcolor=white`,
-        `borderw=3`,
-        `bordercolor=black`,
-        `x=(w-text_w)/2`,
-        `y=h*0.15`,
-        `alpha=0.9`,
-      ].join(':');
+      // Build drawtext WITHOUT fontfile - this should work on Windows
+      const textFilter = `${currentStream}drawtext=text=${cleanTitle}:fontsize=60:fontcolor=white:borderw=3:bordercolor=black:x=(w-text_w)/2:y=h*0.15:alpha=0.9[final]`;
 
-      filterComplex += `${textFilter}[final];`;
+      filterComplex += textFilter;
       currentStream = '[final]';
+    } else {
+      // Remove trailing semicolon if no text
+      filterComplex = filterComplex.replace(/;$/, '');
     }
 
-    // Remove the final semicolon if it exists
-    filterComplex = filterComplex.replace(/;$/, '');
-
-    // Build final command with proper stream mapping
     const commandParts = [
       'ffmpeg',
       '-y',
@@ -307,12 +274,183 @@ class AnimatedVideoService {
       '-crf 28',
       '-pix_fmt yuv420p',
       '-r 30',
-      `-t ${Math.min(duration, 60)}`, // Cap at 60 seconds
+      `-t ${Math.min(duration, 60)}`,
       '-movflags +faststart',
       `"${outputPath}"`,
     ];
 
     return commandParts.join(' ');
+  }
+
+  /**
+   * Alternative: Create video without any text overlay for testing
+   */
+  async generateVideoWithoutText(
+    audioPath: string,
+    backgroundImage?: string,
+    duration?: number,
+  ): Promise<string> {
+    try {
+      console.log('Generating video without text overlay...');
+
+      const fixedAudioPath = await this.validateAndFixAudio(audioPath);
+      const videoDuration =
+        duration || (await this.getAudioDuration(fixedAudioPath));
+
+      const timestamp = Date.now();
+      const outputPath = path.join(this.outputDir, `no-text-${timestamp}.mp4`);
+
+      const bgPath = backgroundImage
+        ? path.resolve(backgroundImage)
+        : await this.generateDynamicBackground();
+
+      // Simple filter chain without text
+      const filterComplex =
+        '[0:v]scale=1080:1920[bg];[bg]zoompan=z=min(1.05,1.2):d=25:s=1080x1920:fps=30[zoom];[zoom]hue=h=10:s=1.1[final]';
+
+      const ffmpegCmd = [
+        'ffmpeg',
+        '-y',
+        `-i "${bgPath}"`,
+        `-i "${fixedAudioPath}"`,
+        '-filter_complex',
+        `"${filterComplex}"`,
+        '-map [final]',
+        '-map 1:a',
+        '-c:v libx264',
+        '-c:a aac',
+        '-preset veryfast',
+        '-crf 28',
+        '-pix_fmt yuv420p',
+        '-r 30',
+        `-t ${Math.min(videoDuration, 60)}`,
+        '-movflags +faststart',
+        `"${outputPath}"`,
+      ].join(' ');
+
+      console.log('Executing FFmpeg without text...');
+      execSync(ffmpegCmd, {stdio: 'inherit', timeout: 60000});
+
+      if (!fs.existsSync(outputPath) || fs.statSync(outputPath).size === 0) {
+        throw new Error('Output video file was not created or is empty');
+      }
+
+      console.log(`Video created successfully: ${outputPath}`);
+      return outputPath;
+    } catch (error: any) {
+      console.error('Error generating video without text:', error);
+      throw new Error(`Failed to generate video: ${error.message}`);
+    }
+  }
+
+  /**
+   * Test method to isolate the text rendering issue
+   */
+  async testTextRendering(audioPath: string): Promise<void> {
+    try {
+      console.log('Testing basic FFmpeg functionality...');
+
+      // Test 1: Create video without text
+      console.log('Test 1: Video without text');
+      await this.generateVideoWithoutText(audioPath);
+      console.log('✅ Basic video generation works');
+
+      // Test 2: Try with system default font
+      console.log('Test 2: Video with text (system font)');
+      await this.generateAnimatedVideo(audioPath, undefined, 'TEST', 5, {
+        glitch: false,
+        grid: false,
+        zoom: true,
+        shake: false,
+        colorShift: true,
+        particles: false,
+        pulse: false,
+        rotate: false,
+      });
+      console.log('✅ Text rendering works');
+    } catch (error: any) {
+      console.error('Test failed:', error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Find available system font - simplified approach
+   */
+  private findSystemFont(): string {
+    // List of potential font files to check
+    const windowsFonts = [
+      'C:\\Windows\\Fonts\\arial.ttf',
+      'C:\\Windows\\Fonts\\Arial.ttf',
+      'C:\\Windows\\Fonts\\arialbd.ttf', // Arial Bold
+      'C:\\Windows\\Fonts\\calibri.ttf',
+    ];
+
+    // Check which font exists
+    for (const font of windowsFonts) {
+      if (fs.existsSync(font)) {
+        console.log(`Found font: ${font}`);
+        // Return with forward slashes for FFmpeg
+        return font.replace(/\\/g, '/');
+      }
+    }
+
+    // If no specific font found, try without fontfile parameter
+    console.warn('No specific font found, using system default');
+    return '';
+  }
+
+  /**
+   * Alternative method: Generate video without text overlay to test basic functionality
+   */
+  async generateBasicVideo(
+    audioPath: string,
+    backgroundImage?: string,
+  ): Promise<string> {
+    try {
+      console.log('Generating basic video without text overlay...');
+
+      const fixedAudioPath = await this.validateAndFixAudio(audioPath);
+      const videoDuration = await this.getAudioDuration(fixedAudioPath);
+
+      const timestamp = Date.now();
+      const outputPath = path.join(this.outputDir, `basic-${timestamp}.mp4`);
+
+      const bgPath =
+        (backgroundImage && path.resolve(backgroundImage)) ||
+        (await this.generateDynamicBackground());
+
+      // Simple filter without text
+      const filterComplex =
+        "[0:v]scale=1080:1920[bg];[bg]zoompan=z='min(1.05,1.2)':d=25:s=1080x1920:fps=30[final]";
+
+      const ffmpegCmd = [
+        'ffmpeg',
+        '-y',
+        `-i "${bgPath}"`,
+        `-i "${fixedAudioPath}"`,
+        '-filter_complex',
+        `"${filterComplex}"`,
+        '-map [final]',
+        '-map 1:a',
+        '-c:v libx264',
+        '-c:a aac',
+        '-preset veryfast',
+        '-crf 28',
+        '-pix_fmt yuv420p',
+        '-r 30',
+        `-t ${Math.min(videoDuration, 60)}`,
+        '-movflags +faststart',
+        `"${outputPath}"`,
+      ].join(' ');
+
+      console.log('Basic video command:', ffmpegCmd.substring(0, 200) + '...');
+      execSync(ffmpegCmd, {stdio: 'inherit', timeout: 60000});
+
+      return outputPath;
+    } catch (error: any) {
+      throw new Error(`Failed to generate basic video: ${error.message}`);
+    }
   }
 
   /**

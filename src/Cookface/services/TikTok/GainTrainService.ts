@@ -43,9 +43,7 @@ class TikTokGainTrainService {
 
   constructor() {
     this.audioService = new GenerativeAIAudioService();
-    this.videoService = new AnimatedVideoService(
-      config.videoStore || './videos',
-    );
+    this.videoService = new AnimatedVideoService(config.videoStore);
 
     // Predefined Pexels image URLs
     this.imageUrls = [

@@ -7,7 +7,7 @@ import {TikTokGainTrainModule} from './modules/TikTokGainTrainModule';
 import {fbEngage} from './modules/fbEngage';
 // import { TelegramNews } from './modules/TelegramNews';
 import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
-// import { isWithinSleepWindow } from './utils/sleepWindow';
+import {isWithinSleepWindow} from './utils/sleepWindow';
 
 (async () => {
   try {
@@ -56,13 +56,13 @@ import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
       const now = Date.now();
 
       // 💡 Sleep window check
-      /* if (isWithinSleepWindow()) {
+      if (isWithinSleepWindow()) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 💤 Sleep window active. Sleeping 15 minutes...`,
         );
         await sleep(15 * 60 * 1000);
         continue;
-      } */
+      }
 
       // Run TikTok Gain Train every ~15 minutes (high frequency for growth)
       if (now - lastGainTrain > getRandomWaitTime(ONEHOUR, TWOHOURS)) {
