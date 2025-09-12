@@ -127,10 +127,10 @@ const postTrendNewsOnFB = async (
 
     console.log('Next button clicked using keyboard shortcuts successfully.');
 
-    await sleep(getRandomWaitTime(2000, 5000));
+    await sleep(getRandomWaitTime(10000, 20000));
 
     // Step 6: Click "Post" button using keyboard shortcuts
-    console.log('Using keyboard shortcuts to click Post button...');
+    /** console.log('Using keyboard shortcuts to click Post button...');
 
     // Hold Shift key and press Tab once
     await page.keyboard.down('Shift');
@@ -144,7 +144,7 @@ const postTrendNewsOnFB = async (
     // Hit Enter button
     await page.keyboard.press('Enter');
 
-    console.log('Post button clicked using keyboard shortcuts successfully.');
+    console.log('Post button clicked using keyboard shortcuts successfully.'); */
 
     /* 
     // Original logic commented out
