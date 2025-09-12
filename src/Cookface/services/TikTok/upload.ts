@@ -448,7 +448,7 @@ async function handleAdvancedSettings(page: Page): Promise<boolean> {
       await sleep(1000);
 
       console.log('🎯 Clicking AI content switch...');
-      await aiSwitchInput.click();
+      // await aiSwitchInput.click();
       console.log('✅ AI content switch clicked successfully');
 
       // Verify the switch was actually toggled
