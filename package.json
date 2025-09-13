@@ -12,6 +12,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node build/src/Cookface/index.js",
+    "youtube": "node build/src/Cookface/youtube.js",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "npx tsc",
@@ -19,7 +20,8 @@
     "prepare": "npm.cmd run compile",
     "pretest": "npm.cmd run compile",
     "posttest": "npm.cmd run lint",
-    "all": "npm run clean && npm run compile && npm run start"
+    "all": "npm run clean && npm run compile && npm run start",
+    "yts-all": "npm run clean && npm run compile && npm run youtube"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

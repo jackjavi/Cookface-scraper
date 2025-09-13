@@ -22,6 +22,7 @@ const requiredEnvVars = [
   'VIDEO_STORE',
   'TIKTOK_USERNAME',
   'TIKTOK_PASSWORD',
+  'PROXY_LIST',
 ];
 
 requiredEnvVars.forEach(key => {
@@ -52,6 +53,7 @@ interface Config {
   videoStore: string;
   TikTokUsername: string;
   TikTokPassword: string;
+  proxyList: string;
 }
 
 const config: Config = {
@@ -80,6 +82,7 @@ const config: Config = {
   videoStore: process.env.VIDEO_STORE as string,
   TikTokUsername: process.env.TIKTOK_USERNAME as string,
   TikTokPassword: process.env.TIKTOK_PASSWORD as string,
+  proxyList: process.env.PROXY_LIST as string,
 };
 
 export default config;
