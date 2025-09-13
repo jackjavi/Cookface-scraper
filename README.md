@@ -47,3 +47,42 @@ Docs - [FFMPEG](https://www.npmjs.com/package/fluent-ffmpeg)
 ```bash
 npm run all
 ```
+
+### Usage Examples with Proxies
+
+```bash
+# Production usage (after compiling)
+npm run proxy-stats              # View proxy statistics
+npm run proxy-fetch              # Get fresh proxies now
+npm run proxy-clean              # Remove failed proxies
+npm run proxy-all                # Full workflow: clean, compile, fetch, stats, start
+
+# Development usage (direct TypeScript execution)
+npm run dev-proxy-fetch          # Fetch during development
+npm run dev-proxy-stats          # Quick stats check
+
+# Your existing workflows still work
+npm run all                      # Your existing full workflow
+npm run start                    # Start with auto proxy management
+```
+
+### Daily Usage
+
+```bash
+npm run proxy-all    # Handles everything: compile, fetch proxies, start app
+```
+
+### Development
+
+```bash
+npm run dev-proxy-fetch    # Quick proxy refresh during development
+npm run compile            # Compile when ready
+npm run start             # Start with fresh proxies
+```
+
+### Monitoring
+
+```bash
+npm run proxy-stats       # Check proxy health anytime
+npm run proxy-list-working # See which proxies are working
+```

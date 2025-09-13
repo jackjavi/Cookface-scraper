@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "Cookface-scraper",
   "version": "0.0.0",
   "description": "",
   "main": "build/src/index.js",
@@ -21,7 +21,24 @@
     "pretest": "npm.cmd run compile",
     "posttest": "npm.cmd run lint",
     "all": "npm run clean && npm run compile && npm run start",
-    "yts-all": "npm run clean && npm run compile && npm run youtube"
+    "yts-all": "npm run clean && npm run compile && npm run youtube",
+    "proxy-cli": "node build/src/Cookface/proxyCLI.js",
+    "proxy-fetch": "node build/src/Cookface/proxyCLI.js fetch",
+    "proxy-test": "node build/src/Cookface/proxyCLI.js test",
+    "proxy-stats": "node build/src/Cookface/proxyCLI.js stats",
+    "proxy-start": "node build/src/Cookface/proxyCLI.js start",
+    "proxy-list": "node build/src/Cookface/proxyCLI.js list",
+    "proxy-list-working": "node build/src/Cookface/proxyCLI.js list-working",
+    "proxy-list-failed": "node build/src/Cookface/proxyCLI.js list-failed",
+    "proxy-clean": "node build/src/Cookface/proxyCLI.js clean",
+    "proxy-backup": "node build/src/Cookface/proxyCLI.js backup",
+    "proxy-restore": "node build/src/Cookface/proxyCLI.js restore",
+    "proxy-reset": "node build/src/Cookface/proxyCLI.js reset",
+    "proxy-help": "node build/src/Cookface/proxyCLI.js help",
+    "dev-proxy-cli": "ts-node src/Cookface/proxyCLI.ts",
+    "dev-proxy-fetch": "ts-node src/Cookface/proxyCLI.ts fetch",
+    "dev-proxy-stats": "ts-node src/Cookface/proxyCLI.ts stats",
+    "proxy-all": "npm run clean && npm run compile && npm run proxy-fetch && npm run proxy-stats && npm run start"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
