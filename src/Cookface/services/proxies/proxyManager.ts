@@ -99,11 +99,11 @@ export class ProxyManager {
   }
 
   /**
-   * Fetch fresh proxies from the source and update the list
+   * Fetch fresh proxies from the source and REPLACE the existing list completely
    */
   public async fetchAndUpdateProxies(): Promise<void> {
     console.log(
-      `[${new Date().toLocaleTimeString()}] 🔄 Fetching fresh proxies...`,
+      `[${new Date().toLocaleTimeString()}] 🔄 Fetching fresh proxies (clearing old ones)...`,
     );
 
     try {
@@ -114,31 +114,28 @@ export class ProxyManager {
       const freshProxies = await this.fetchProxiesFromSource();
       console.log(`📥 Fetched ${freshProxies.length} fresh proxies`);
 
-      // Load existing proxies
-      const existingProxies = await this.loadExistingProxies();
-      console.log(`📋 Found ${existingProxies.length} existing proxies`);
+      if (freshProxies.length === 0) {
+        console.warn('⚠️  No fresh proxies fetched, keeping existing list');
+        return;
+      }
 
-      // Merge and deduplicate
-      const mergedProxies = this.mergeAndDeduplicateProxies(
-        existingProxies,
-        freshProxies,
-      );
-      console.log(`🔗 Merged to ${mergedProxies.length} unique proxies`);
+      // IMPORTANT: Clear old proxies and use only fresh ones
+      console.log('🧹 Clearing old proxies and using only fresh ones');
 
       // Limit the number of proxies
-      const limitedProxies = mergedProxies.slice(0, this.config.maxProxies);
+      const limitedProxies = freshProxies.slice(0, this.config.maxProxies);
 
-      // Test a sample of new proxies
+      // Test a sample of new proxies to verify they work
       const testedProxies = await this.testProxySample(limitedProxies);
 
-      // Save updated proxy list
+      // Save the completely new proxy list
       await this.saveProxyList(testedProxies);
 
       // Get working proxy count
       const workingCount = testedProxies.filter(p => p.isWorking).length;
 
-      console.log(`✅ Proxy update complete:`);
-      console.log(`   📊 Total proxies: ${testedProxies.length}`);
+      console.log(`✅ Proxy update complete (old proxies cleared):`);
+      console.log(`   📊 Total fresh proxies: ${testedProxies.length}`);
       console.log(`   ✅ Working proxies: ${workingCount}`);
       console.log(
         `   ❌ Failed/Untested: ${testedProxies.length - workingCount}`,
@@ -157,12 +154,132 @@ export class ProxyManager {
   }
 
   /**
+   * Fetch a completely fresh list of proxies and clear all existing ones
+   */
+  public async fetchFreshProxiesOnly(): Promise<void> {
+    console.log(
+      `[${new Date().toLocaleTimeString()}] 🆕 Fetching completely fresh proxy list...`,
+    );
+
+    try {
+      // Create backup of current proxy list
+      await this.createBackup();
+
+      // Fetch fresh proxies
+      const freshProxies = await this.fetchProxiesFromSource();
+      console.log(`📥 Fetched ${freshProxies.length} completely fresh proxies`);
+
+      if (freshProxies.length === 0) {
+        throw new Error('No fresh proxies could be fetched from any source');
+      }
+
+      // Take only the freshest proxies up to the limit
+      const limitedProxies = freshProxies.slice(0, this.config.maxProxies);
+      console.log(
+        `🎯 Using ${limitedProxies.length} fresh proxies (old list completely cleared)`,
+      );
+
+      // Test a good sample of the fresh proxies
+      const sampleSize = Math.min(15, Math.ceil(limitedProxies.length * 0.3));
+      const testedProxies = await this.testProxySample(
+        limitedProxies,
+        sampleSize,
+      );
+
+      // Save the completely new proxy list
+      await this.saveProxyList(testedProxies);
+
+      // Get working proxy count
+      const workingCount = testedProxies.filter(
+        p => p.isWorking === true,
+      ).length;
+
+      console.log(`✅ Fresh proxy list created:`);
+      console.log(`   📊 Total fresh proxies: ${testedProxies.length}`);
+      console.log(`   ✅ Working proxies: ${workingCount}`);
+      console.log(
+        `   🧪 Tested: ${testedProxies.filter(p => p.isWorking !== undefined).length}`,
+      );
+      console.log(
+        `   ❓ Untested: ${testedProxies.filter(p => p.isWorking === undefined).length}`,
+      );
+    } catch (error) {
+      console.error('❌ Error fetching fresh proxies:', error);
+      await this.restoreBackup();
+      throw error;
+    }
+  }
+
+  /**
+   * Test all existing proxies (not just a sample)
+   */
+  public async testAllProxies(): Promise<void> {
+    console.log(
+      `[${new Date().toLocaleTimeString()}] 🔍 Testing ALL existing proxies...`,
+    );
+
+    try {
+      const proxies = await this.loadExistingProxies();
+
+      if (proxies.length === 0) {
+        console.log('📭 No proxies to test');
+        return;
+      }
+
+      console.log(`🧪 Testing all ${proxies.length} proxies...`);
+
+      // Test all proxies sequentially to avoid overwhelming the system
+      const updatedProxies = [...proxies];
+
+      for (let i = 0; i < updatedProxies.length; i++) {
+        const proxy = updatedProxies[i];
+        console.log(
+          `Testing proxy ${i + 1}/${updatedProxies.length}: ${proxy.proxyUrl}`,
+        );
+
+        try {
+          const testResult = await this.testSingleProxy(proxy);
+          Object.assign(proxy, testResult);
+
+          // Save progress every 10 proxies in case of interruption
+          if ((i + 1) % 10 === 0) {
+            await this.saveProxyList(updatedProxies);
+            console.log(`💾 Saved progress after ${i + 1} proxies`);
+          }
+        } catch (error) {
+          console.warn(`⚠️ Error testing proxy ${proxy.proxyUrl}:`, error);
+          proxy.isWorking = false;
+          proxy.lastTested = new Date().toISOString();
+        }
+
+        // Add a small delay between tests to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+
+      // Final save
+      await this.saveProxyList(updatedProxies);
+
+      const workingCount = updatedProxies.filter(
+        p => p.isWorking === true,
+      ).length;
+      console.log(
+        `✅ Complete proxy testing: ${workingCount}/${updatedProxies.length} working`,
+      );
+    } catch (error) {
+      console.error('❌ Error testing all proxies:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Fetch proxies from the online source
    */
   private async fetchProxiesFromSource(): Promise<ProxyData[]> {
     const sources = [
       'https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks5/data.txt',
       'https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/socks5/data.txt',
+      'https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt',
+      'https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt',
       // Add more sources as backup
     ];
 
@@ -275,30 +392,6 @@ export class ProxyManager {
   }
 
   /**
-   * Merge and deduplicate proxy lists
-   */
-  private mergeAndDeduplicateProxies(
-    existing: ProxyData[],
-    fresh: ProxyData[],
-  ): ProxyData[] {
-    const proxyMap = new Map<string, ProxyData>();
-
-    // Add existing proxies (keep their test results)
-    for (const proxy of existing) {
-      proxyMap.set(proxy.proxyUrl, proxy);
-    }
-
-    // Add fresh proxies (don't overwrite existing test results)
-    for (const proxy of fresh) {
-      if (!proxyMap.has(proxy.proxyUrl)) {
-        proxyMap.set(proxy.proxyUrl, proxy);
-      }
-    }
-
-    return Array.from(proxyMap.values());
-  }
-
-  /**
    * Test a sample of proxies to verify they're working
    */
   private async testProxySample(
@@ -309,31 +402,33 @@ export class ProxyManager {
       `🧪 Testing sample of ${Math.min(sampleSize, proxies.length)} proxies...`,
     );
 
-    // Separate untested and previously working proxies
-    const untested = proxies.filter(p => p.isWorking === undefined);
-    const previouslyWorking = proxies.filter(p => p.isWorking === true);
-    const previouslyFailed = proxies.filter(p => p.isWorking === false);
+    // Take a random sample of proxies to test
+    const shuffled = this.shuffleArray([...proxies]);
+    const toTest = shuffled.slice(0, Math.min(sampleSize, proxies.length));
 
-    // Test some untested proxies first
-    const toTest = [
-      ...untested.slice(0, Math.floor(sampleSize * 0.7)),
-      ...previouslyWorking.slice(0, Math.floor(sampleSize * 0.2)),
-      ...previouslyFailed.slice(0, Math.floor(sampleSize * 0.1)),
-    ];
+    console.log(`🎯 Testing ${toTest.length} randomly selected proxies`);
 
-    const testPromises = toTest.map(proxy => this.testSingleProxy(proxy));
-    const results = await Promise.allSettled(testPromises);
+    // Test proxies sequentially to avoid overwhelming the system
+    for (let i = 0; i < toTest.length; i++) {
+      const proxy = toTest[i];
+      console.log(`Testing ${i + 1}/${toTest.length}: ${proxy.proxyUrl}`);
 
-    // Update test results
-    results.forEach((result, index) => {
-      const proxy = toTest[index];
-      if (result.status === 'fulfilled') {
-        Object.assign(proxy, result.value);
-      } else {
+      try {
+        const testResult = await this.testSingleProxy(proxy);
+        Object.assign(proxy, testResult);
+
+        const status = proxy.isWorking ? '✅' : '❌';
+        const time = proxy.responseTime ? ` (${proxy.responseTime}ms)` : '';
+        console.log(`${status} ${proxy.proxyUrl}${time}`);
+      } catch (error) {
         proxy.isWorking = false;
         proxy.lastTested = new Date().toISOString();
+        console.log(`❌ ${proxy.proxyUrl} - Failed`);
       }
-    });
+
+      // Small delay between tests
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
 
     return proxies;
   }
@@ -363,7 +458,7 @@ export class ProxyManager {
 
         await page.goto('https://www.google.com', {
           waitUntil: 'networkidle2',
-          timeout: 15000,
+          timeout: 30000,
         });
 
         const responseTime = Date.now() - startTime;
@@ -471,6 +566,7 @@ export class ProxyManager {
     try {
       if (fs.existsSync(this.config.proxyFilePath)) {
         fs.copyFileSync(this.config.proxyFilePath, this.config.backupFilePath);
+        console.log(`📦 Created backup: ${this.config.backupFilePath}`);
       }
     } catch (error) {
       console.warn('⚠️  Could not create backup:', error);

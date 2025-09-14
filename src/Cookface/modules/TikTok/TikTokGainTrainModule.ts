@@ -1,9 +1,9 @@
-import TikTokGainTrainService from '../services/TikTok/GainTrainService';
-import {TikTokUpload, validateVideoFile} from '../services/TikTok/upload';
-import config from '../config';
+import TikTokGainTrainService from '../../services/TikTok/GainTrainService';
+import {TikTokUpload, validateVideoFile} from '../../services/TikTok/upload';
+import config from '../../config';
 import {Page} from 'puppeteer';
 import * as path from 'path';
-import sleep from '../utils/sleep';
+import sleep from '../../utils/sleep';
 
 /**
  * TikTok Gain Train Module

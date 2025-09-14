@@ -1,18 +1,18 @@
-import sleep from '../utils/sleep';
-import getRandomWaitTime from '../utils/randomWaitTime';
+import sleep from '../../utils/sleep';
+import getRandomWaitTime from '../../utils/randomWaitTime';
 import {
   likeSingleArticle,
   likeMultipleArticles,
-} from '../services/TikTok/likeArticle';
-import {navigateToNextArticle} from '../services/TikTok/navigationControls';
-import {selectActiveArticle} from '../utils/TikTok/selectActiveArticle';
+} from '../../services/TikTok/likeArticle';
+import {navigateToNextArticle} from '../../services/TikTok/navigationControls';
+import {selectActiveArticle} from '../../utils/TikTok/selectActiveArticle';
 import {
   navigateToTikTokPage,
   TIKTOK_ROUTES,
   navigateToPreviousPage,
-} from '../utils/TikTok/Navigation';
+} from '../../utils/TikTok/Navigation';
 import {Page} from 'puppeteer';
-import config from '../config/index';
+import config from '../../config/index';
 
 const CONFIG = {
   TikTokUsername: config.TikTokUsername,
@@ -29,7 +29,7 @@ function getWeightedChoice(weights: number[]): number {
   return weights.length - 1; // Fallback to last index
 }
 
-export const TikTokEngage = async (tiktokPage: Page): Promise<void> => {
+export const TikTokLikesEngage = async (tiktokPage: Page): Promise<void> => {
   try {
     console.log('Starting TikTokEngage processing...');
     await tiktokPage.bringToFront();

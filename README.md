@@ -86,3 +86,13 @@ npm run start             # Start with fresh proxies
 npm run proxy-stats       # Check proxy health anytime
 npm run proxy-list-working # See which proxies are working
 ```
+
+### FETCH
+
+```bash
+# This will now clear old proxies and fetch completely fresh ones
+npm run proxy-fetch
+
+# Or use the new method specifically designed for fresh proxies
+# (You'd need to add this to your CLI if you want it as a separate command)
+```

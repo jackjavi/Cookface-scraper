@@ -523,6 +523,65 @@ Reply:`;
     }
   }
 
+  async generateTikTokReply(
+    comments: string[],
+    tiktokUsername: string,
+  ): Promise<string> {
+    if (!Array.isArray(comments) || comments.length === 0) {
+      throw new Error('Comments should be a non-empty array of strings.');
+    }
+
+    // Determine if we should include a follow-back phrase (50% chance)
+    const includeFollowPhrase = Math.random() > 0.95;
+
+    const prompt = `You're a genuine, relatable person engaging authentically with TikTok content. Your goal is to create a natural comment (under 15 words) that fits seamlessly with the conversation.
+
+Existing Comments:
+${comments.map((comment, index) => `${index + 1}. "${comment}"`).join('\n')}
+
+Create a comment that:
+- Matches the tone and energy of existing comments
+- Feels authentic and conversational 
+- Adds value through support, humor, relatability, or insight
+- Uses casual TikTok language and style
+- Fits naturally with the comment thread
+- Avoids being overly promotional or spammy
+
+${
+  includeFollowPhrase
+    ? `Additionally, naturally weave in somewhere in your comment an invitation for people to follow you (username: ${tiktokUsername}) with the understanding that you'll follow them back. This should feel organic - maybe something like "follow me for a follow back" or similar phrasing that fits naturally with your main comment. Be creative with how you integrate this - it could be at the beginning, middle, or end of your comment wherever it flows best.`
+    : 'Keep the comment focused and genuine without any follow requests.'
+}
+
+Keep it short, authentic, and engaging. Use emojis sparingly if they fit naturally.
+
+Comment:`;
+
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const reply = response.text();
+
+      // Clean the comment: remove prefixes, markdown, and excess formatting
+      const cleanReply = reply
+        .replace(/^[^:]*:\s*/, '') // Remove everything up to and including the first colon
+        .replace(/\*\*/g, '') // Remove markdown bold indicators
+        .replace(/\n/g, ' ') // Replace newlines with spaces
+        .replace(/(^["'""'']+)|(["'""'']+$)/g, '') // Remove quotes at start/end
+        .replace(/(?<=\s)["'""'']+|["'""'']+(?=\s)/g, '') // Remove stray quotes around words
+        .replace(/Comment:\s*/i, '') // Remove "Comment:" prefix if present
+        .trim();
+
+      console.log('Generated TikTok comment:', cleanReply);
+      console.log('Include follow phrase:', includeFollowPhrase);
+
+      return cleanReply;
+    } catch (error) {
+      console.error('Error generating TikTok reply:', error);
+      throw new Error('Failed to generate TikTok reply');
+    }
+  }
+
   async generateKenyanJokePost(): Promise<string> {
     const recentJokes = this.getRecentEntries(this.jokesFilePath, 10);
 

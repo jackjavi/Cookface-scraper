@@ -1,15 +1,15 @@
 [
   {
     "proxyUrl": "socks5://121.169.46.116:1090",
-    "isWorking": true,
-    "lastTested": "2025-09-13T14:10:53.323Z",
-    "responseTime": 5254
+    "isWorking": false,
+    "lastTested": "2025-09-14T11:39:21.810Z",
+    "responseTime": 6029
   },
   {
     "proxyUrl": "socks5://115.127.132.225:1080",
     "isWorking": false,
-    "lastTested": "2025-09-13T14:11:04.450Z",
-    "responseTime": 16515
+    "lastTested": "2025-09-13T14:23:56.094Z",
+    "responseTime": 17491
   },
   {
     "proxyUrl": "socks5://69.49.234.59:55781",
@@ -85,50 +85,268 @@
   },
   {
     "proxyUrl": "socks5://185.93.89.164:7801",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-13T14:23:56.020Z",
+    "isWorking": false,
+    "responseTime": 17428
   },
   {
     "proxyUrl": "socks5://119.148.39.241:9990",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-13T14:23:56.006Z",
+    "isWorking": false,
+    "responseTime": 17413
   },
   {
     "proxyUrl": "socks5://8.218.50.160:1100",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-13T14:23:56.008Z",
+    "isWorking": false,
+    "responseTime": 17414
   },
   {
     "proxyUrl": "socks5://47.82.116.173:1100",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-13T14:23:52.265Z",
+    "isWorking": false,
+    "responseTime": 13663
   },
   {
     "proxyUrl": "socks5://87.106.52.7:6400",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-13T14:23:44.703Z",
+    "isWorking": false,
+    "responseTime": 6101
   },
   {
     "proxyUrl": "socks5://47.236.204.180:1111",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-13T14:23:56.014Z",
+    "isWorking": false,
+    "responseTime": 17412
   },
   {
     "proxyUrl": "socks5://178.33.77.209:10880",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-13T14:23:55.954Z",
+    "isWorking": false,
+    "responseTime": 17351
   },
   {
     "proxyUrl": "socks5://45.61.188.134:44499",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-14T11:38:09.170Z",
+    "isWorking": false,
+    "responseTime": 17718
   },
   {
     "proxyUrl": "socks5://221.202.27.194:10807",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-14T11:37:54.458Z",
+    "isWorking": false,
+    "responseTime": 3005
   },
   {
     "proxyUrl": "socks5://117.161.170.163:9098",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-14T11:38:09.111Z",
+    "isWorking": false,
+    "responseTime": 17658
   },
   {
     "proxyUrl": "socks5://117.161.170.163:9068",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-14T11:38:09.111Z",
+    "isWorking": false,
+    "responseTime": 17657
   },
   {
     "proxyUrl": "socks5://117.161.170.163:9091",
-    "lastTested": "2025-09-13T14:09:06.333Z"
+    "lastTested": "2025-09-14T11:38:09.238Z",
+    "isWorking": false,
+    "responseTime": 17784
+  },
+  {
+    "proxyUrl": "socks5://103.151.30.49:1080",
+    "lastTested": "2025-09-14T11:38:09.262Z",
+    "isWorking": false,
+    "responseTime": 17808
+  },
+  {
+    "proxyUrl": "socks5://117.161.170.163:9408",
+    "lastTested": "2025-09-14T11:37:59.271Z",
+    "isWorking": false,
+    "responseTime": 7817
+  },
+  {
+    "proxyUrl": "socks5://117.161.170.163:9457",
+    "lastTested": "2025-09-14T11:39:37.847Z",
+    "isWorking": false,
+    "responseTime": 22076
+  },
+  {
+    "proxyUrl": "socks5://117.161.170.163:9323",
+    "lastTested": "2025-09-14T11:39:49.143Z",
+    "isWorking": false,
+    "responseTime": 33372
+  },
+  {
+    "proxyUrl": "socks5://117.161.170.163:9489",
+    "lastTested": "2025-09-14T11:39:21.907Z",
+    "isWorking": false,
+    "responseTime": 6135
+  },
+  {
+    "proxyUrl": "socks5://134.199.159.23:1080",
+    "lastTested": "2025-09-14T11:40:17.998Z",
+    "isWorking": false,
+    "responseTime": 62218
+  },
+  {
+    "proxyUrl": "socks5://170.233.30.33:4153",
+    "lastTested": "2025-09-14T11:39:21.660Z",
+    "isWorking": false,
+    "responseTime": 5880
+  },
+  {
+    "proxyUrl": "socks5://222.59.173.105:44178",
+    "lastTested": "2025-09-14T11:39:48.445Z",
+    "isWorking": false,
+    "responseTime": 32665
+  },
+  {
+    "proxyUrl": "socks5://78.63.115.20:8899",
+    "lastTested": "2025-09-14T11:40:17.981Z",
+    "isWorking": false,
+    "responseTime": 62200
+  },
+  {
+    "proxyUrl": "socks5://185.93.89.144:26990",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://117.161.170.163:9277",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://117.161.170.163:9252",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://117.161.170.163:9067",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://8.219.10.38:33333",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://222.59.173.105:44139",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://8.210.244.253:1122",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://117.161.170.163:9034",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://117.161.170.163:9002",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://223.25.109.163:8199",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://221.202.27.194:10808",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://47.243.94.125:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://138.199.25.13:3906",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://51.178.68.226:18522",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://82.223.165.28:62284",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://202.40.178.234:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://212.237.125.216:6969",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://61.9.34.118:58765",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://185.93.89.182:4122",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://139.162.78.109:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://138.68.60.8:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://209.97.150.167:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://45.204.212.213:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://58.22.60.174:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://117.161.170.163:9381",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://103.245.205.30:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://14.19.176.208:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://185.93.89.163:4313",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://47.238.2.180:1100",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://139.59.1.14:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://128.199.202.122:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://43.100.70.111:1024",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://198.199.86.11:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://159.203.61.169:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
+  },
+  {
+    "proxyUrl": "socks5://134.209.29.120:1080",
+    "lastTested": "2025-09-14T11:37:51.451Z"
   }
 ]

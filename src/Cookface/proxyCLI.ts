@@ -292,10 +292,10 @@ Examples:
         await this.proxyManager.fetchAndUpdateProxies();
         break;
 
-      /** case 'test':
+      case 'test':
         console.log('🧪 Testing existing proxies...');
         await this.proxyManager.testAllProxies();
-        break; */
+        break;
 
       case 'stats':
         await this.showStats();
