@@ -202,7 +202,7 @@ export async function getMultipleYTSPages(
 export async function navigateToYouTube(page: Page): Promise<void> {
   try {
     console.log('Navigating to YouTube...');
-    await page.goto('https://www.youtu.be/dnY2p2whjk8?si=W-htD6gL_dmdhM5J', {
+    await page.goto('https://youtu.be/dnY2p2whjk8?si=W-htD6gL_dmdhM5J', {
       waitUntil: 'domcontentloaded',
       timeout: 120000,
     });
