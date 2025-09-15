@@ -21,8 +21,8 @@ async function singlePageExample() {
     console.log(`Created page with proxy: ${proxy}`);
 
     // Navigate to YouTube
-    // await navigateToYouTube(page);
-    await sleep(300000);
+    await navigateToYouTube(page);
+    // await sleep(300000);
 
     // Do your scraping work here
     // await page.waitForSelector('input#search', {timeout: 10000});

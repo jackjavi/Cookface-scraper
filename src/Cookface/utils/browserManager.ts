@@ -35,18 +35,8 @@ export async function createProxyBrowser(): Promise<{
   browser: Browser;
   proxy: string;
 }> {
-  // const randomProxy = await getRandomProxy(config.proxyList);
-  const randomProxy = `socks4://104.200.135.46:4145`;
+  const randomProxy = `socks4://82.200.235.134:38191`;
   console.log('Creating browser with proxy:', randomProxy);
-
-  if (!randomProxy) {
-    throw new Error('No proxy available from proxy list');
-  }
-
-  // Parse the SOCKS5 proxy URL
-  // const proxyUrl = new URL(randomProxy);
-  // const proxyUrl = new URL(`socks5://99.110.188.252:1080`);
-  // const proxyServer = `${proxyUrl.hostname}:${proxyUrl.port}`;
 
   const browserArgs = [
     `--proxy-server=${randomProxy}`,
@@ -60,32 +50,41 @@ export async function createProxyBrowser(): Promise<{
     '--disable-background-timer-throttling',
     '--disable-backgrounding-occluded-windows',
     '--disable-renderer-backgrounding',
-    // Additional proxy-related flags
     '--disable-features=VizDisplayCompositor',
+    // Enhanced SSL handling for proxies
     '--ignore-certificate-errors-spki-list',
     '--ignore-certificate-errors',
     '--ignore-ssl-errors',
+    '--disable-web-security',
+    '--allow-running-insecure-content',
+    '--disable-features=VizDisplayCompositor',
   ];
 
   try {
     const proxyBrowser = await puppeteer.launch({
       headless: false,
-      // args: [`--proxy-server=${randomProxy}`],
       args: browserArgs,
-      // defaultViewport: {width: 1920, height: 1280},
+      timeout: 30000, // Increase timeout
     });
 
-    // Quick test
+    // Test with a simpler HTTP site first
     const testPage = await proxyBrowser.newPage();
-    await testPage.goto('https://facebook.com', {
-      waitUntil: 'domcontentloaded',
-      // timeout: 10000,
-    });
-    // await testPage.close();
 
-    // Store the browser instance for cleanup
+    /** try {
+      // Then try HTTPS
+       await testPage.goto('https://www.google.com', {
+        waitUntil: 'domcontentloaded',
+        timeout: 120000,
+      });
+      console.log('✅ Proxy working with HTTPS');
+    } catch (testError: any) {
+      console.log('⚠️ Proxy has limited HTTPS support:', testError.message);
+      // Continue anyway - might work for some sites
+    } finally {
+      // await testPage.close();
+    } */
+
     activeBrowsers.set(randomProxy, proxyBrowser);
-
     console.log(`✅ Browser created successfully with proxy: ${randomProxy}`);
     return {browser: proxyBrowser, proxy: randomProxy};
   } catch (error: any) {
@@ -108,18 +107,41 @@ export async function getNewYTSPage(): Promise<{
   const {browser: ytsBrowser, proxy} = await createProxyBrowser();
 
   const ytsPage = await ytsBrowser.newPage();
+  // const yts2Page = await ytsBrowser.newPage();
+  // const yts3Page = await ytsBrowser.newPage();
+  // const yts4Page = await ytsBrowser.newPage();
 
   // Set viewport
   // await ytsPage.setViewport({width: 1920, height: 1280});
 
+  // In your getNewYTSPage function, try HTTP first
+  try {
+    /**
+    console.log('Testing with HTTP YouTube first...');
+    await ytsPage.goto('http://youtube.com', {
+      waitUntil: 'domcontentloaded',
+      timeout: 60000,
+    });
+
+    // YouTube will likely redirect to HTTPS, but this tests basic connectivity
+    console.log('✅ Basic YouTube connectivity working');
+  } catch (httpError) {
+    console.log('HTTP test failed, trying HTTPS with longer timeout...');
+
+    await yts2Page.goto('https://youtube.com', {
+      waitUntil: 'domcontentloaded',
+      timeout: 90000,
+    });
+  }
+
   try {
     // Test the proxy by visiting IP checker
     console.log('Testing proxy connection...');
-    await ytsPage.goto('https://www.whatismyip.com/', {
+    await yts3Page.goto('https://www.whatismyip.com/', {
       waitUntil: 'networkidle2',
-      // timeout: 300000,
-    });
-    await sleep(60000);
+      timeout: 600000,
+    }); */
+    // await sleep(60000);
 
     // Optional: Get the actual IP to verify proxy is working
     /** try {
@@ -132,7 +154,7 @@ export async function getNewYTSPage(): Promise<{
       console.log('Could not extract IP, but page loaded successfully');
     } */
 
-    console.log('New page opened with proxy:\t', proxy);
+    // console.log('New page opened with proxy:\t', proxy);
     return {page: ytsPage, browser: ytsBrowser, proxy};
   } catch (error: any) {
     console.error('❌ Failed to load test page:', error.message);
@@ -180,9 +202,9 @@ export async function getMultipleYTSPages(
 export async function navigateToYouTube(page: Page): Promise<void> {
   try {
     console.log('Navigating to YouTube...');
-    await page.goto('https://www.youtube.com', {
-      waitUntil: 'networkidle2',
-      // timeout: 30000,
+    await page.goto('https://www.youtu.be/dnY2p2whjk8?si=W-htD6gL_dmdhM5J', {
+      waitUntil: 'domcontentloaded',
+      timeout: 120000,
     });
     console.log('✅ Successfully navigated to YouTube');
   } catch (error: any) {
