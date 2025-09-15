@@ -21,16 +21,17 @@ async function singlePageExample() {
     console.log(`Created page with proxy: ${proxy}`);
 
     // Navigate to YouTube
-    await navigateToYouTube(page);
+    // await navigateToYouTube(page);
+    await sleep(300000);
 
     // Do your scraping work here
-    await page.waitForSelector('input#search', {timeout: 10000});
-    console.log('YouTube loaded successfully!');
+    // await page.waitForSelector('input#search', {timeout: 10000});
+    // console.log('YouTube loaded successfully!');
 
     // Clean up
-    await closeProxyBrowser(browser, proxy);
-  } catch (error) {
-    console.error('Single page example failed:', error);
+    // await closeProxyBrowser(browser, proxy);
+  } catch (error: any) {
+    console.error('Single page example failed:', error.message);
   } finally {
     await sleep(100000);
   }
@@ -213,5 +214,6 @@ export async function runExamples() {
 
 // Run if this file is executed directly
 if (require.main === module) {
-  runExamples().catch(console.error);
+  // runExamples().catch(console.error);
+  singlePageExample();
 }

@@ -3,6 +3,7 @@ import {Browser, Page} from 'puppeteer';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import config from '../config/index';
 import * as fs from 'fs';
+import sleep from './sleep';
 
 puppeteer.use(StealthPlugin());
 
@@ -34,7 +35,8 @@ export async function createProxyBrowser(): Promise<{
   browser: Browser;
   proxy: string;
 }> {
-  const randomProxy = await getRandomProxy(config.proxyList);
+  // const randomProxy = await getRandomProxy(config.proxyList);
+  const randomProxy = `socks4://104.200.135.46:4145`;
   console.log('Creating browser with proxy:', randomProxy);
 
   if (!randomProxy) {
@@ -42,11 +44,12 @@ export async function createProxyBrowser(): Promise<{
   }
 
   // Parse the SOCKS5 proxy URL
-  const proxyUrl = new URL(randomProxy);
-  const proxyServer = `${proxyUrl.hostname}:${proxyUrl.port}`;
+  // const proxyUrl = new URL(randomProxy);
+  // const proxyUrl = new URL(`socks5://99.110.188.252:1080`);
+  // const proxyServer = `${proxyUrl.hostname}:${proxyUrl.port}`;
 
   const browserArgs = [
-    `--proxy-server=socks5://${proxyServer}`,
+    `--proxy-server=${randomProxy}`,
     '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage',
@@ -57,14 +60,28 @@ export async function createProxyBrowser(): Promise<{
     '--disable-background-timer-throttling',
     '--disable-backgrounding-occluded-windows',
     '--disable-renderer-backgrounding',
+    // Additional proxy-related flags
+    '--disable-features=VizDisplayCompositor',
+    '--ignore-certificate-errors-spki-list',
+    '--ignore-certificate-errors',
+    '--ignore-ssl-errors',
   ];
 
   try {
     const proxyBrowser = await puppeteer.launch({
       headless: false,
+      // args: [`--proxy-server=${randomProxy}`],
       args: browserArgs,
-      defaultViewport: {width: 1366, height: 768},
+      // defaultViewport: {width: 1920, height: 1280},
     });
+
+    // Quick test
+    const testPage = await proxyBrowser.newPage();
+    await testPage.goto('https://facebook.com', {
+      waitUntil: 'domcontentloaded',
+      // timeout: 10000,
+    });
+    // await testPage.close();
 
     // Store the browser instance for cleanup
     activeBrowsers.set(randomProxy, proxyBrowser);
@@ -93,18 +110,19 @@ export async function getNewYTSPage(): Promise<{
   const ytsPage = await ytsBrowser.newPage();
 
   // Set viewport
-  await ytsPage.setViewport({width: 1366, height: 768});
+  // await ytsPage.setViewport({width: 1920, height: 1280});
 
   try {
     // Test the proxy by visiting IP checker
     console.log('Testing proxy connection...');
     await ytsPage.goto('https://www.whatismyip.com/', {
       waitUntil: 'networkidle2',
-      timeout: 30000,
+      // timeout: 300000,
     });
+    await sleep(60000);
 
     // Optional: Get the actual IP to verify proxy is working
-    try {
+    /** try {
       const ipElement = await ytsPage.$('span#ip');
       if (ipElement) {
         const ip = await ytsPage.evaluate(el => el.textContent, ipElement);
@@ -112,14 +130,14 @@ export async function getNewYTSPage(): Promise<{
       }
     } catch (ipError) {
       console.log('Could not extract IP, but page loaded successfully');
-    }
+    } */
 
-    console.log('New YouTube page opened with proxy:', proxy);
+    console.log('New page opened with proxy:\t', proxy);
     return {page: ytsPage, browser: ytsBrowser, proxy};
   } catch (error: any) {
     console.error('❌ Failed to load test page:', error.message);
-    await ytsBrowser.close();
-    activeBrowsers.delete(proxy);
+    // await ytsBrowser.close();
+    // activeBrowsers.delete(proxy);
     throw error;
   }
 }
@@ -164,7 +182,7 @@ export async function navigateToYouTube(page: Page): Promise<void> {
     console.log('Navigating to YouTube...');
     await page.goto('https://www.youtube.com', {
       waitUntil: 'networkidle2',
-      timeout: 30000,
+      // timeout: 30000,
     });
     console.log('✅ Successfully navigated to YouTube');
   } catch (error: any) {

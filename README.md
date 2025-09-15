@@ -96,3 +96,17 @@ npm run proxy-fetch
 # Or use the new method specifically designed for fresh proxies
 # (You'd need to add this to your CLI if you want it as a separate command)
 ```
+
+### TEST PROXY MANUALLY
+
+```bash
+curl --proxy socks5://209.97.150.167:1080 https://httpbin.org/ip
+# Test if the host is reachable on that port
+telnet 209.97.150.167 1080
+
+# Or use nc (netcat)
+nc -zv 209.97.150.167 1080
+
+# Or nmap
+nmap -p 1080 209.97.150.167
+```
