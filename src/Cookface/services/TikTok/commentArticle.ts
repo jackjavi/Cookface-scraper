@@ -37,6 +37,36 @@ export async function CommentArticle(
   page: Page,
   options: CommentOptions = {},
 ): Promise<CommentResult> {
+  await sleep(getRandomWaitTime(1000, 4000));
+  await page.reload({waitUntil: 'domcontentloaded'});
+  console.log('Page reloaded successfully.');
+  await sleep(getRandomWaitTime(1000, 5000));
+
+  // Navigate to next article once initially
+  await navigateToNextArticle(page, 1500);
+
+  // Navigate through random number of articles (2-6) with random pauses
+  const articlesToNavigate = Math.floor(Math.random() * 5) + 2; // Random between 2-6
+  console.log(
+    `🎯 Navigating through ${articlesToNavigate} articles before starting comment section...`,
+  );
+
+  for (let i = 0; i < articlesToNavigate; i++) {
+    console.log(`📱 Navigating to article ${i + 1}/${articlesToNavigate}...`);
+
+    // Navigate to next article
+    await navigateToNextArticle(page, 1500);
+
+    // Random pause between 4-7 seconds between navigations
+    const pauseTime = getRandomWaitTime(4000, 7000);
+    console.log(`⏳ Pausing for ${pauseTime}ms before next navigation...`);
+    await sleep(pauseTime);
+  }
+
+  console.log(
+    `✅ Completed navigation through ${articlesToNavigate} articles, starting comment section...`,
+  );
+
   const {
     minCommentCount = 5,
     maxCommentsToExtract = 10,

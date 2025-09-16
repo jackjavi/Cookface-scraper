@@ -55,13 +55,13 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       const now = Date.now();
 
       // 💤 Sleep window check
-      /** if (isWithinSleepWindow()) {
+      if (isWithinSleepWindow()) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 💤 Sleep window active. Sleeping 15 minutes...`,
         );
         await sleep(15 * 60 * 1000);
         continue;
-      } */
+      }
 
       // Run TikTokCommentsEngage every ~20-30 minutes
       if (

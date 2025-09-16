@@ -45,8 +45,8 @@ export const XTrendsToNews = async (
 
     // Initialize services
     const genAIService = new GenerativeAIService();
-    // const genAIAudioService = new GenerativeAIAudioService();
-    // const genAIVideoService = new GenerativeAIVideoService();
+    const genAIAudioService = new GenerativeAIAudioService();
+    const genAIVideoService = new GenerativeAIVideoService();
 
     const trends = await scrapeTrends24();
 
@@ -121,7 +121,7 @@ export const XTrendsToNews = async (
     await sleep(2000);
 
     // Generate audio for the news bite
-    /** console.log('Generating audio for news bite...');
+    console.log('Generating audio for news bite...');
     try {
       audioFilePath = await genAIAudioService.generateNewsAudio(
         newsBite,
@@ -134,10 +134,10 @@ export const XTrendsToNews = async (
         audioError,
       );
       // Continue with the process even if audio generation fails
-    } */
+    }
 
     // Generate video from image and audio
-    /** console.log('Generating video from image and audio...');
+    console.log('Generating video from image and audio...');
     try {
       if (audioFilePath && sharedImagePath) {
         videoFilePath = await genAIVideoService.generateVideoFromImageAndAudio(
@@ -159,12 +159,12 @@ export const XTrendsToNews = async (
         videoError,
       );
       // Continue with the process even if video generation fails
-    } */
+    }
 
     await sleep(2000);
 
     // Post to X [PAUSE NEWSBITES POSTING TO X FOR NOW]
-    /** console.log('Posting to X...');
+    console.log('Posting to X...');
     await postTrendNewsOnX(
       'Home',
       xPage,
@@ -173,7 +173,7 @@ export const XTrendsToNews = async (
       sharedImagePath ? sharedImagePath : undefined,
       // videoFilePath ? videoFilePath : undefined,
     );
-    console.log('Successfully posted to X'); */
+    console.log('Successfully posted to X');
 
     await fbPage.bringToFront();
     await sleep(2000);
