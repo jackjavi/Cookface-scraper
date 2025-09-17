@@ -51,62 +51,12 @@ npm run all
 ### Usage Examples with Proxies
 
 ```bash
-# Production usage (after compiling)
-npm run proxy-stats              # View proxy statistics
-npm run proxy-fetch              # Get fresh proxies now
-npm run proxy-clean              # Remove failed proxies
-npm run proxy-all                # Full workflow: clean, compile, fetch, stats, start
+# Fetch only (no testing)
+npm run proxy-fetch-only
 
-# Development usage (direct TypeScript execution)
-npm run dev-proxy-fetch          # Fetch during development
-npm run dev-proxy-stats          # Quick stats check
+# Test existing proxies only
+npm run proxy-test-only
 
-# Your existing workflows still work
-npm run all                      # Your existing full workflow
-npm run start                    # Start with auto proxy management
-```
-
-### Daily Usage
-
-```bash
-npm run proxy-all    # Handles everything: compile, fetch proxies, start app
-```
-
-### Development
-
-```bash
-npm run dev-proxy-fetch    # Quick proxy refresh during development
-npm run compile            # Compile when ready
-npm run start             # Start with fresh proxies
-```
-
-### Monitoring
-
-```bash
-npm run proxy-stats       # Check proxy health anytime
-npm run proxy-list-working # See which proxies are working
-```
-
-### FETCH
-
-```bash
-# This will now clear old proxies and fetch completely fresh ones
-npm run proxy-fetch
-
-# Or use the new method specifically designed for fresh proxies
-# (You'd need to add this to your CLI if you want it as a separate command)
-```
-
-### TEST PROXY MANUALLY
-
-```bash
-curl --proxy socks5://209.97.150.167:1080 https://httpbin.org/ip
-# Test if the host is reachable on that port
-telnet 209.97.150.167 1080
-
-# Or use nc (netcat)
-nc -zv 209.97.150.167 1080
-
-# Or nmap
-nmap -p 1080 209.97.150.167
+# Combined operation (fetch + test)
+npm run proxy-fetch-test
 ```

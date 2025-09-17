@@ -1,352 +1,1214 @@
 [
   {
-    "proxyUrl": "socks5://121.169.46.116:1090",
-    "isWorking": false,
-    "lastTested": "2025-09-14T11:39:21.810Z",
-    "responseTime": 6029
+    "proxyUrl": "http://160.153.0.9:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.660Z"
   },
   {
-    "proxyUrl": "socks5://115.127.132.225:1080",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:23:56.094Z",
-    "responseTime": 17491
+    "proxyUrl": "http://172.67.68.124:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.759Z"
   },
   {
-    "proxyUrl": "socks5://69.49.234.59:55781",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:09:12.444Z",
-    "responseTime": 6106
+    "proxyUrl": "http://5.10.246.68:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.818Z"
   },
   {
-    "proxyUrl": "socks5://222.59.173.105:44101",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:09:22.677Z",
-    "responseTime": 16339
+    "proxyUrl": "socks5://23.95.150.9:5978",
+    "protocol": "socks5",
+    "source": "TheSpeedX SOCKS5",
+    "lastTested": "2025-09-17T01:46:01.765Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9357",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:09:22.641Z",
-    "responseTime": 16303
+    "proxyUrl": "http://104.24.36.108:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.664Z"
   },
   {
-    "proxyUrl": "socks5://223.25.109.114:8199",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:09:09.284Z",
-    "responseTime": 2946
+    "proxyUrl": "http://185.221.160.23:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.662Z"
   },
   {
-    "proxyUrl": "socks5://82.200.235.134:24887",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:09:09.718Z",
-    "responseTime": 3379
+    "proxyUrl": "http://104.16.198.111:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.644Z"
   },
   {
-    "proxyUrl": "socks5://82.200.235.134:51614",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:09:08.072Z",
-    "responseTime": 1733
+    "proxyUrl": "http://185.244.36.237:47816",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.621Z"
   },
   {
-    "proxyUrl": "socks5://85.111.94.98:15858",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:11:04.367Z",
-    "responseTime": 16442
+    "proxyUrl": "http://185.148.105.94:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.693Z"
   },
   {
-    "proxyUrl": "socks5://85.111.94.98:15833",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:11:04.372Z",
-    "responseTime": 16447
+    "proxyUrl": "http://104.21.31.111:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.625Z"
   },
   {
-    "proxyUrl": "socks5://85.111.94.98:38121",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:11:04.217Z",
-    "responseTime": 16291
+    "proxyUrl": "http://172.67.74.221:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.611Z"
   },
   {
-    "proxyUrl": "socks5://160.19.16.86:1080",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:11:04.408Z",
-    "responseTime": 16474
+    "proxyUrl": "http://45.80.111.39:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.658Z"
   },
   {
-    "proxyUrl": "socks5://89.169.36.109:1080",
-    "isWorking": false,
-    "lastTested": "2025-09-13T14:10:55.839Z",
-    "responseTime": 7905
+    "proxyUrl": "http://185.176.26.152:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.794Z"
   },
   {
-    "proxyUrl": "socks5://177.36.64.129:54003",
-    "lastTested": "2025-09-13T14:11:04.408Z",
-    "isWorking": false,
-    "responseTime": 16473
+    "proxyUrl": "http://198.41.202.179:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.706Z"
   },
   {
-    "proxyUrl": "socks5://185.93.89.164:7801",
-    "lastTested": "2025-09-13T14:23:56.020Z",
-    "isWorking": false,
-    "responseTime": 17428
+    "proxyUrl": "http://104.21.24.13:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.805Z"
   },
   {
-    "proxyUrl": "socks5://119.148.39.241:9990",
-    "lastTested": "2025-09-13T14:23:56.006Z",
-    "isWorking": false,
-    "responseTime": 17413
+    "proxyUrl": "http://45.159.218.157:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.607Z"
   },
   {
-    "proxyUrl": "socks5://8.218.50.160:1100",
-    "lastTested": "2025-09-13T14:23:56.008Z",
-    "isWorking": false,
-    "responseTime": 17414
+    "proxyUrl": "http://104.17.66.111:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.679Z"
   },
   {
-    "proxyUrl": "socks5://47.82.116.173:1100",
-    "lastTested": "2025-09-13T14:23:52.265Z",
-    "isWorking": false,
-    "responseTime": 13663
+    "proxyUrl": "http://47.82.113.251:1100",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.590Z"
   },
   {
-    "proxyUrl": "socks5://87.106.52.7:6400",
-    "lastTested": "2025-09-13T14:23:44.703Z",
-    "isWorking": false,
-    "responseTime": 6101
+    "proxyUrl": "http://185.247.226.94:16049",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.793Z"
   },
   {
-    "proxyUrl": "socks5://47.236.204.180:1111",
-    "lastTested": "2025-09-13T14:23:56.014Z",
-    "isWorking": false,
-    "responseTime": 17412
+    "proxyUrl": "http://172.67.70.66:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.793Z"
   },
   {
-    "proxyUrl": "socks5://178.33.77.209:10880",
-    "lastTested": "2025-09-13T14:23:55.954Z",
-    "isWorking": false,
-    "responseTime": 17351
+    "proxyUrl": "http://104.21.58.104:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.801Z"
   },
   {
-    "proxyUrl": "socks5://45.61.188.134:44499",
-    "lastTested": "2025-09-14T11:38:09.170Z",
-    "isWorking": false,
-    "responseTime": 17718
+    "proxyUrl": "http://185.162.228.36:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.721Z"
   },
   {
-    "proxyUrl": "socks5://221.202.27.194:10807",
-    "lastTested": "2025-09-14T11:37:54.458Z",
-    "isWorking": false,
-    "responseTime": 3005
+    "proxyUrl": "http://172.67.205.92:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.703Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9098",
-    "lastTested": "2025-09-14T11:38:09.111Z",
-    "isWorking": false,
-    "responseTime": 17658
+    "proxyUrl": "http://104.16.24.205:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.724Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9068",
-    "lastTested": "2025-09-14T11:38:09.111Z",
-    "isWorking": false,
-    "responseTime": 17657
+    "proxyUrl": "http://172.67.208.202:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.726Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9091",
-    "lastTested": "2025-09-14T11:38:09.238Z",
-    "isWorking": false,
-    "responseTime": 17784
+    "proxyUrl": "http://172.67.165.59:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.608Z"
   },
   {
-    "proxyUrl": "socks5://103.151.30.49:1080",
-    "lastTested": "2025-09-14T11:38:09.262Z",
-    "isWorking": false,
-    "responseTime": 17808
+    "proxyUrl": "http://104.21.28.79:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.768Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9408",
-    "lastTested": "2025-09-14T11:37:59.271Z",
-    "isWorking": false,
-    "responseTime": 7817
+    "proxyUrl": "http://91.193.58.10:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.819Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9457",
-    "lastTested": "2025-09-14T11:39:37.847Z",
-    "isWorking": false,
-    "responseTime": 22076
+    "proxyUrl": "http://172.67.180.248:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.602Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9323",
-    "lastTested": "2025-09-14T11:39:49.143Z",
-    "isWorking": false,
-    "responseTime": 33372
+    "proxyUrl": "http://104.17.227.88:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.574Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9489",
-    "lastTested": "2025-09-14T11:39:21.907Z",
-    "isWorking": false,
-    "responseTime": 6135
+    "proxyUrl": "http://172.67.217.74:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.609Z"
   },
   {
-    "proxyUrl": "socks5://134.199.159.23:1080",
-    "lastTested": "2025-09-14T11:40:17.998Z",
-    "isWorking": false,
-    "responseTime": 62218
+    "proxyUrl": "http://63.141.128.116:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.738Z"
   },
   {
-    "proxyUrl": "socks5://170.233.30.33:4153",
-    "lastTested": "2025-09-14T11:39:21.660Z",
-    "isWorking": false,
-    "responseTime": 5880
+    "proxyUrl": "http://104.16.106.111:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.621Z"
   },
   {
-    "proxyUrl": "socks5://222.59.173.105:44178",
-    "lastTested": "2025-09-14T11:39:48.445Z",
-    "isWorking": false,
-    "responseTime": 32665
+    "proxyUrl": "http://104.19.112.172:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.828Z"
   },
   {
-    "proxyUrl": "socks5://78.63.115.20:8899",
-    "lastTested": "2025-09-14T11:40:17.981Z",
-    "isWorking": false,
-    "responseTime": 62200
+    "proxyUrl": "http://45.67.215.241:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.794Z"
   },
   {
-    "proxyUrl": "socks5://185.93.89.144:26990",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://18.142.81.218:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.652Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9277",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://89.116.250.245:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.731Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9252",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://91.193.58.142:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.751Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9067",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://172.64.149.47:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.813Z"
   },
   {
-    "proxyUrl": "socks5://8.219.10.38:33333",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://104.16.105.141:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.799Z"
   },
   {
-    "proxyUrl": "socks5://222.59.173.105:44139",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://206.238.236.2:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.699Z"
   },
   {
-    "proxyUrl": "socks5://8.210.244.253:1122",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://54.36.81.217:8080",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.695Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9034",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://172.67.192.8:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.694Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9002",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://69.84.182.235:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.700Z"
   },
   {
-    "proxyUrl": "socks5://223.25.109.163:8199",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://104.16.1.93:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.667Z"
   },
   {
-    "proxyUrl": "socks5://221.202.27.194:10808",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://104.25.1.67:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.785Z"
   },
   {
-    "proxyUrl": "socks5://47.243.94.125:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://104.25.1.125:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.736Z"
   },
   {
-    "proxyUrl": "socks5://138.199.25.13:3906",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://172.67.167.42:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.627Z"
   },
   {
-    "proxyUrl": "socks5://51.178.68.226:18522",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://31.12.75.14:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.697Z"
   },
   {
-    "proxyUrl": "socks5://82.223.165.28:62284",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://185.176.26.100:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.726Z"
   },
   {
-    "proxyUrl": "socks5://202.40.178.234:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://159.246.55.69:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.798Z"
   },
   {
-    "proxyUrl": "socks5://212.237.125.216:6969",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://172.67.180.29:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.613Z"
   },
   {
-    "proxyUrl": "socks5://61.9.34.118:58765",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "socks5://8.215.15.163:5060",
+    "protocol": "socks5",
+    "source": "TheSpeedX SOCKS5",
+    "lastTested": "2025-09-17T01:46:01.752Z"
   },
   {
-    "proxyUrl": "socks5://185.93.89.182:4122",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://198.41.198.154:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.807Z"
   },
   {
-    "proxyUrl": "socks5://139.162.78.109:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://45.80.111.81:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.578Z"
   },
   {
-    "proxyUrl": "socks5://138.68.60.8:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "socks5://8.211.194.85:808",
+    "protocol": "socks5",
+    "source": "TheSpeedX SOCKS5",
+    "lastTested": "2025-09-17T01:46:01.764Z"
   },
   {
-    "proxyUrl": "socks5://209.97.150.167:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://45.131.6.198:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.730Z"
   },
   {
-    "proxyUrl": "socks5://45.204.212.213:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://199.34.229.163:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.721Z"
   },
   {
-    "proxyUrl": "socks5://58.22.60.174:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://104.25.16.220:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.702Z"
   },
   {
-    "proxyUrl": "socks5://117.161.170.163:9381",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://45.85.118.227:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.814Z"
   },
   {
-    "proxyUrl": "socks5://103.245.205.30:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://104.27.17.51:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.606Z"
   },
   {
-    "proxyUrl": "socks5://14.19.176.208:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://66.81.247.51:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.699Z"
   },
   {
-    "proxyUrl": "socks5://185.93.89.163:4313",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://206.238.236.248:80",
+    "protocol": "http",
+    "anonymity": "elite",
+    "country": "SG",
+    "score": 1,
+    "source": "Proxifly All",
+    "lastTested": "2025-09-17T01:45:54.788Z"
   },
   {
-    "proxyUrl": "socks5://47.238.2.180:1100",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://104.27.8.145:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.788Z"
   },
   {
-    "proxyUrl": "socks5://139.59.1.14:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://172.67.70.110:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.625Z"
   },
   {
-    "proxyUrl": "socks5://128.199.202.122:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://188.42.89.130:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.748Z"
   },
   {
-    "proxyUrl": "socks5://43.100.70.111:1024",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://23.227.39.115:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.633Z"
   },
   {
-    "proxyUrl": "socks5://198.199.86.11:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://199.34.229.82:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.755Z"
   },
   {
-    "proxyUrl": "socks5://159.203.61.169:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://104.21.57.62:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.705Z"
   },
   {
-    "proxyUrl": "socks5://134.209.29.120:1080",
-    "lastTested": "2025-09-14T11:37:51.451Z"
+    "proxyUrl": "http://104.24.187.76:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.748Z"
+  },
+  {
+    "proxyUrl": "http://141.101.122.154:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.659Z"
+  },
+  {
+    "proxyUrl": "http://195.85.23.63:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.806Z"
+  },
+  {
+    "proxyUrl": "http://104.25.0.236:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.711Z"
+  },
+  {
+    "proxyUrl": "http://193.8.87.57:4444",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.621Z"
+  },
+  {
+    "proxyUrl": "http://172.67.232.228:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.787Z"
+  },
+  {
+    "proxyUrl": "http://104.27.3.242:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.677Z"
+  },
+  {
+    "proxyUrl": "http://104.17.100.169:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.721Z"
+  },
+  {
+    "proxyUrl": "http://160.153.0.180:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.583Z"
+  },
+  {
+    "proxyUrl": "http://172.67.67.181:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.612Z"
+  },
+  {
+    "proxyUrl": "http://159.112.235.215:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.654Z"
+  },
+  {
+    "proxyUrl": "http://45.131.5.253:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.821Z"
+  },
+  {
+    "proxyUrl": "http://104.27.24.65:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.830Z"
+  },
+  {
+    "proxyUrl": "http://104.17.98.191:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.820Z"
+  },
+  {
+    "proxyUrl": "http://104.25.1.212:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.651Z"
+  },
+  {
+    "proxyUrl": "http://5.10.246.186:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.629Z"
+  },
+  {
+    "proxyUrl": "http://104.26.9.237:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.705Z"
+  },
+  {
+    "proxyUrl": "http://141.101.120.199:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.824Z"
+  },
+  {
+    "proxyUrl": "http://5.10.247.181:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.584Z"
+  },
+  {
+    "proxyUrl": "http://172.67.237.253:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.792Z"
+  },
+  {
+    "proxyUrl": "http://69.84.182.40:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.700Z"
+  },
+  {
+    "proxyUrl": "http://45.131.211.211:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.832Z"
+  },
+  {
+    "proxyUrl": "socks5://142.54.237.34:4145",
+    "protocol": "socks5",
+    "source": "TheSpeedX SOCKS5",
+    "lastTested": "2025-09-17T01:46:01.773Z"
+  },
+  {
+    "proxyUrl": "http://185.193.28.174:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.772Z"
+  },
+  {
+    "proxyUrl": "http://108.162.195.77:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.752Z"
+  },
+  {
+    "proxyUrl": "http://45.85.119.119:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.680Z"
+  },
+  {
+    "proxyUrl": "http://141.101.123.217:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.599Z"
+  },
+  {
+    "proxyUrl": "http://185.238.228.77:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.746Z"
+  },
+  {
+    "proxyUrl": "http://152.53.194.55:40769",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.686Z"
+  },
+  {
+    "proxyUrl": "http://104.17.89.53:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.740Z"
+  },
+  {
+    "proxyUrl": "http://185.170.166.74:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.715Z"
+  },
+  {
+    "proxyUrl": "http://104.21.66.188:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.567Z"
+  },
+  {
+    "proxyUrl": "http://159.112.235.214:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.679Z"
+  },
+  {
+    "proxyUrl": "http://154.194.12.250:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.578Z"
+  },
+  {
+    "proxyUrl": "http://160.153.0.96:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.695Z"
+  },
+  {
+    "proxyUrl": "http://198.41.206.52:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.726Z"
+  },
+  {
+    "proxyUrl": "http://104.17.108.199:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.759Z"
+  },
+  {
+    "proxyUrl": "http://160.153.1.109:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.647Z"
+  },
+  {
+    "proxyUrl": "http://199.34.229.68:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.804Z"
+  },
+  {
+    "proxyUrl": "http://45.131.6.104:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.604Z"
+  },
+  {
+    "proxyUrl": "http://47.238.134.126:999",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.732Z"
+  },
+  {
+    "proxyUrl": "http://45.85.119.6:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.738Z"
+  },
+  {
+    "proxyUrl": "http://172.67.181.15:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.613Z"
+  },
+  {
+    "proxyUrl": "http://196.204.24.251:8080",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.590Z"
+  },
+  {
+    "proxyUrl": "http://46.254.93.160:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.668Z"
+  },
+  {
+    "proxyUrl": "http://104.27.8.163:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.690Z"
+  },
+  {
+    "proxyUrl": "http://104.19.95.95:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.714Z"
+  },
+  {
+    "proxyUrl": "http://206.238.238.38:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.665Z"
+  },
+  {
+    "proxyUrl": "http://104.25.210.183:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.654Z"
+  },
+  {
+    "proxyUrl": "http://206.238.236.20:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.812Z"
+  },
+  {
+    "proxyUrl": "http://45.131.4.93:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.821Z"
+  },
+  {
+    "proxyUrl": "http://172.67.192.35:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.625Z"
+  },
+  {
+    "proxyUrl": "http://160.153.1.127:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.628Z"
+  },
+  {
+    "proxyUrl": "http://104.19.32.189:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.624Z"
+  },
+  {
+    "proxyUrl": "http://172.67.210.204:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.788Z"
+  },
+  {
+    "proxyUrl": "http://199.34.230.243:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.653Z"
+  },
+  {
+    "proxyUrl": "http://104.17.101.128:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.759Z"
+  },
+  {
+    "proxyUrl": "http://198.41.218.69:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.725Z"
+  },
+  {
+    "proxyUrl": "http://108.162.193.6:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.832Z"
+  },
+  {
+    "proxyUrl": "http://45.80.110.217:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.778Z"
+  },
+  {
+    "proxyUrl": "http://154.194.12.2:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.635Z"
+  },
+  {
+    "proxyUrl": "http://5.182.34.185:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.728Z"
+  },
+  {
+    "proxyUrl": "http://172.64.90.75:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.718Z"
+  },
+  {
+    "proxyUrl": "http://185.238.228.52:80",
+    "protocol": "http",
+    "anonymity": "elite",
+    "country": "ES",
+    "score": 1,
+    "source": "Proxifly All",
+    "lastTested": "2025-09-17T01:45:54.790Z"
+  },
+  {
+    "proxyUrl": "http://91.232.105.99:30112",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.805Z"
+  },
+  {
+    "proxyUrl": "http://185.193.29.209:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.607Z"
+  },
+  {
+    "proxyUrl": "http://172.67.181.35:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.644Z"
+  },
+  {
+    "proxyUrl": "http://185.146.173.242:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.621Z"
+  },
+  {
+    "proxyUrl": "http://63.141.128.49:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.785Z"
+  },
+  {
+    "proxyUrl": "http://104.27.12.245:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.700Z"
+  },
+  {
+    "proxyUrl": "http://170.114.46.64:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.569Z"
+  },
+  {
+    "proxyUrl": "http://141.101.122.63:80",
+    "protocol": "http",
+    "anonymity": "elite",
+    "country": "Unknown",
+    "score": 1,
+    "source": "Proxifly All",
+    "lastTested": "2025-09-17T01:45:54.788Z"
+  },
+  {
+    "proxyUrl": "http://141.101.120.15:80",
+    "protocol": "http",
+    "anonymity": "elite",
+    "country": "Unknown",
+    "score": 1,
+    "source": "Proxifly All",
+    "lastTested": "2025-09-17T01:45:54.789Z"
+  },
+  {
+    "proxyUrl": "http://185.176.26.102:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.723Z"
+  },
+  {
+    "proxyUrl": "http://45.67.215.71:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.694Z"
+  },
+  {
+    "proxyUrl": "http://190.5.77.211:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.753Z"
+  },
+  {
+    "proxyUrl": "http://23.227.60.218:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.606Z"
+  },
+  {
+    "proxyUrl": "http://104.17.118.101:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.645Z"
+  },
+  {
+    "proxyUrl": "socks5://213.131.85.26:1976",
+    "protocol": "socks5",
+    "source": "TheSpeedX SOCKS5",
+    "lastTested": "2025-09-17T01:46:01.758Z"
+  },
+  {
+    "proxyUrl": "http://171.237.214.247:1007",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.728Z"
+  },
+  {
+    "proxyUrl": "http://172.67.86.165:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.653Z"
+  },
+  {
+    "proxyUrl": "http://38.57.3.58:20360",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.562Z"
+  },
+  {
+    "proxyUrl": "http://104.26.6.70:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.649Z"
+  },
+  {
+    "proxyUrl": "http://63.141.128.54:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.833Z"
+  },
+  {
+    "proxyUrl": "http://104.17.172.53:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.618Z"
+  },
+  {
+    "proxyUrl": "http://104.17.2.33:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.814Z"
+  },
+  {
+    "proxyUrl": "http://45.159.216.148:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.632Z"
+  },
+  {
+    "proxyUrl": "http://104.16.1.84:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.807Z"
+  },
+  {
+    "proxyUrl": "http://104.16.246.37:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.757Z"
+  },
+  {
+    "proxyUrl": "http://162.159.242.170:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.650Z"
+  },
+  {
+    "proxyUrl": "http://45.80.108.174:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.788Z"
+  },
+  {
+    "proxyUrl": "http://202.40.186.66:9090",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.777Z"
+  },
+  {
+    "proxyUrl": "http://104.24.205.125:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.760Z"
+  },
+  {
+    "proxyUrl": "http://5.10.245.115:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.672Z"
+  },
+  {
+    "proxyUrl": "http://104.16.167.122:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.644Z"
+  },
+  {
+    "proxyUrl": "http://46.254.93.174:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.716Z"
+  },
+  {
+    "proxyUrl": "http://45.131.6.130:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.832Z"
+  },
+  {
+    "proxyUrl": "http://45.131.6.63:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.744Z"
+  },
+  {
+    "proxyUrl": "socks5://8.221.141.88:6443",
+    "protocol": "socks5",
+    "source": "TheSpeedX SOCKS5",
+    "lastTested": "2025-09-17T01:46:01.765Z"
+  },
+  {
+    "proxyUrl": "http://5.182.34.42:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.764Z"
+  },
+  {
+    "proxyUrl": "http://104.19.51.216:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.801Z"
+  },
+  {
+    "proxyUrl": "http://159.112.235.48:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.711Z"
+  },
+  {
+    "proxyUrl": "http://172.64.154.81:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.817Z"
+  },
+  {
+    "proxyUrl": "socks5://8.213.128.9:8060",
+    "protocol": "socks5",
+    "source": "TheSpeedX SOCKS5",
+    "lastTested": "2025-09-17T01:46:01.745Z"
+  },
+  {
+    "proxyUrl": "http://89.116.250.141:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.646Z"
+  },
+  {
+    "proxyUrl": "http://104.27.45.108:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.804Z"
+  },
+  {
+    "proxyUrl": "http://188.42.89.239:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.806Z"
+  },
+  {
+    "proxyUrl": "http://104.24.37.15:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.725Z"
+  },
+  {
+    "proxyUrl": "http://185.148.106.15:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.575Z"
+  },
+  {
+    "proxyUrl": "http://206.238.237.29:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.789Z"
+  },
+  {
+    "proxyUrl": "socks5://45.10.163.12:80",
+    "protocol": "socks5",
+    "source": "TheSpeedX SOCKS5",
+    "lastTested": "2025-09-17T01:46:01.743Z"
+  },
+  {
+    "proxyUrl": "http://188.114.96.9:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.644Z"
+  },
+  {
+    "proxyUrl": "http://172.67.176.57:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.805Z"
+  },
+  {
+    "proxyUrl": "http://104.17.93.119:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.829Z"
+  },
+  {
+    "proxyUrl": "http://172.67.255.149:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.571Z"
+  },
+  {
+    "proxyUrl": "http://104.19.134.228:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.580Z"
+  },
+  {
+    "proxyUrl": "http://104.16.55.132:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.652Z"
+  },
+  {
+    "proxyUrl": "http://23.227.60.93:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.806Z"
+  },
+  {
+    "proxyUrl": "http://162.159.243.36:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.797Z"
+  },
+  {
+    "proxyUrl": "http://209.46.30.50:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.576Z"
+  },
+  {
+    "proxyUrl": "http://147.185.161.183:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.613Z"
+  },
+  {
+    "proxyUrl": "http://103.169.142.41:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.554Z"
+  },
+  {
+    "proxyUrl": "http://172.67.70.192:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.770Z"
+  },
+  {
+    "proxyUrl": "http://104.17.119.50:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.625Z"
+  },
+  {
+    "proxyUrl": "http://216.205.52.203:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.664Z"
+  },
+  {
+    "proxyUrl": "http://41.33.66.228:1981",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.802Z"
+  },
+  {
+    "proxyUrl": "http://192.200.160.10:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.696Z"
+  },
+  {
+    "proxyUrl": "http://104.18.136.184:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.747Z"
+  },
+  {
+    "proxyUrl": "http://104.25.255.140:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.556Z"
+  },
+  {
+    "proxyUrl": "http://104.18.30.188:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.643Z"
+  },
+  {
+    "proxyUrl": "http://185.238.228.140:80",
+    "protocol": "http",
+    "source": "TheSpeedX HTTP",
+    "lastTested": "2025-09-17T01:46:03.724Z"
   }
 ]

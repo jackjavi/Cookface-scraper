@@ -35,7 +35,7 @@ export async function createProxyBrowser(): Promise<{
   browser: Browser;
   proxy: string;
 }> {
-  const randomProxy = `socks4://82.200.235.134:38191`;
+  const randomProxy = `socks4://37.18.73.60:5566`;
   console.log('Creating browser with proxy:', randomProxy);
 
   const browserArgs = [
@@ -58,17 +58,33 @@ export async function createProxyBrowser(): Promise<{
     '--disable-web-security',
     '--allow-running-insecure-content',
     '--disable-features=VizDisplayCompositor',
+    // Speed optimizations
+    /** '--disable-images', // Don't load images initially
+    '--disable-javascript', // For basic navigation (enable later if needed)
+    '--disable-plugins',
+    '--disable-extensions',
+    '--disable-background-timer-throttling',
+    '--disable-renderer-backgrounding',
+    '--disable-backgrounding-occluded-windows',
+    '--disable-features=TranslateUI,BlinkGenPropertyTrees',
+    '--aggressive-cache-discard',
+    '--memory-pressure-off',
+    // Network optimizations
+    '--max-connections-per-host=6',
+    '--disable-background-networking',
+    '--disable-sync', */
   ];
 
   try {
     const proxyBrowser = await puppeteer.launch({
       headless: false,
       args: browserArgs,
+      //args: [`--proxy-server=${randomProxy}`],
       timeout: 30000, // Increase timeout
     });
 
     // Test with a simpler HTTP site first
-    const testPage = await proxyBrowser.newPage();
+    // const testPage = await proxyBrowser.newPage();
 
     /** try {
       // Then try HTTPS
@@ -202,7 +218,7 @@ export async function getMultipleYTSPages(
 export async function navigateToYouTube(page: Page): Promise<void> {
   try {
     console.log('Navigating to YouTube...');
-    await page.goto('https://youtu.be/dnY2p2whjk8?si=W-htD6gL_dmdhM5J', {
+    await page.goto('https://www.whatismyip.com/', {
       waitUntil: 'domcontentloaded',
       timeout: 120000,
     });
