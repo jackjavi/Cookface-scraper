@@ -20,6 +20,8 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
     const ONEHOUR = 60 * 60 * 1000;
     const ONEHOURFORTYFIVE = 105 * 60 * 1000;
     const TWOHOURS = 2 * 60 * 60 * 1000;
+    const THREEHOURS = 3 * 60 * 60 * 1000;
+    const FOURHOURS = 4 * 60 * 60 * 1000;
 
     const browser = await initializeBrowser();
 
@@ -55,15 +57,15 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       const now = Date.now();
 
       // 💤 Sleep window check
-      /** if (isWithinSleepWindow()) {
+      if (isWithinSleepWindow()) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 💤 Sleep window active. Sleeping 15 minutes...`,
         );
         await sleep(15 * 60 * 1000);
         continue;
-      } */
+      }
 
-      // Run TikTokCommentsEngage every ~20-30 minutes
+      // Run TikTokCommentsEngage every ~ 30 minutes - 1 hour
       if (
         now - lastTikTokComments >
         getRandomWaitTime(THIRTY_MINUTES, ONEHOUR)
@@ -82,8 +84,8 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         continue;
       }
 
-      // Run TikTok Gain Train every ~1-2 hours (high frequency for growth)
-      /** if (now - lastGainTrain > getRandomWaitTime(ONEHOUR, TWOHOURS)) {
+      // Run TikTok Gain Train every ~3-4 hours
+      if (now - lastGainTrain > getRandomWaitTime(THREEHOURS, FOURHOURS)) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 🚂 Starting TikTok Gain Train Module...`,
         );
@@ -96,10 +98,10 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         lastGainTrain = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      } */
+      }
 
-      // Run XEngage every ~4-6 minutes
-      if (now - lastEngage > getRandomWaitTime(FOUR_MINUTES, SIX_MINUTES)) {
+      // Run XEngage every ~3-6 minutes
+      if (now - lastEngage > getRandomWaitTime(THREE_MINUTES, FOUR_MINUTES)) {
         console.log(
           `[${new Date().toLocaleTimeString()}] ⏱️ Starting XEngage...`,
         );
@@ -131,7 +133,10 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       }
 
       // Run TikTokEngage every ~20-30 minutes
-      if (now - lastTikTokLikes > getRandomWaitTime(ONEHOUR, TWOHOURS)) {
+      if (
+        now - lastTikTokLikes >
+        getRandomWaitTime(ONEHOURFORTYFIVE, THREEHOURS)
+      ) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 🎵 Starting TikTokEngage...`,
         );
@@ -146,10 +151,11 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         continue;
       }
 
-      // Run fbEngage every ~30 minutes (uncomment when ready)
-      /** 
-      if (now - lastFbEngage > THIRTY_MINUTES) {
-        console.log(`[${new Date().toLocaleTimeString()}] 🎵 Starting fbEngage...`);
+      // Run fbEngage every ~ 1-2 hours
+      if (now - lastFbEngage > getRandomWaitTime(ONEHOUR, TWOHOURS)) {
+        console.log(
+          `[${new Date().toLocaleTimeString()}] 🎵 Starting fbEngage...`,
+        );
         try {
           await fbEngage(fbPage);
           console.log('✅ fbEngage completed successfully');
@@ -160,7 +166,6 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
       }
-      */
 
       // If nothing is ready, sleep briefly
       await sleep(60 * 1000); // Sleep 1 minute before checking again

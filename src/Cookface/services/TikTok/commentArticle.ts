@@ -5,11 +5,21 @@ import LikeComment from './likeComment';
 import sleep from '../../utils/sleep';
 import getRandomWaitTime from '../../utils/randomWaitTime';
 import GenerativeAIService from '../generativeAI';
+import {
+  navigateToTikTokPage,
+  TIKTOK_ROUTES,
+  navigateToPreviousPage,
+  navigateToHomeDirectly,
+} from '../../utils/TikTok/Navigation';
 import config from '../../config/index';
-import {navigateToNextArticle} from './navigationControls';
+
+const CONFIG = {
+  TikTokUsername: config.TikTokUsername,
+};
 
 export interface CommentOptions {
   minCommentCount?: number;
+  maxCommentCount?: number;
   maxCommentsToExtract?: number;
   maxArticlesToCheck?: number; // New option to limit navigation attempts
 }
@@ -37,8 +47,33 @@ export async function CommentArticle(
   page: Page,
   options: CommentOptions = {},
 ): Promise<CommentResult> {
+  await sleep(getRandomWaitTime(1000, 5000));
+
+  // Home Page Feed refresh (2-6) times with random pauses
+  /** const articlesToNavigate = Math.floor(Math.random() * 5) + 2; // Random between 2-6
+  console.log(
+    `🎯 Refreshing Home page ${articlesToNavigate}times before starting comment section...`,
+  );
+
+  for (let i = 0; i < articlesToNavigate; i++) {
+    console.log(`📱 Navigating to article ${i + 1}/${articlesToNavigate}...`);
+
+    // Refresh Home Feed
+    await navigateToHomeDirectly(page);
+
+    // Random pause between 4-7 seconds between navigations
+    const pauseTime = getRandomWaitTime(4000, 7000);
+    console.log(`⏳ Pausing for ${pauseTime}ms before next navigation...`);
+    await sleep(pauseTime);
+  }
+
+  console.log(
+    `✅ Completed refereshing Home page by clicking the home tab ${articlesToNavigate} times, starting comment section...`,
+  ); */
+
   const {
     minCommentCount = 5,
+    maxCommentCount = 100,
     maxCommentsToExtract = 10,
     maxArticlesToCheck = 10, // Limit to prevent infinite loop
   } = options;
@@ -64,7 +99,8 @@ export async function CommentArticle(
         // Navigate to next article and continue
         if (articlesChecked < maxArticlesToCheck) {
           console.log('📱 Navigating to next article...');
-          await navigateToNextArticle(page, getRandomWaitTime(1500, 3000));
+          // Refresh Home Feed
+          await navigateToHomeDirectly(page);
           await sleep(getRandomWaitTime(1000, 2000));
           continue;
         } else {
@@ -94,7 +130,8 @@ export async function CommentArticle(
         // Navigate to next article and continue
         if (articlesChecked < maxArticlesToCheck) {
           console.log('📱 Navigating to next article...');
-          await navigateToNextArticle(page, getRandomWaitTime(1500, 3000));
+          // Refresh Home Feed
+          await navigateToHomeDirectly(page);
           await sleep(getRandomWaitTime(1000, 2000));
           continue;
         } else {
@@ -131,8 +168,9 @@ export async function CommentArticle(
 
         // Navigate to next article and continue
         if (articlesChecked < maxArticlesToCheck) {
-          console.log('📱 Navigating to next article...');
-          await navigateToNextArticle(page, getRandomWaitTime(1500, 3000));
+          console.log('📱 Refreshing Home Feed...');
+          // Refresh Home Feed
+          await navigateToHomeDirectly(page);
           await sleep(getRandomWaitTime(1000, 2000));
           continue;
         } else {
@@ -170,14 +208,15 @@ export async function CommentArticle(
       }
 
       // Check if meets minimum comment count
-      if (commentCount < minCommentCount) {
+      if (commentCount < minCommentCount && commentCount > maxCommentCount) {
         console.log(
-          `⏭️ Article ${index} doesn't meet threshold (${commentCount} < ${minCommentCount}). Navigating to next article...`,
+          `⏭️ Article ${index} doesn't meet threshold (${commentCount} < ${minCommentCount}). Refresh Home Page...`,
         );
 
         // Navigate to next article and continue the loop
         if (articlesChecked < maxArticlesToCheck) {
-          await navigateToNextArticle(page, getRandomWaitTime(1500, 3000));
+          // Refresh Home Feed
+          await navigateToHomeDirectly(page);
           await sleep(getRandomWaitTime(1000, 2000));
           continue;
         } else {

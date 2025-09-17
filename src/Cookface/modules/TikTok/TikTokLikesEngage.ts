@@ -80,7 +80,7 @@ async function executeLikeSingle(page: Page): Promise<void> {
       await navigateToTikTokPage(page, TIKTOK_ROUTES.HOME, CONFIG);
     }
 
-    await navigateToNextArticle(page, 1500);
+    /// await navigateToNextArticle(page, 1500);
     // Random minimum like count between 1-10
     const minLikeCount = Math.floor(Math.random() * 10) + 1;
 
@@ -124,7 +124,7 @@ async function executeLikeMultiple(page: Page): Promise<void> {
     }
 
     await sleep(3000);
-    await navigateToNextArticle(page, 1500);
+    // await navigateToNextArticle(page, 1500);
     // Random settings
     const maxArticles = Math.floor(Math.random() * 4) + 2; // 2-5 articles
     const minLikeCount = Math.floor(Math.random() * 8) + 1; // 1-8 likes minimum
