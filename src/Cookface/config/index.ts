@@ -23,6 +23,7 @@ const requiredEnvVars = [
   'TIKTOK_USERNAME',
   'TIKTOK_PASSWORD',
   'PROXY_LIST',
+  'PROXY_LIST_SUCCESS',
 ];
 
 requiredEnvVars.forEach(key => {
@@ -54,6 +55,7 @@ interface Config {
   TikTokUsername: string;
   TikTokPassword: string;
   proxyList: string;
+  proxyListSuccess: string;
 }
 
 const config: Config = {
@@ -83,6 +85,7 @@ const config: Config = {
   TikTokUsername: process.env.TIKTOK_USERNAME as string,
   TikTokPassword: process.env.TIKTOK_PASSWORD as string,
   proxyList: process.env.PROXY_LIST as string,
+  proxyListSuccess: process.env.PROXY_LIST_SUCCESS as string,
 };
 
 export default config;

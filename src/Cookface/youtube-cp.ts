@@ -43,18 +43,10 @@ async function workingProxySinglePageExample() {
     console.log(`✅ Created page with working proxy: ${proxy}`);
 
     // Navigate to YouTube with enhanced method
-    await navigateToYouTube(page)
-      .then(() => sleep(180000))
-      .finally(() => {
-        // Keep browser open for demonstration
-        sleep(10000);
-
-        // Clean up
-        closeProxyBrowser(browser, proxy);
-      });
+    await navigateToYouTube(page);
 
     // Example: Search for content
-    /** try {
+    try {
       await page.waitForSelector('input#search', {timeout: 15000});
       await page.type('input#search', 'web scraping tutorial');
       await page.click('button#search-icon-legacy');
@@ -71,10 +63,16 @@ async function workingProxySinglePageExample() {
           .filter(Boolean),
       );
 
-      console.log('Found videos:', videoTitles); 
+      console.log('Found videos:', videoTitles);
     } catch (searchError) {
       console.log('Search failed, but page loaded successfully:', searchError);
-    } */
+    }
+
+    // Keep browser open for demonstration
+    await sleep(10000);
+
+    // Clean up
+    await closeProxyBrowser(browser, proxy);
   } catch (error: any) {
     console.error('Working proxy example failed:', error.message);
   }
@@ -383,10 +381,7 @@ export async function runExamples() {
 // Main execution - prioritize working proxy examples
 if (require.main === module) {
   // Check if we have working proxies and run appropriate examples
-
-  workingProxySinglePageExample();
-
-  /** getWorkingProxyCount()
+  getWorkingProxyCount()
     .then(count => {
       if (count > 0) {
         console.log(
@@ -404,5 +399,5 @@ if (require.main === module) {
     .catch(error => {
       console.error('Failed to check proxy status:', error);
       runExamples().catch(console.error);
-    }); */
+    });
 }

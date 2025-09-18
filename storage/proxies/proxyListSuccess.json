@@ -1,0 +1,912 @@
+[
+  {
+    "proxyUrl": "socks4://192.111.130.2:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:38:18.102Z",
+    "isWorking": true,
+    "responseTime": 2040,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://162.253.68.97:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:38:22.347Z",
+    "isWorking": true,
+    "responseTime": 2135,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://192.252.220.89:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:44:15.254Z",
+    "isWorking": true,
+    "responseTime": 2461,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://74.119.147.209:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:41:15.160Z",
+    "isWorking": true,
+    "responseTime": 2478,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://72.223.188.92:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:40:22.896Z",
+    "isWorking": true,
+    "responseTime": 2559,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://216.68.128.121:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:44:34.645Z",
+    "isWorking": true,
+    "responseTime": 2674,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://202.131.235.138:4153",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "MN",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:40:33.738Z",
+    "isWorking": true,
+    "responseTime": 2695,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://98.190.239.3:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:39:33.733Z",
+    "isWorking": true,
+    "responseTime": 2761,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://68.71.247.130:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "Unknown",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:40:56.698Z",
+    "isWorking": true,
+    "responseTime": 2814,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://198.8.84.3:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "CA",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:42:32.987Z",
+    "isWorking": true,
+    "responseTime": 2851,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://98.182.147.97:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:40:44.591Z",
+    "isWorking": true,
+    "responseTime": 2857,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://98.175.31.222:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:44:03.718Z",
+    "isWorking": true,
+    "responseTime": 2955,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://69.61.200.104:36181",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:40:39.620Z",
+    "isWorking": true,
+    "responseTime": 3775,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://192.111.137.37:18762",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:40:28.922Z",
+    "isWorking": true,
+    "responseTime": 3922,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://72.37.216.68:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:44:48.195Z",
+    "isWorking": true,
+    "responseTime": 4228,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://208.65.90.21:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:40:11.283Z",
+    "isWorking": true,
+    "responseTime": 4269,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://192.252.216.86:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:41:49.884Z",
+    "isWorking": true,
+    "responseTime": 4449,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://192.111.129.150:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "CA",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:44:54.815Z",
+    "isWorking": true,
+    "responseTime": 4497,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://67.201.39.14:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:44:21.911Z",
+    "isWorking": true,
+    "responseTime": 4536,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://142.54.235.9:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:45:01.472Z",
+    "isWorking": true,
+    "responseTime": 4547,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://199.102.104.70:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:41:10.558Z",
+    "isWorking": true,
+    "responseTime": 4602,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://192.241.156.17:1080",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:43:58.645Z",
+    "isWorking": true,
+    "responseTime": 4658,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://68.71.242.118:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:42:47.364Z",
+    "isWorking": true,
+    "responseTime": 4668,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://171.237.50.137:1080",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "VN",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:42:28.019Z",
+    "isWorking": true,
+    "responseTime": 4698,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://192.111.129.145:16894",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "CA",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:38:06.570Z",
+    "isWorking": true,
+    "responseTime": 4709,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://192.252.220.92:17328",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:41:36.391Z",
+    "isWorking": true,
+    "responseTime": 4716,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://98.191.0.37:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:41:29.579Z",
+    "isWorking": true,
+    "responseTime": 4725,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://142.54.237.38:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:43:25.905Z",
+    "isWorking": true,
+    "responseTime": 4761,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://192.111.137.34:18765",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:41:43.321Z",
+    "isWorking": true,
+    "responseTime": 4800,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://8.220.194.115:1080",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "KR",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:40:18.212Z",
+    "isWorking": true,
+    "responseTime": 4814,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://199.102.107.145:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:44:10.652Z",
+    "isWorking": true,
+    "responseTime": 4831,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://142.54.237.34:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:39:47.803Z",
+    "isWorking": true,
+    "responseTime": 4886,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://200.43.231.17:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "AR",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:39:40.798Z",
+    "isWorking": true,
+    "responseTime": 4946,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://67.201.58.190:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:37:50.744Z",
+    "isWorking": true,
+    "responseTime": 4970,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://192.111.135.18:18301",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:42:21.221Z",
+    "isWorking": true,
+    "responseTime": 4980,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://192.111.139.165:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:42:14.130Z",
+    "isWorking": true,
+    "responseTime": 5025,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://198.8.94.170:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:42:54.513Z",
+    "isWorking": true,
+    "responseTime": 5032,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://98.170.57.249:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:41:03.841Z",
+    "isWorking": true,
+    "responseTime": 5046,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://106.13.58.110:8888",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "CN",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:40:51.777Z",
+    "isWorking": true,
+    "responseTime": 5065,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://98.170.57.241:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:44:41.856Z",
+    "isWorking": true,
+    "responseTime": 5118,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://68.71.251.134:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:38:13.938Z",
+    "isWorking": true,
+    "responseTime": 5274,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://70.166.167.38:57728",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:43:19.029Z",
+    "isWorking": true,
+    "responseTime": 5294,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://67.201.35.145:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:41:22.734Z",
+    "isWorking": true,
+    "responseTime": 5464,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://184.170.249.65:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:42:40.573Z",
+    "isWorking": true,
+    "responseTime": 5480,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://213.6.68.210:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "PS",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:38:37.647Z",
+    "isWorking": true,
+    "responseTime": 5519,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://199.116.114.11:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:38:30.012Z",
+    "isWorking": true,
+    "responseTime": 5552,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://37.18.73.60:5566",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "RU",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:39:02.989Z",
+    "isWorking": true,
+    "responseTime": 5690,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://208.102.51.6:58208",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:44:29.880Z",
+    "isWorking": true,
+    "responseTime": 5847,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://184.170.251.30:11288",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:39:28.879Z",
+    "isWorking": true,
+    "responseTime": 6314,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://68.71.252.38:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:39:11.559Z",
+    "isWorking": true,
+    "responseTime": 6464,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://67.201.59.70:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:39:20.443Z",
+    "isWorking": true,
+    "responseTime": 6777,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://184.170.248.5:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:43:51.885Z",
+    "isWorking": true,
+    "responseTime": 6781,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  },
+  {
+    "proxyUrl": "socks4://72.49.49.11:31034",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:37:59.759Z",
+    "isWorking": true,
+    "responseTime": 6911,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://72.37.217.3:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:37:43.665Z",
+    "isWorking": true,
+    "responseTime": 11189,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "realIP": "192.111.139.163",
+      "captchaDetected": false,
+      "htmlSnippet": "<html><head><meta name=\"color-scheme\" content=\"light dark\"><meta charset=\"utf-8\"></head><body><pre>{\n  \"origin\": \"192.111.139.163\"\n}\n</pre><div class=\"json-formatter-container\"></div></body></html>"
+    }
+  },
+  {
+    "proxyUrl": "socks4://68.71.245.206:4145",
+    "protocol": "socks4",
+    "anonymity": "transparent",
+    "country": "US",
+    "score": 1,
+    "source": "Proxifly SOCKS4 JSON",
+    "lastTested": "2025-09-18T01:38:55.168Z",
+    "isWorking": true,
+    "responseTime": 15405,
+    "successDetails": {
+      "canLoadGoogle": true,
+      "canLoadHttps": true,
+      "captchaDetected": false
+    }
+  }
+]
