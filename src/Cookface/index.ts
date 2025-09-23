@@ -57,7 +57,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       const now = Date.now();
 
       // 💤 Sleep window check
-      if (isWithinSleepWindow()) {
+      /** if (isWithinSleepWindow()) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 💤 Sleep window active. Sleeping 15 minutes...`,
         );
@@ -114,7 +114,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         lastEngage = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      }
+      } */
 
       // Run XTrendsToNews every ~30-60 minutes
       if (now - lastTrends > getRandomWaitTime(THIRTY_MINUTES, ONEHOUR)) {
@@ -133,7 +133,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       }
 
       // Run TikTokEngage every ~20-30 minutes
-      if (
+      /** if (
         now - lastTikTokLikes >
         getRandomWaitTime(ONEHOURFORTYFIVE, THREEHOURS)
       ) {
@@ -165,7 +165,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         lastFbEngage = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      }
+      } */
 
       // If nothing is ready, sleep briefly
       await sleep(60 * 1000); // Sleep 1 minute before checking again

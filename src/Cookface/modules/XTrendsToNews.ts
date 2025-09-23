@@ -5,7 +5,8 @@ import GenerativeAIService from '../services/generativeAI';
 import GenerativeAIAudioService from '../services/GenAI/genAIAudioService';
 import GenerativeAIVideoService from '../services/GenAI/genAIVideoService';
 import {postTrendNewsOnX} from '../services/postTrendNewsOnX';
-import {postTrendNewsOnFB} from '../services/postTrendNewsOnFB';
+import {postTrendNewsOnFBPage} from '../services/Facebook/postTrendNewsOnFBPage';
+import {SwitchToProfile} from '../utils/facebook/switchToPage';
 import {sendArticleToTelegram} from '../services/postTrendNewsOnTelegram';
 import {TikTokUpload, validateVideoFile} from '../services/TikTok/upload';
 import {
@@ -121,7 +122,7 @@ export const XTrendsToNews = async (
     await sleep(2000);
 
     // Generate audio for the news bite
-    console.log('Generating audio for news bite...');
+    /** console.log('Generating audio for news bite...');
     try {
       audioFilePath = await genAIAudioService.generateNewsAudio(
         newsBite,
@@ -159,12 +160,12 @@ export const XTrendsToNews = async (
         videoError,
       );
       // Continue with the process even if video generation fails
-    }
+    } */
 
     await sleep(2000);
 
     // Post to X [PAUSE NEWSBITES POSTING TO X FOR NOW]
-    console.log('Posting to X...');
+    /** console.log('Posting to X...');
     await postTrendNewsOnX(
       'Home',
       xPage,
@@ -173,7 +174,7 @@ export const XTrendsToNews = async (
       sharedImagePath ? sharedImagePath : undefined,
       // videoFilePath ? videoFilePath : undefined,
     );
-    console.log('Successfully posted to X');
+    console.log('Successfully posted to X'); */
 
     await fbPage.bringToFront();
     await sleep(2000);
@@ -183,7 +184,8 @@ export const XTrendsToNews = async (
 
     // Post to Facebook
     console.log('Posting to Facebook...');
-    await postTrendNewsOnFB(
+    await SwitchToProfile(fbPage);
+    await postTrendNewsOnFBPage(
       fbPage,
       newsBite,
       selectedImage.src,
@@ -192,7 +194,7 @@ export const XTrendsToNews = async (
     );
     console.log('Successfully posted to Facebook');
 
-    await sleep(3000);
+    await sleep(30000);
 
     // Post to Telegram using the shared image path
     console.log('Posting to Telegram...');

@@ -1,14 +1,14 @@
-import sleep from '../utils/sleep';
-import getRandomWaitTime from '../utils/randomWaitTime';
+import sleep from '../../utils/sleep';
+import getRandomWaitTime from '../../utils/randomWaitTime';
 import {Page, ElementHandle} from 'puppeteer';
 import path from 'path';
 import {
   downloadImage,
   cleanupImage,
   generateMultiPlatformImageFilename,
-} from '../utils/imageUtils.js';
-import config from '../config/index.js';
-import GenerativeAIService from '../services/generativeAI';
+} from '../../utils/imageUtils.js';
+import config from '../../config/index.js';
+import GenerativeAIService from '../generativeAI';
 
 const YOUTUBE_LINK =
   'For social media automation and software development services, do not hesitate to contact us. https://youtu.be/dnY2p2whjk8?si=3eBCaHP9GKlwUEUI';
@@ -23,7 +23,7 @@ const CHANNEL_LINK =
  * @param sharedImagePath Optional: if image is already downloaded, use this path
  * @returns The path of the downloaded image (for reuse in other platforms)
  */
-const postTrendNewsOnFB = async (
+const postTrendNewsOnFBPage = async (
   page: Page,
   newsBite: string,
   imgUrl: string,
@@ -130,7 +130,7 @@ const postTrendNewsOnFB = async (
     await sleep(getRandomWaitTime(10000, 20000));
 
     // Step 6: Click "Post" button using keyboard shortcuts
-    /** console.log('Using keyboard shortcuts to click Post button...');
+    console.log('Using keyboard shortcuts to click Post button...');
 
     // Hold Shift key and press Tab once
     await page.keyboard.down('Shift');
@@ -142,13 +142,12 @@ const postTrendNewsOnFB = async (
     await sleep(1000); // Wait 1 second
 
     // Hit Enter button
-    await page.keyboard.press('Enter');
+    // await page.keyboard.press('Enter');
 
-    console.log('Post button clicked using keyboard shortcuts successfully.'); */
+    console.log('Post button clicked using keyboard shortcuts successfully.');
 
-    /* 
-    // Original logic commented out
-    const postClicked = await page.evaluate(() => {
+    // Step Z: Original logic commented out
+    /** const postClicked = await page.evaluate(() => {
       const spans = Array.from(document.querySelectorAll('span'));
       const postBtn = spans.find(span => span.textContent?.trim() === 'Post');
       if (postBtn) {
@@ -327,4 +326,4 @@ const uploadImageToFacebook = async (
   }
 };
 
-export {postTrendNewsOnFB, uploadImageToFacebook};
+export {postTrendNewsOnFBPage, uploadImageToFacebook};

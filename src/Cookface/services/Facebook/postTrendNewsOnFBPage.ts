@@ -1,0 +1,427 @@
+import sleep from '../../utils/sleep';
+import getRandomWaitTime from '../../utils/randomWaitTime';
+import {Page, ElementHandle} from 'puppeteer';
+import path from 'path';
+import {
+  downloadImage,
+  cleanupImage,
+  generateMultiPlatformImageFilename,
+} from '../../utils/imageUtils.js';
+import config from '../../config/index.js';
+import GenerativeAIService from '../generativeAI';
+
+const YOUTUBE_LINK =
+  'For social media automation and software development services, do not hesitate to contact us. https://youtu.be/dnY2p2whjk8?si=3eBCaHP9GKlwUEUI';
+const CHANNEL_LINK =
+  '🚂 Join our Telegram channel for uninterrupted news content https://t.me/tnk254';
+
+/**
+ * Posts trend news on Facebook with image
+ * @param page Puppeteer page instance
+ * @param newsBite The news bite to post
+ * @param imgUrl The image URL to download and upload
+ * @param sharedImagePath Optional: if image is already downloaded, use this path
+ * @returns The path of the downloaded image (for reuse in other platforms)
+ */
+const postTrendNewsOnFBPage = async (
+  page: Page,
+  newsBite: string,
+  imgUrl: string,
+  sharedImagePath?: string,
+  videoFilePath?: string,
+): Promise<string> => {
+  const genAI = new GenerativeAIService();
+  let imagePath = sharedImagePath;
+
+  try {
+    // Step 1: Download image if not already provided
+    if (!imagePath && imgUrl) {
+      console.log(`Downloading image from: ${imgUrl}`);
+      const imageFilename = generateMultiPlatformImageFilename(
+        newsBite,
+        'facebook',
+      );
+      imagePath = `${config.imagesStore}${imageFilename}`;
+
+      await downloadImage(imgUrl, imagePath);
+      console.log(`Image downloaded to: ${imagePath}`);
+    } else if (sharedImagePath) {
+      console.log(`Using shared image: ${sharedImagePath}`);
+      imagePath = sharedImagePath;
+    }
+
+    // Step 2: Upload image if available
+    const rand = Math.random();
+    if (imagePath && rand <= 0.9) {
+      await uploadImageToFacebook(page, imagePath, videoFilePath);
+      await sleep(3000);
+    }
+
+    // Step 2: Wait for the "What's on your mind?" span to appear
+    /** await page.waitForSelector('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6', {
+      timeout: 15000,
+      visible: true,
+    });
+
+    // Step 3: Click the "What's on your mind?" span
+    const clicked = await page.evaluate(() => {
+      const spans = Array.from(
+        document.querySelectorAll('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6'),
+      );
+      const target = spans.find(span =>
+        span.textContent?.includes("What's on your mind,"),
+      );
+      if (target) {
+        (target as HTMLElement).click();
+        return true;
+      }
+      return false;
+    });
+
+    if (clicked) {
+      console.log('Clicked on "What’s on your mind?" span successfully.');
+    } else {
+      console.warn('Target span not found.');
+    } 
+
+    await sleep(3000); */
+
+    // Step 3: Determine what to post
+
+    let toPost: string;
+
+    /** if (rand > 0.95) {
+      toPost = `${YOUTUBE_LINK} `;
+    } else if (rand > 0.9) {
+      toPost = `${CHANNEL_LINK} `;
+    } else {
+      toPost = newsBite;
+    } */
+    toPost = newsBite;
+
+    console.log(`Typing content: ${toPost}`);
+
+    // Step 4: Type the content
+    await page.keyboard.type(toPost, {delay: 200});
+    console.log('Typed the message into the editor successfully.');
+
+    await sleep(10000);
+
+    // Step 5: Click "Next" button using keyboard shortcuts
+    console.log('Using keyboard shortcuts to click Next button...');
+
+    // Hold Shift key and press Tab 4 times
+    await page.keyboard.down('Shift');
+
+    for (let i = 0; i < 4; i++) {
+      await page.keyboard.press('Tab');
+      await sleep(1000); // Wait 1 second after each tab
+    }
+
+    // Release Shift key
+    await page.keyboard.up('Shift');
+    await sleep(1000); // Wait 1 second
+
+    // Hit Enter button
+    await page.keyboard.press('Enter');
+
+    console.log('Next button clicked using keyboard shortcuts successfully.');
+
+    await sleep(getRandomWaitTime(1000, 4000));
+
+    // Step 6: Click tab 4 times to highlight share to groups button and press Enter
+    console.log(
+      'Step 6: Clicking tab 4 times to highlight share to groups button...',
+    );
+    for (let i = 0; i < 4; i++) {
+      await page.keyboard.press('Tab');
+      await sleep(1000);
+    }
+    await page.keyboard.press('Enter');
+    console.log('Share to groups button clicked successfully.');
+    await sleep(3000);
+
+    // Step 7: Select random groups to share to
+    console.log('Step 7: Selecting random groups to share to...');
+
+    // Find all unchecked checkbox inputs with the specified class
+    const groupInputs = await page.$$(
+      'input.x1i10hfl.x9f619.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1ypdohk.x5yr21d.x1o0tod.xdj266r.x14z9mp.xat24cr.x1lziwak.x1w3u9th.x1a2a7pz.xexx8yu.xyri2b.x18d9i69.x1c1uobl.x10l6tqk.x13vifvy.xh8yej3[type="checkbox"][aria-checked="false"]',
+    );
+
+    if (groupInputs.length > 0) {
+      // Generate random number between 2 and 4 (inclusive)
+      const numGroupsToSelect = Math.floor(Math.random() * 3) + 2; // Random between 2-4
+      console.log(
+        `Found ${groupInputs.length} available groups, selecting ${numGroupsToSelect} groups`,
+      );
+
+      // Randomly select groups to click
+      const selectedGroups = [];
+      const availableIndexes = Array.from(
+        {length: groupInputs.length},
+        (_, i) => i,
+      );
+
+      for (
+        let i = 0;
+        i < Math.min(numGroupsToSelect, availableIndexes.length);
+        i++
+      ) {
+        const randomIndex = Math.floor(Math.random() * availableIndexes.length);
+        const selectedIndex = availableIndexes.splice(randomIndex, 1)[0];
+        selectedGroups.push(selectedIndex);
+      }
+
+      // Click on selected groups
+      for (const index of selectedGroups) {
+        await groupInputs[index].click();
+        console.log(`Clicked on group ${index + 1}`);
+        await sleep(1000);
+      }
+
+      // Find and click the Done button using tab navigation
+      console.log('Navigating to Done button...');
+      let doneFound = false;
+      let tabAttempts = 0;
+      const maxTabAttempts = 20; // Prevent infinite loop
+
+      while (!doneFound && tabAttempts < maxTabAttempts) {
+        await page.keyboard.press('Tab');
+        await sleep(500);
+        tabAttempts++;
+
+        // Check if the focused element is the Done button
+        const isDoneButton = await page.evaluate(() => {
+          const activeEl = document.activeElement as HTMLElement;
+          if (activeEl && activeEl.getAttribute('aria-label') === 'Done') {
+            const span = activeEl.querySelector('span');
+            return (
+              span && span.textContent && span.textContent.includes('Done')
+            );
+          }
+          return false;
+        });
+
+        if (isDoneButton) {
+          console.log('Found Done button, clicking Enter...');
+          await page.keyboard.press('Enter');
+          doneFound = true;
+          await sleep(2000);
+        }
+      }
+
+      if (!doneFound) {
+        console.warn('Could not find Done button through tab navigation');
+      }
+    } else {
+      console.log('No available groups found to share to');
+    }
+
+    // Step 8: Click tab 3 times to highlight Post button and press Enter
+    console.log('Step 8: Clicking tab 3 times to highlight Post button...');
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press('Tab');
+      await sleep(1000);
+    }
+    await page.keyboard.press('Enter');
+    console.log('Post button clicked successfully.');
+
+    // Step 6 (Minus Sharing to groups): Click "Post" button using keyboard shortcuts
+    /** console.log('Using keyboard shortcuts to click Post button...');
+
+    // Hold Shift key and press Tab once
+    await page.keyboard.down('Shift');
+
+    await page.keyboard.press('Tab');
+
+    // Release Shift key
+    await page.keyboard.up('Shift');
+    await sleep(1000); // Wait 1 second
+
+    // Hit Enter button
+    // await page.keyboard.press('Enter');
+
+    console.log('Post button clicked using keyboard shortcuts successfully.'); */
+
+    // Step Z: Original logic commented out
+    /** const postClicked = await page.evaluate(() => {
+      const spans = Array.from(document.querySelectorAll('span'));
+      const postBtn = spans.find(span => span.textContent?.trim() === 'Post');
+      if (postBtn) {
+        (postBtn as HTMLElement).click();
+        return true;
+      }
+      return false;
+    });
+
+    if (postClicked) {
+      console.log('Clicked on "Post" button successfully.');
+    } else {
+      console.warn('"Post" button not found.');
+    }
+    */
+
+    await sleep(getRandomWaitTime(2000, 5000));
+
+    return imagePath || '';
+  } catch (err: any) {
+    console.error(`Error in postTrendNewsOnFB: ${err.message}`);
+    throw err;
+  }
+};
+
+/**
+ * Upload image to Facebook using the file input
+ * @param page Puppeteer page instance
+ * @param imagePath Local path to the image file
+ */
+const uploadImageToFacebook = async (
+  page: Page,
+  imagePath: string,
+  videoFilePath?: string,
+): Promise<void> => {
+  try {
+    console.log('Starting image upload to Facebook...');
+
+    // Multiple selectors to find the file input for Facebook
+    const fileInputSelectors = [
+      'input[accept="image/*,image/heif,image/heic,video/*,video/mp4,video/x-m4v,video/x-matroska,.mkv"]',
+      'input[type="file"][accept*="image"]',
+      'input.x1s85apg[type="file"]',
+      'input[type="file"][multiple]',
+    ];
+
+    let fileInput: ElementHandle<HTMLInputElement> | null = null;
+
+    // Try to find existing file input
+    for (const selector of fileInputSelectors) {
+      try {
+        const input = await page.$(selector);
+        if (input) {
+          fileInput = input as ElementHandle<HTMLInputElement>;
+          console.log(`Found file input with selector: ${selector}`);
+          break;
+        }
+      } catch (e) {
+        continue;
+      }
+    }
+
+    // If no file input found, try clicking the Photo/video button first
+    if (!fileInput) {
+      console.log('File input not found, looking for Photo/video button...');
+
+      const mediaButtonSelectors = [
+        '[aria-label="Photo/video"]',
+        'div[aria-label="Photo/video"]',
+        '[role="button"]:has-text("Photo/video")',
+      ];
+
+      let buttonClicked = false;
+      for (const selector of mediaButtonSelectors) {
+        try {
+          const button = await page.$(selector);
+          if (button) {
+            await button.click();
+            console.log(`Clicked Photo/video button: ${selector}`);
+            buttonClicked = true;
+            await sleep(2000);
+            break;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+
+      // Alternative approach: click by aria-label using evaluate
+      if (!buttonClicked) {
+        const clicked = await page.evaluate(() => {
+          const buttons = Array.from(
+            document.querySelectorAll('[aria-label="Photo/video"]'),
+          );
+          if (buttons.length > 0) {
+            (buttons[0] as HTMLElement).click();
+            return true;
+          }
+          return false;
+        });
+
+        if (clicked) {
+          console.log('Clicked Photo/video button using evaluate');
+          await sleep(2000);
+        }
+      }
+
+      // Try to find file input again after clicking button
+      for (const selector of fileInputSelectors) {
+        try {
+          const input = await page.waitForSelector(selector, {
+            timeout: 3000,
+            visible: false,
+          });
+          if (input) {
+            fileInput = input as ElementHandle<HTMLInputElement>;
+            console.log(`Found file input after clicking button: ${selector}`);
+            break;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+    }
+
+    if (!fileInput) {
+      throw new Error(
+        'Could not find file input element for Facebook image upload',
+      );
+    }
+
+    // Upload the file
+    let absolutePath: string;
+    if (videoFilePath) {
+      absolutePath = path.resolve(videoFilePath);
+    } else {
+      absolutePath = path.resolve(imagePath);
+    }
+
+    await fileInput.uploadFile(absolutePath);
+    console.log(`File uploaded successfully: ${absolutePath}`);
+    await sleep(5000);
+
+    // Wait for image upload confirmation
+    /** const confirmationSelectors = [
+      'img[src*="blob:"]',
+      '[data-testid="media-preview"]',
+      '.x1i10hfl img',
+      '[role="img"]',
+      'img[alt*="preview"]',
+    ];
+
+    let uploadConfirmed = false;
+    for (const selector of confirmationSelectors) {
+      try {
+        await page.waitForSelector(selector, {timeout: 10000});
+        console.log(`Image upload confirmed with selector: ${selector}`);
+        uploadConfirmed = true;
+        break;
+      } catch (e) {
+        continue;
+      }
+    }
+
+    if (!uploadConfirmed) {
+      console.log(
+        'Warning: Could not confirm image upload, but it may have succeeded',
+      );
+      await sleep(3000);
+    } */
+
+    console.log('Facebook image upload process completed');
+  } catch (error: any) {
+    console.error('Error uploading image to Facebook:', error.message);
+    throw error;
+  }
+};
+
+export {postTrendNewsOnFBPage, uploadImageToFacebook};
