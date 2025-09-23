@@ -122,7 +122,7 @@ export const XTrendsToNews = async (
     await sleep(2000);
 
     // Generate audio for the news bite
-    /** console.log('Generating audio for news bite...');
+    console.log('Generating audio for news bite...');
     try {
       audioFilePath = await genAIAudioService.generateNewsAudio(
         newsBite,
@@ -160,7 +160,7 @@ export const XTrendsToNews = async (
         videoError,
       );
       // Continue with the process even if video generation fails
-    } */
+    }
 
     await sleep(2000);
 

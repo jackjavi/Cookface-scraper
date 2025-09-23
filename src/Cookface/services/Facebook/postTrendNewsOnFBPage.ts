@@ -127,7 +127,7 @@ const postTrendNewsOnFBPage = async (
 
     console.log('Next button clicked using keyboard shortcuts successfully.');
 
-    await sleep(getRandomWaitTime(1000, 4000));
+    await sleep(getRandomWaitTime(3000, 6000));
 
     // Step 6: Click tab 4 times to highlight share to groups button and press Enter
     console.log(

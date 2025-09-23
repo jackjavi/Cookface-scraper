@@ -57,7 +57,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       const now = Date.now();
 
       // 💤 Sleep window check
-      /** if (isWithinSleepWindow()) {
+      if (isWithinSleepWindow()) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 💤 Sleep window active. Sleeping 15 minutes...`,
         );
@@ -68,7 +68,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       // Run TikTokCommentsEngage every ~ 30 minutes - 1 hour
       if (
         now - lastTikTokComments >
-        getRandomWaitTime(THIRTY_MINUTES, ONEHOUR)
+        getRandomWaitTime(ONEHOUR, ONEHOURFORTYFIVE)
       ) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 🎵 Starting TikTokEngageComments...`,
@@ -85,7 +85,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       }
 
       // Run TikTok Gain Train every ~3-4 hours
-      if (now - lastGainTrain > getRandomWaitTime(THREEHOURS, FOURHOURS)) {
+      /** if (now - lastGainTrain > getRandomWaitTime(THREEHOURS, FOURHOURS)) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 🚂 Starting TikTok Gain Train Module...`,
         );
@@ -98,7 +98,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         lastGainTrain = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      }
+      } */
 
       // Run XEngage every ~3-6 minutes
       if (now - lastEngage > getRandomWaitTime(THREE_MINUTES, FOUR_MINUTES)) {
@@ -114,10 +114,10 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         lastEngage = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      } */
+      }
 
       // Run XTrendsToNews every ~30-60 minutes
-      if (now - lastTrends > getRandomWaitTime(THIRTY_MINUTES, ONEHOUR)) {
+      if (now - lastTrends > getRandomWaitTime(ONEHOUR, ONEHOURFORTYFIVE)) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 📊 Starting XTrendsToNews...`,
         );
