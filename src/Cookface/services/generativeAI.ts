@@ -295,7 +295,7 @@ Top Posts: ${examplePosts}
         .replace(/(?<=\s)["'“”‘’]+|["'“”‘’]+(?=\s)/g, '')
         .trim();
 
-      return cleanPost;
+      return `${cleanPost} `;
     } catch (error) {
       console.error('Error generating tweet trends post:', error);
       throw new Error('Failed to generate a post for the trending topic');
