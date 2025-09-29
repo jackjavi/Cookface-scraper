@@ -464,6 +464,193 @@ Use only numbers 1-10. No other text or explanations.
     }
   }
 
+  /**
+   * Select all relevant images with rating >= 6, sorted by relevance score (highest first)
+   * @param newsBite - The news bite content
+   * @param comments - Array of comments for context
+   * @param images - Array of TweetImage objects to analyze
+   * @returns Promise<TweetImage[]> - Array of relevant images sorted by score (highest first)
+   */
+  async selectMostRelevantImages(
+    newsBite: string,
+    comments: Comment[],
+    images: TweetImage[],
+  ): Promise<TweetImage[]> {
+    const RELEVANCE_THRESHOLD = 6; // Minimum score of 6 out of 10 to be considered relevant
+
+    if (!images || images.length === 0) {
+      console.log(
+        'No images available for analysis, returning default image in array',
+      );
+      return [
+        {
+          src: config.tnkDefaultIMG,
+          alt: 'Default TNK image',
+          articleIndex: -1,
+        },
+      ];
+    }
+
+    try {
+      // Function to convert image URL to base64 for Gemini API
+      const imageToGenerativePart = async (imageUrl: string) => {
+        try {
+          const response = await fetch(imageUrl);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch image: ${response.statusText}`);
+          }
+          const buffer = await response.arrayBuffer();
+          const base64String = Buffer.from(buffer).toString('base64');
+
+          // Determine MIME type from URL or default to JPEG
+          let mimeType = 'image/jpeg';
+          if (imageUrl.includes('.png')) mimeType = 'image/png';
+          else if (imageUrl.includes('.gif')) mimeType = 'image/gif';
+          else if (imageUrl.includes('.webp')) mimeType = 'image/webp';
+
+          return {
+            inlineData: {
+              data: base64String,
+              mimeType: mimeType,
+            },
+          };
+        } catch (error) {
+          console.error('Error processing image:', imageUrl, error);
+          return null;
+        }
+      };
+
+      // Process up to 10 images to avoid API limits (increased from 5)
+      const imagesToProcess = images.slice(0, 10);
+      console.log(`Processing ${imagesToProcess.length} images in batch...`);
+
+      // Convert all images to generative parts
+      const imageParts = [];
+      const validImages = [];
+
+      for (let i = 0; i < imagesToProcess.length; i++) {
+        const imagePart = await imageToGenerativePart(imagesToProcess[i].src);
+        if (imagePart) {
+          imageParts.push(imagePart);
+          validImages.push(imagesToProcess[i]);
+        }
+      }
+
+      if (imageParts.length === 0) {
+        console.log(
+          'No images could be processed, returning default image in array',
+        );
+        return [
+          {
+            src: config.tnkDefaultIMG,
+            alt: 'Default TNK image',
+            articleIndex: -1,
+          },
+        ];
+      }
+
+      // Create prompt for batch analysis
+      const prompt = `
+You are analyzing ${validImages.length} images for relevance to a news story.
+
+NEWS STORY: "${newsBite}"
+
+Rate each image's relevance on a scale of 1-10, considering:
+- Visual elements that directly relate to the news story
+- People, objects, or scenes mentioned in the news
+- Emotional tone and context alignment
+- Overall visual storytelling value
+
+Respond with ONLY the scores in this exact format:
+Image 1: [score]
+Image 2: [score]
+Image 3: [score]
+(etc. for each image)
+
+Use only numbers 1-10. No other text or explanations.
+    `;
+
+      // Build content array with prompt and all images
+      const contentParts = [prompt, ...imageParts];
+
+      // Make single API call with all images
+      const result = await this.visionModel.generateContent(contentParts);
+      const response = result.response.text().trim();
+
+      console.log('Batch analysis response:', response);
+
+      // Parse scores from response
+      const scores: number[] = [];
+      const lines = response.split('\n');
+
+      for (let i = 0; i < validImages.length; i++) {
+        // Look for patterns like "Image 1: 7" or just "7" on separate lines
+        const imagePattern = new RegExp(`Image\\s*${i + 1}:\\s*(\\d+)`, 'i');
+        const match = response.match(imagePattern);
+
+        if (match) {
+          scores.push(parseInt(match[1]));
+        } else if (lines[i]) {
+          // Fallback: try to extract number from corresponding line
+          const numberMatch = lines[i].match(/\d+/);
+          scores.push(numberMatch ? parseInt(numberMatch[0]) : 1);
+        } else {
+          scores.push(1); // Default low score
+        }
+      }
+
+      console.log('Extracted scores:', scores);
+
+      // Create array of images with their scores
+      const imagesWithScores = validImages.map((image, index) => ({
+        image,
+        score: scores[index] || 1,
+      }));
+
+      // Filter images that meet the threshold and sort by score (highest first)
+      const relevantImages = imagesWithScores
+        .filter(item => item.score >= RELEVANCE_THRESHOLD)
+        .sort((a, b) => b.score - a.score)
+        .map(item => item.image);
+
+      if (relevantImages.length === 0) {
+        console.log(
+          `No images scored above threshold (${RELEVANCE_THRESHOLD}). Using default image.`,
+        );
+        return [
+          {
+            src: config.tnkDefaultIMG,
+            alt: 'Default TNK image',
+            articleIndex: -1,
+          },
+        ];
+      }
+
+      console.log(`Selected ${relevantImages.length} relevant images`);
+      relevantImages.forEach((image, index) => {
+        const scoreItem = imagesWithScores.find(
+          item => item.image.src === image.src,
+        );
+        console.log(
+          `Image ${index + 1}: Score ${scoreItem?.score}, URL: ${image.src}`,
+        );
+      });
+
+      return relevantImages;
+    } catch (error) {
+      console.error('Error in batch image selection process:', error);
+      // Fallback to default image if analysis fails
+      console.log('Falling back to default image due to error');
+      return [
+        {
+          src: config.tnkDefaultIMG,
+          alt: 'Default TNK image',
+          articleIndex: -1,
+        },
+      ];
+    }
+  }
+
   async generateReply(posts: Post[]): Promise<string> {
     if (!Array.isArray(posts) || posts.length === 0) {
       throw new Error('Posts should be a non-empty array of objects.');

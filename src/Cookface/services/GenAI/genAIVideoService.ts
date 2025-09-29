@@ -9,40 +9,55 @@ class GenerativeAIVideoService {
   constructor() {
     this.videoStore = config.videoStore;
 
-    // Set explicit paths to your FFmpeg installation
-    const ffmpegPath = 'C:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe';
-    const ffprobePath = 'C:\\Program Files\\ffmpeg\\bin\\ffprobe.exe';
+    // Configure FFmpeg paths based on operating system
+    this.configureFfmpegPaths();
+  }
 
-    // Verify both executables exist
-    if (fs.existsSync(ffmpegPath) && fs.existsSync(ffprobePath)) {
-      ffmpeg.setFfmpegPath(ffmpegPath);
-      ffmpeg.setFfprobePath(ffprobePath);
-      console.log(`FFmpeg configured at: ${ffmpegPath}`);
-      console.log(`FFprobe configured at: ${ffprobePath}`);
+  /**
+   * Configure FFmpeg paths based on the current operating system
+   */
+  private configureFfmpegPaths(): void {
+    const os = require('os');
+    const platform = os.platform();
+
+    console.log(`Detected operating system: ${platform}`);
+
+    // Only configure explicit paths for Windows
+    if (platform === 'win32') {
+      const ffmpegPath = 'C:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe';
+      const ffprobePath = 'C:\\Program Files\\ffmpeg\\bin\\ffprobe.exe';
+
+      // Verify both executables exist
+      if (fs.existsSync(ffmpegPath) && fs.existsSync(ffprobePath)) {
+        ffmpeg.setFfmpegPath(ffmpegPath);
+        ffmpeg.setFfprobePath(ffprobePath);
+        console.log(`FFmpeg configured for Windows at: ${ffmpegPath}`);
+        console.log(`FFprobe configured for Windows at: ${ffprobePath}`);
+      } else {
+        console.error('FFmpeg or FFprobe not found at expected Windows paths:');
+        console.error(
+          `FFmpeg: ${ffmpegPath} - ${fs.existsSync(ffmpegPath) ? 'EXISTS' : 'NOT FOUND'}`,
+        );
+        console.error(
+          `FFprobe: ${ffprobePath} - ${fs.existsSync(ffprobePath) ? 'EXISTS' : 'NOT FOUND'}`,
+        );
+        console.warn('Attempting to use system PATH for FFmpeg...');
+      }
     } else {
-      console.error('FFmpeg or FFprobe not found at expected paths:');
-      console.error(
-        `FFmpeg: ${ffmpegPath} - ${fs.existsSync(ffmpegPath) ? 'EXISTS' : 'NOT FOUND'}`,
-      );
-      console.error(
-        `FFprobe: ${ffprobePath} - ${fs.existsSync(ffprobePath) ? 'EXISTS' : 'NOT FOUND'}`,
-      );
-      throw new Error('FFmpeg installation not found');
+      // Linux/macOS - use system PATH (no explicit configuration needed)
+      console.log(`Using system PATH for FFmpeg on ${platform}`);
     }
   }
 
   /**
    * Generate video filename for storage
-   * @param newsBite - The news bite content to base filename on
-   * @returns string - Generated filename
    */
   private generateVideoFilename(newsBite: string): string {
-    // Clean the news bite for filename
     const cleanTitle = newsBite
-      .replace(/[^\w\s-]/g, '') // Remove special characters
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
       .toLowerCase()
-      .substring(0, 40); // Limit length
+      .substring(0, 40);
 
     const timestamp = Date.now();
     return `tnk-news-${cleanTitle}-${timestamp}.mp4`;
@@ -50,7 +65,6 @@ class GenerativeAIVideoService {
 
   /**
    * Ensure video directory exists
-   * @returns Promise<void>
    */
   private async ensureVideoDirectory(): Promise<void> {
     try {
@@ -65,213 +79,336 @@ class GenerativeAIVideoService {
   }
 
   /**
-   * Get image dimensions using FFprobe
-   * @param imagePath - Path to the image file
-   * @returns Promise<{width: number, height: number}>
+   * Get audio duration
    */
-  private async getImageDimensions(
-    imagePath: string,
-  ): Promise<{width: number; height: number}> {
-    return new Promise((resolve, reject) => {
-      ffmpeg.ffprobe(imagePath, (err: any, metadata: any) => {
+  private async getAudioDuration(audioPath: string): Promise<number> {
+    return new Promise(resolve => {
+      ffmpeg.ffprobe(audioPath, (err: any, metadata: any) => {
         if (err) {
-          console.error('Error getting image dimensions:', err);
-          // Return default dimensions if probe fails
-          resolve({width: 1280, height: 720});
+          console.warn(
+            'Could not get audio duration, using default:',
+            err.message,
+          );
+          resolve(30);
           return;
         }
-
-        const videoStream = metadata.streams.find(
-          (stream: any) => stream.codec_type === 'video',
-        );
-        if (videoStream) {
-          resolve({
-            width: videoStream.width || 1280,
-            height: videoStream.height || 720,
-          });
-        } else {
-          resolve({width: 1280, height: 720});
-        }
+        const duration = metadata.format.duration || 30;
+        const validDuration = Math.min(Math.max(parseFloat(duration), 5), 120);
+        resolve(validDuration);
       });
     });
   }
 
   /**
-   * Generate video from image and audio using FFmpeg
-   * @param imagePath - Path to the image file
-   * @param audioPath - Path to the audio file
-   * @param outputPath - Path where the video should be saved
-   * @returns Promise<void>
+   * Validate image paths
    */
-  private async createVideoWithFFmpeg(
+  private validateImagePaths(imagePaths: string[]): string[] {
+    const validPaths: string[] = [];
+
+    for (const imagePath of imagePaths) {
+      try {
+        if (fs.existsSync(imagePath) && fs.statSync(imagePath).isFile()) {
+          fs.accessSync(imagePath, fs.constants.R_OK);
+          validPaths.push(imagePath);
+        } else {
+          console.warn(`Image file not found: ${imagePath}`);
+        }
+      } catch (error) {
+        console.warn(`Cannot access image file: ${imagePath}`, error);
+      }
+    }
+
+    return validPaths;
+  }
+
+  /**
+   * Create simple video from single image - NO COMPLEX FILTERS
+   */
+  private async createSingleImageVideo(
     imagePath: string,
     audioPath: string,
     outputPath: string,
+    title?: string,
   ): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      console.log('Starting video generation with FFmpeg...');
-      console.log(`Image: ${imagePath}`);
-      console.log(`Audio: ${audioPath}`);
-      console.log(`Output: ${outputPath}`);
+    return new Promise((resolve, reject) => {
+      console.log('Creating simple single image video...');
 
-      // Ensure output directory exists
-      const outputDir = path.dirname(outputPath);
-      if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, {recursive: true});
-      }
+      const command = ffmpeg()
+        .input(imagePath)
+        .inputOptions(['-loop', '1'])
+        .input(audioPath)
+        .outputOptions([
+          '-c:v libx264',
+          '-c:a aac',
+          '-b:a 128k',
+          '-pix_fmt yuv420p',
+          '-vf',
+          'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:-1:-1:color=black',
+          '-r 30',
+          '-shortest',
+          '-movflags +faststart',
+          '-preset ultrafast',
+          '-crf 28',
+        ])
+        .output(outputPath)
+        .on('start', commandLine => {
+          console.log('Simple video command started');
+        })
+        .on('progress', progress => {
+          console.log(`Video progress: ${Math.round(progress.percent || 0)}%`);
+        })
+        .on('end', () => {
+          console.log('Simple video completed');
+          resolve();
+        })
+        .on('error', err => {
+          console.error('Simple video error:', err.message);
+          reject(new Error(`Simple video failed: ${err.message}`));
+        });
 
-      try {
-        // Get image dimensions first
-        const dimensions = await this.getImageDimensions(imagePath);
-        console.log(
-          `Image dimensions: ${dimensions.width}x${dimensions.height}`,
-        );
-
-        // Ensure dimensions are even numbers (required by libx264)
-        const width =
-          dimensions.width % 2 === 0 ? dimensions.width : dimensions.width - 1;
-        const height =
-          dimensions.height % 2 === 0
-            ? dimensions.height
-            : dimensions.height - 1;
-
-        console.log(`Adjusted dimensions: ${width}x${height}`);
-
-        const command = ffmpeg()
-          .input(imagePath)
-          .inputOptions([
-            '-loop 1', // Loop the image
-            '-framerate 25', // Standard framerate
-          ])
-          .input(audioPath)
-          .outputOptions([
-            '-c:v libx264', // Video codec
-            '-tune stillimage', // Optimize for still images
-            '-c:a aac', // Audio codec
-            '-b:a 128k', // Reduced audio bitrate
-            '-pix_fmt yuv420p', // Pixel format for compatibility
-            `-s ${width}x${height}`, // Explicitly set video size
-            '-r 25', // Output framerate
-            '-shortest', // End when shortest input ends (audio in this case)
-            '-movflags +faststart', // Optimize for web streaming
-            '-preset ultrafast', // Faster encoding
-            '-crf 23', // Constant rate factor for good quality
-          ])
-          .output(outputPath)
-          .on('start', commandLine => {
-            console.log('FFmpeg command:', commandLine);
-          })
-          .on('progress', progress => {
-            console.log(
-              `Video generation progress: ${Math.round(progress.percent || 0)}%`,
-            );
-          })
-          .on('end', () => {
-            console.log('Video generation completed successfully');
-            resolve();
-          })
-          .on('error', err => {
-            console.error('FFmpeg error:', err.message);
-            reject(new Error(`Video generation failed: ${err.message}`));
-          });
-
-        command.run();
-      } catch (error) {
-        console.error('Error in video generation setup:', error);
-        reject(error);
-      }
+      command.run();
     });
   }
 
   /**
-   * Generate video from image path and audio file
-   * @param imagePath - Local path to the image file
-   * @param audioFilePath - Path to the audio file
-   * @param newsBite - News bite content for filename generation (optional for future use like subtitles)
-   * @returns Promise<string> - Path to the generated video file
+   * Create multi-image video by concatenation method - SIMPLE APPROACH
+   */
+  private async createMultiImageVideo(
+    imagePaths: string[],
+    audioPath: string,
+    outputPath: string,
+    duration: number,
+    title?: string,
+  ): Promise<void> {
+    const tempDir = path.dirname(outputPath);
+    const tempVideos: string[] = [];
+    const concatFile = path.join(tempDir, `concat_${Date.now()}.txt`);
+
+    try {
+      console.log(
+        `Creating multi-image video with ${imagePaths.length} images using concat method...`,
+      );
+
+      const timePerImage = Math.max(duration / imagePaths.length, 2); // Min 2 seconds per image
+
+      // Create individual video for each image
+      for (let i = 0; i < imagePaths.length; i++) {
+        const tempVideoPath = path.join(tempDir, `temp_${Date.now()}_${i}.mp4`);
+        await this.createTempVideoForImage(
+          imagePaths[i],
+          tempVideoPath,
+          timePerImage,
+        );
+        tempVideos.push(tempVideoPath);
+        console.log(`Created temp video ${i + 1}/${imagePaths.length}`);
+      }
+
+      // Create concat file
+      const concatContent = tempVideos
+        .map(video => `file '${path.basename(video)}'`)
+        .join('\n');
+      fs.writeFileSync(concatFile, concatContent);
+
+      // Concatenate all videos and add audio
+      await new Promise<void>((resolve, reject) => {
+        ffmpeg()
+          .input(concatFile)
+          .inputOptions(['-f', 'concat', '-safe', '0'])
+          .input(audioPath)
+          .outputOptions([
+            '-c:v libx264',
+            '-c:a aac',
+            '-b:a 128k',
+            '-pix_fmt yuv420p',
+            '-r 30',
+            `-t ${duration}`,
+            '-movflags +faststart',
+            '-preset ultrafast',
+            '-crf 28',
+          ])
+          .output(outputPath)
+          .on('start', () => {
+            console.log('Concatenating videos with audio...');
+          })
+          .on('progress', progress => {
+            console.log(
+              `Concat progress: ${Math.round(progress.percent || 0)}%`,
+            );
+          })
+          .on('end', () => {
+            console.log('Multi-image video completed');
+            resolve();
+          })
+          .on('error', err => {
+            console.error('Concat error:', err.message);
+            reject(new Error(`Concat failed: ${err.message}`));
+          })
+          .run();
+      });
+    } finally {
+      // Clean up temp files
+      tempVideos.forEach(tempVideo => {
+        if (fs.existsSync(tempVideo)) {
+          try {
+            fs.unlinkSync(tempVideo);
+          } catch (e) {
+            console.warn(`Failed to delete temp video: ${tempVideo}`);
+          }
+        }
+      });
+
+      if (fs.existsSync(concatFile)) {
+        try {
+          fs.unlinkSync(concatFile);
+        } catch (e) {
+          console.warn(`Failed to delete concat file: ${concatFile}`);
+        }
+      }
+    }
+  }
+
+  /**
+   * Create temporary video for single image - ULTRA SIMPLE
+   */
+  private async createTempVideoForImage(
+    imagePath: string,
+    outputPath: string,
+    duration: number,
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      ffmpeg()
+        .input(imagePath)
+        .inputOptions(['-loop', '1', '-t', duration.toString()])
+        .outputOptions([
+          '-c:v libx264',
+          '-pix_fmt yuv420p',
+          '-vf',
+          'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:-1:-1:color=black',
+          '-r 30',
+          '-preset ultrafast',
+          '-crf 30', // Higher CRF for temp videos (smaller file)
+        ])
+        .output(outputPath)
+        .on('end', () => resolve())
+        .on('error', err =>
+          reject(new Error(`Temp video creation failed: ${err.message}`)),
+        )
+        .run();
+    });
+  }
+
+  /**
+   * Generate video from image(s) and audio - SIMPLIFIED MAIN METHOD
    */
   async generateVideoFromImageAndAudio(
-    imagePath: string,
+    imagePathOrPaths: string | string[],
     audioFilePath: string,
     newsBite?: string,
   ): Promise<string> {
     try {
-      console.log('Starting video generation process...');
+      console.log('Starting simplified video generation...');
+
+      // Normalize input to array
+      const imagePaths = Array.isArray(imagePathOrPaths)
+        ? imagePathOrPaths
+        : [imagePathOrPaths];
+
+      console.log(`Processing ${imagePaths.length} image(s)`);
 
       // Validate inputs
-      if (!imagePath || !audioFilePath) {
-        throw new Error(
-          'Missing required parameters: imagePath and audioFilePath are required',
-        );
-      }
-
-      if (!fs.existsSync(imagePath)) {
-        throw new Error(`Image file not found: ${imagePath}`);
+      if (!imagePaths.length || !audioFilePath) {
+        throw new Error('Missing required parameters');
       }
 
       if (!fs.existsSync(audioFilePath)) {
         throw new Error(`Audio file not found: ${audioFilePath}`);
       }
 
-      // Check if files are readable
-      try {
-        fs.accessSync(imagePath, fs.constants.R_OK);
-        fs.accessSync(audioFilePath, fs.constants.R_OK);
-      } catch (accessError) {
-        throw new Error(`Cannot access input files: ${accessError}`);
+      // Validate and filter image paths
+      const validImagePaths = this.validateImagePaths(imagePaths);
+      if (validImagePaths.length === 0) {
+        throw new Error('No valid image files found');
       }
+
+      console.log(`Using ${validImagePaths.length} valid images`);
+
+      // Get audio duration
+      const audioDuration = await this.getAudioDuration(audioFilePath);
+      console.log(`Audio duration: ${audioDuration.toFixed(2)} seconds`);
 
       // Ensure video directory exists
       await this.ensureVideoDirectory();
 
-      // Generate video filename and path
-      const videoFilename = this.generateVideoFilename(
-        newsBite || 'news-video',
-      );
+      // Generate output path
+      const videoFilename = this.generateVideoFilename(newsBite || 'video');
       const videoFilePath = path.join(this.videoStore, videoFilename);
 
-      // Generate video using FFmpeg
-      console.log('Creating video with FFmpeg...');
-      await this.createVideoWithFFmpeg(imagePath, audioFilePath, videoFilePath);
+      // Always try multi-image first if more than one image
+      if (validImagePaths.length === 1) {
+        console.log('Single image - creating simple video');
+        await this.createSingleImageVideo(
+          validImagePaths[0],
+          audioFilePath,
+          videoFilePath,
+          newsBite,
+        );
+      } else {
+        console.log(
+          `Multiple images (${validImagePaths.length}) - trying multi-image video`,
+        );
+
+        try {
+          await this.createMultiImageVideo(
+            validImagePaths,
+            audioFilePath,
+            videoFilePath,
+            audioDuration,
+            newsBite,
+          );
+          console.log('Multi-image video created successfully');
+        } catch (error) {
+          console.warn('Multi-image failed, using first image only:', error);
+          // Clean up any partial output
+          if (fs.existsSync(videoFilePath)) {
+            fs.unlinkSync(videoFilePath);
+          }
+
+          await this.createSingleImageVideo(
+            validImagePaths[0],
+            audioFilePath,
+            videoFilePath,
+            newsBite,
+          );
+        }
+      }
 
       // Verify video was created
       if (!fs.existsSync(videoFilePath)) {
-        throw new Error('Video file was not created successfully');
+        throw new Error('Video file was not created');
       }
 
       const stats = fs.statSync(videoFilePath);
-      console.log(`Video generated successfully: ${videoFilePath}`);
-      console.log(`File size: ${(stats.size / 1024 / 1024).toFixed(2)} MB`);
+      console.log(
+        `Video created: ${videoFilePath} (${(stats.size / 1024 / 1024).toFixed(2)} MB)`,
+      );
 
       return videoFilePath;
     } catch (error: any) {
-      console.error('Error generating video:', error);
+      console.error('Video generation error:', error);
       throw new Error(`Failed to generate video: ${error.message}`);
     }
   }
 
-  /**
-   * Get video file stats
-   * @param videoFilePath - Path to video file
-   * @returns Promise<fs.Stats | null>
-   */
+  // Utility methods (unchanged)
   async getVideoStats(videoFilePath: string): Promise<fs.Stats | null> {
     try {
-      if (fs.existsSync(videoFilePath)) {
-        return fs.statSync(videoFilePath);
-      }
-      return null;
+      return fs.existsSync(videoFilePath) ? fs.statSync(videoFilePath) : null;
     } catch (error) {
       console.error('Error getting video stats:', error);
       return null;
     }
   }
 
-  /**
-   * Get video duration using FFprobe (part of FFmpeg)
-   * @param videoFilePath - Path to video file
-   * @returns Promise<number> - Duration in seconds, or 0 if error
-   */
   async getVideoDuration(videoFilePath: string): Promise<number> {
     return new Promise(resolve => {
       ffmpeg.ffprobe(videoFilePath, (err: any, metadata: any) => {
@@ -280,41 +417,25 @@ class GenerativeAIVideoService {
           resolve(0);
           return;
         }
-
-        const duration = metadata.format.duration || 0;
-        resolve(parseFloat(duration));
+        resolve(parseFloat(metadata.format.duration || 0));
       });
     });
   }
 
-  /**
-   * Cleanup video file after use
-   * @param videoFilePath - Path to the video file to cleanup
-   */
   async cleanupVideo(videoFilePath: string): Promise<void> {
     try {
       if (fs.existsSync(videoFilePath)) {
         await fs.promises.unlink(videoFilePath);
-        console.log(`Cleaned up video file: ${videoFilePath}`);
-      } else {
-        console.log(`Video file not found for cleanup: ${videoFilePath}`);
+        console.log(`Cleaned up: ${videoFilePath}`);
       }
     } catch (error) {
-      console.error(`Error cleaning up video file ${videoFilePath}:`, error);
-      // Don't throw error - cleanup failure shouldn't stop the process
+      console.error(`Cleanup error: ${videoFilePath}`, error);
     }
   }
 
-  /**
-   * Clean up old video files (older than specified hours)
-   * @param maxAgeHours - Maximum age in hours (default: 24)
-   */
   async cleanupOldVideoFiles(maxAgeHours: number = 24): Promise<void> {
     try {
-      if (!fs.existsSync(this.videoStore)) {
-        console.log('Video storage directory does not exist');
-        return;
-      }
+      if (!fs.existsSync(this.videoStore)) return;
 
       const files = await fs.promises.readdir(this.videoStore);
       const maxAgeMs = maxAgeHours * 60 * 60 * 1000;
@@ -329,36 +450,24 @@ class GenerativeAIVideoService {
           if (now - stats.mtime.getTime() > maxAgeMs) {
             await fs.promises.unlink(filePath);
             cleanedCount++;
-            console.log(`Cleaned up old video file: ${file}`);
           }
         }
       }
 
       console.log(`Cleaned up ${cleanedCount} old video files`);
     } catch (error) {
-      console.error('Error cleaning up old video files:', error);
+      console.error('Error cleaning up old files:', error);
     }
   }
 
-  /**
-   * Check if video file exists
-   * @param videoFilePath - Path to video file
-   * @returns boolean
-   */
   videoExists(videoFilePath: string): boolean {
     try {
       return fs.existsSync(videoFilePath);
-    } catch (error) {
-      console.error('Error checking video existence:', error);
+    } catch {
       return false;
     }
   }
 
-  /**
-   * Get formatted file size
-   * @param videoFilePath - Path to video file
-   * @returns Promise<string> - Formatted file size or 'Unknown'
-   */
   async getFormattedFileSize(videoFilePath: string): Promise<string> {
     try {
       const stats = await this.getVideoStats(videoFilePath);
@@ -372,8 +481,7 @@ class GenerativeAIVideoService {
       const i = Math.floor(Math.log(bytes) / Math.log(k));
 
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    } catch (error) {
-      console.error('Error getting formatted file size:', error);
+    } catch {
       return 'Unknown';
     }
   }

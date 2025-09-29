@@ -51,7 +51,7 @@ async function fetchTweetTrends(
     try {
       const commentTime = new Date(timestamp).getTime();
       const currentTime = Date.now();
-      const fiveHoursInMs = 5 * 60 * 60 * 1000; // 5 hours in milliseconds
+      const fiveHoursInMs = 10 * 60 * 60 * 1000; // 10 hours in milliseconds
 
       const timeDifference = currentTime - commentTime;
       const isRecent = timeDifference <= fiveHoursInMs && timeDifference >= 0;

@@ -14,7 +14,7 @@ import {
   cleanupImage,
   generateMultiPlatformImageFilename,
 } from '../utils/imageUtils';
-import {cleanupVideo} from '../utils/videoUtils';
+import {cleanupVideo} from '../utils/video/videoUtils';
 import config from '../config/index.js';
 import {Page} from 'puppeteer';
 import path from 'path';
@@ -36,7 +36,7 @@ export const XTrendsToNews = async (
   fbPage: Page,
   tiktokPage?: Page, // Optional TikTok page for video upload
 ): Promise<void> => {
-  let sharedImagePath: string | null = null;
+  let sharedImagePaths: string[] = [];
   let audioFilePath: string | null = null;
   let videoFilePath: string | null = null;
 
@@ -73,50 +73,52 @@ export const XTrendsToNews = async (
 
     console.log(`Generated News Bite: ${newsBite}`);
 
-    // Analyze and select the most relevant image
-    let selectedImage: TweetImage | null = null;
+    // Analyze and select ALL relevant images
+    let selectedImages: TweetImage[] = [];
     if (images && images.length > 0) {
       console.log('Analyzing images for relevance to news bite...');
-      selectedImage = await genAIService.selectMostRelevantImage(
+      selectedImages = await genAIService.selectMostRelevantImages(
+        // Changed method name
         newsBite,
         comments,
         images,
       );
 
-      if (selectedImage) {
-        console.log(`Selected most relevant image: ${selectedImage.src}`);
-      } else {
-        console.log('No relevant image selected, using default');
-        selectedImage = {
+      console.log(`Selected ${selectedImages.length} relevant images`);
+      selectedImages.forEach((image, index) => {
+        console.log(`Selected image ${index + 1}: ${image.src}`);
+      });
+    } else {
+      console.log('No images available, using default');
+      selectedImages = [
+        {
           src: config.tnkDefaultIMG,
           alt: 'Default Image',
           articleIndex: -1,
-        };
-      }
-    } else {
-      console.log('No images available, using default');
-      selectedImage = {
-        src: config.tnkDefaultIMG,
-        alt: 'Default Image',
-        articleIndex: -1,
-      };
+        },
+      ];
     }
 
-    // Download image centrally for multi-platform use
-    console.log('Downloading image for multi-platform use...');
+    // Download images centrally for multi-platform use
+    console.log('Downloading images for multi-platform use...');
     try {
-      const imageFilename = generateMultiPlatformImageFilename(
-        newsBite,
-        'multiplatform',
-      );
-      sharedImagePath = `${config.imagesStore}${imageFilename}`;
+      for (let i = 0; i < selectedImages.length; i++) {
+        const image = selectedImages[i];
+        const imageFilename = generateMultiPlatformImageFilename(
+          newsBite,
+          `multiplatform-${i + 1}`, // Add index to filename
+        );
+        const imagePath = `${config.imagesStore}${imageFilename}`;
 
-      await downloadImage(selectedImage.src, sharedImagePath);
-      console.log(`Image downloaded successfully: ${sharedImagePath}`);
+        await downloadImage(image.src, imagePath);
+        sharedImagePaths.push(imagePath);
+        console.log(`Image ${i + 1} downloaded successfully: ${imagePath}`);
+      }
+      console.log(`Total ${sharedImagePaths.length} images downloaded`);
     } catch (imageError) {
-      console.error('Failed to download image:', imageError);
-      // Continue without image if download fails
-      sharedImagePath = null;
+      console.error('Failed to download images:', imageError);
+      // Continue without images if download fails
+      sharedImagePaths = [];
     }
 
     await sleep(2000);
@@ -137,29 +139,28 @@ export const XTrendsToNews = async (
       // Continue with the process even if audio generation fails
     }
 
-    // Generate video from image and audio
-    console.log('Generating video from image and audio...');
+    // Generate video from images and audio
+    console.log('Generating video from images and audio...');
     try {
-      if (audioFilePath && sharedImagePath) {
+      if (audioFilePath && sharedImagePaths.length > 0) {
         videoFilePath = await genAIVideoService.generateVideoFromImageAndAudio(
-          sharedImagePath,
+          sharedImagePaths,
           audioFilePath,
-          newsBite, // Pass newsBite for future use (subtitles, metadata, etc.)
+          newsBite,
         );
         console.log(`Generated video file: ${videoFilePath}`);
 
         // Clean up audio file since it's now embedded in video
         await genAIAudioService.cleanupAudio(audioFilePath);
-        audioFilePath = null; // Mark as cleaned up
+        audioFilePath = null;
       } else {
-        console.log('Skipping video generation - missing audio or image');
+        console.log('Skipping video generation - missing audio or images');
       }
     } catch (videoError) {
       console.error(
         'Video generation failed, continuing without video:',
         videoError,
       );
-      // Continue with the process even if video generation fails
     }
 
     await sleep(2000);
@@ -170,8 +171,8 @@ export const XTrendsToNews = async (
       'Home',
       xPage,
       newsBite,
-      selectedImage.src,
-      sharedImagePath ? sharedImagePath : undefined,
+      selectedImages[0].src,
+      sharedImagePaths.length > 0 ? sharedImagePaths[0] : undefined,
       // videoFilePath ? videoFilePath : undefined,
     );
     console.log('Successfully posted to X'); */
@@ -188,17 +189,24 @@ export const XTrendsToNews = async (
     await postTrendNewsOnFB(
       fbPage,
       newsBite,
-      selectedImage.src,
-      sharedImagePath ? sharedImagePath : undefined,
-      // videoFilePath ? videoFilePath : undefined,
+      selectedImages[0].src,
+      sharedImagePaths.length > 0 ? sharedImagePaths[0] : undefined,
+      videoFilePath ? videoFilePath : undefined,
     );
     console.log('Successfully posted to Facebook');
 
-    await sleep(30000);
+    await fbPage.reload({waitUntil: 'networkidle2'});
+    console.log('Page reloaded successfully.');
+
+    await sleep(10000);
 
     // Post to Telegram using the shared image path
     console.log('Posting to Telegram...');
-    await sendArticleToTelegram(newsBite, selectedImage.src, sharedImagePath!);
+    await sendArticleToTelegram(
+      newsBite,
+      selectedImages[0].src,
+      sharedImagePaths[0],
+    );
     console.log('Successfully posted to Telegram');
 
     // Upload to TikTok if video was generated and TikTok page is available
@@ -260,9 +268,11 @@ export const XTrendsToNews = async (
     // Cleanup temporary files/Resources
     console.log('Starting cleanup process...');
 
-    if (sharedImagePath) {
-      console.log('Cleaning up shared image...');
-      await cleanupImage(sharedImagePath);
+    if (sharedImagePaths.length > 0) {
+      console.log('Cleaning up shared images...');
+      for (const imagePath of sharedImagePaths) {
+        await cleanupImage(imagePath);
+      }
     }
 
     // Keep video file for now since it was uploaded to TikTok
@@ -275,7 +285,7 @@ export const XTrendsToNews = async (
 
     if (videoFilePath) {
       console.log('Cleaning up video file...');
-      await cleanupVideo(videoFilePath);
+      // await cleanupVideo(videoFilePath); // COmbine and post on YouTube at EOD
     }
 
     console.log('Cleanup process completed');

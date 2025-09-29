@@ -14,6 +14,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
     const THREE_MINUTES = 3 * 60 * 1000;
     const FOUR_MINUTES = 4 * 60 * 1000;
     const SIX_MINUTES = 6 * 60 * 1000;
+    const TEN_MINUTES = 10 * 60 * 1000;
     const TWENTY_MINUTES = 20 * 60 * 1000;
     const THIRTY_MINUTES = 30 * 60 * 1000;
     const FORTY_FIVE_MINUTES = 45 * 60 * 1000;
@@ -57,15 +58,15 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       const now = Date.now();
 
       // 💤 Sleep window check
-      if (isWithinSleepWindow()) {
+      /** if (isWithinSleepWindow()) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 💤 Sleep window active. Sleeping 15 minutes...`,
         );
         await sleep(15 * 60 * 1000);
         continue;
-      }
+      } */
 
-      // Run TikTokCommentsEngage every ~ 30 minutes - 1 hour
+      // Run TikTokCommentsEngage every ~ 1-1.45 hrs
       if (
         now - lastTikTokComments >
         getRandomWaitTime(ONEHOUR, ONEHOURFORTYFIVE)
@@ -100,8 +101,8 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         continue;
       } */
 
-      // Run XEngage every ~3-6 minutes
-      if (now - lastEngage > getRandomWaitTime(THREE_MINUTES, FOUR_MINUTES)) {
+      // Run XEngage every ~4-10 minutes
+      if (now - lastEngage > getRandomWaitTime(FOUR_MINUTES, TEN_MINUTES)) {
         console.log(
           `[${new Date().toLocaleTimeString()}] ⏱️ Starting XEngage...`,
         );
@@ -116,7 +117,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         continue;
       }
 
-      // Run XTrendsToNews every ~30-60 minutes
+      // Run XTrendsToNews every ~1 hr - 1 hr 45 minutes
       if (now - lastTrends > getRandomWaitTime(ONEHOUR, ONEHOURFORTYFIVE)) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 📊 Starting XTrendsToNews...`,

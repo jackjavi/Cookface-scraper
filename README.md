@@ -20,7 +20,11 @@
 chromium-browser --remote-debugging-port=9222 --start-maximized
 ```
 
-### Microsoft Edge
+### Microsoft Edge Linux
+
+```bash
+microsoft-edge --remote-debugging-port=9222 -start-maximized
+```
 
 #### Windows on Git bash
 

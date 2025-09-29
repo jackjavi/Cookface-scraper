@@ -377,7 +377,7 @@ class AnimatedVideoService {
   /**
    * Find available system font - simplified approach
    */
-  private findSystemFont(): string {
+  /** private findSystemFont(): string {
     // List of potential font files to check
     const windowsFonts = [
       'C:\\Windows\\Fonts\\arial.ttf',
@@ -398,7 +398,7 @@ class AnimatedVideoService {
     // If no specific font found, try without fontfile parameter
     console.warn('No specific font found, using system default');
     return '';
-  }
+  } */
 
   /**
    * Alternative method: Generate video without text overlay to test basic functionality

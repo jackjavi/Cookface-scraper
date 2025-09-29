@@ -42,10 +42,12 @@ class GenerativeAIAudioService {
       .join('\n');
 
     const prompt = `
-You are creating a professional news podcast script for "TRENDING NEWS KE" - a Kenyan news podcast that covers viral stories and trending topics.
+You are creating a professional news podcast script for "TRENDING NEWS KENYA" - a Kenyan news podcast that covers viral stories and trending topics.
 
 Create a single-speaker, 20-30 second podcast transcript that:
 - Starts with a brief, catchy intro mentioning "TRENDING NEWS KENYA"
+- Do not include extras like "Intro music fades" neither at the start nor end - Just the main transcript to be read
+- Don't include "Here is your podcast script at the start of the script". Just the main content to be read.
 - Presents the news story in an engaging, conversational tone
 - Incorporates relevant context from the social media reactions
 - Uses natural speech patterns with appropriate pauses

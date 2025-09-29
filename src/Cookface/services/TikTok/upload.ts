@@ -7,6 +7,7 @@ import {
   TIKTOK_ROUTES,
 } from '../../utils/TikTok/Navigation';
 import sleep from '../../utils/sleep';
+import getRandomWaitTime from '../../utils/randomWaitTime';
 import path from 'path';
 import fs from 'fs';
 
@@ -143,16 +144,16 @@ export async function TikTokUpload(
     console.log('✅ Description updated successfully');
 
     // Handle advanced settings for AI content
-    console.log('🔧 Configuring AI content settings...');
+    /** console.log('🔧 Configuring AI content settings...');
     const advancedSettingsSuccess = await handleAdvancedSettings(page);
 
     if (!advancedSettingsSuccess) {
       console.warn(
         '⚠️ Could not configure advanced settings, continuing with upload...',
       );
-    }
+    } */
 
-    await sleep(20000); // Wait for checks to complete. Update later to check for specific indicators
+    await sleep(getRandomWaitTime(10000, 20000)); // Wait for checks to complete.
 
     // Find the button group and post the video
     console.log('🔍 Looking for post button...');
@@ -448,7 +449,7 @@ async function handleAdvancedSettings(page: Page): Promise<boolean> {
       await sleep(1000);
 
       console.log('🎯 Clicking AI content switch...');
-      // await aiSwitchInput.click();
+      await aiSwitchInput.click();
       console.log('✅ AI content switch clicked successfully');
 
       // Verify the switch was actually toggled
@@ -459,9 +460,9 @@ async function handleAdvancedSettings(page: Page): Promise<boolean> {
 
     // Step 6: Wait for initial 20 seconds before continuing
     console.log(
-      '⏳ Waiting 20 seconds before continuing with post button logic...',
+      '⏳ Waiting 9-20 seconds before continuing with post button logic...',
     );
-    await sleep(20000);
+    await sleep(getRandomWaitTime(9000, 20000));
 
     return true;
   } catch (error) {

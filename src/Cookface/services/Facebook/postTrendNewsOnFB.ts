@@ -34,7 +34,7 @@ const postTrendNewsOnFB = async (
   let imagePath = sharedImagePath;
 
   try {
-    // Step 1: Download image if not already provided
+    // Step 0: Download image if not already provided
     if (!imagePath && imgUrl) {
       console.log(`Downloading image from: ${imgUrl}`);
       const imageFilename = generateMultiPlatformImageFilename(
@@ -50,11 +50,24 @@ const postTrendNewsOnFB = async (
       imagePath = sharedImagePath;
     }
 
+    // Step 1: Click tab 13 times to highlight "What's on your mind?" Post section and press Enter
+    console.log(
+      `Step 1: Clicking tab 13 times to highlight What's on your mind? Post section...`,
+    );
+    for (let i = 0; i < 13; i++) {
+      await page.keyboard.press('Tab');
+      await sleep(getRandomWaitTime(500, 1900));
+    }
+    await page.keyboard.press('Enter');
+    console.log('Clicked on "What’s on your mind?" span successfully.');
+
+    await sleep(getRandomWaitTime(2100, 4900));
+
     // Step 2: Upload image if available
     const rand = Math.random();
-    if (imagePath && rand <= 0.9) {
+    if (imagePath && rand <= 1) {
       await uploadImageToFacebook(page, imagePath, videoFilePath);
-      await sleep(3000);
+      await sleep(getRandomWaitTime(2500, 5000));
     }
 
     // Step 2: Wait for the "What's on your mind?" span to appear
@@ -105,17 +118,18 @@ const postTrendNewsOnFB = async (
     await page.keyboard.type(toPost, {delay: 200});
     console.log('Typed the message into the editor successfully.');
 
-    await sleep(10000);
+    await sleep(getRandomWaitTime(3900, 6800));
 
-    // Step 5: Click "Next" button using keyboard shortcuts
-    console.log('Using keyboard shortcuts to click Next button...');
+    // Step 5: Click "Post" button using keyboard shortcuts
+    console.log('Using keyboard shortcuts to click Post button...');
 
     // Hold Shift key and press Tab 4 times
     await page.keyboard.down('Shift');
 
     for (let i = 0; i < 4; i++) {
       await page.keyboard.press('Tab');
-      await sleep(1000); // Wait 1 second after each tab
+      if (i === 3) break;
+      await sleep(getRandomWaitTime(700, 1900));
     }
 
     // Release Shift key
@@ -125,9 +139,9 @@ const postTrendNewsOnFB = async (
     // Hit Enter button
     await page.keyboard.press('Enter');
 
-    console.log('Next button clicked using keyboard shortcuts successfully.');
+    console.log('Post button clicked using keyboard shortcuts successfully.');
 
-    await sleep(getRandomWaitTime(10000, 20000));
+    await sleep(getRandomWaitTime(4600, 7700));
 
     // Step 6: Click "Post" button using keyboard shortcuts
     /** console.log('Using keyboard shortcuts to click Post button...');
@@ -190,9 +204,9 @@ const uploadImageToFacebook = async (
     // Multiple selectors to find the file input for Facebook
     const fileInputSelectors = [
       'input[accept="image/*,image/heif,image/heic,video/*,video/mp4,video/x-m4v,video/x-matroska,.mkv"]',
-      'input[type="file"][accept*="image"]',
+      /** 'input[type="file"][accept*="image"]',
       'input.x1s85apg[type="file"]',
-      'input[type="file"][multiple]',
+      'input[type="file"][multiple]', */
     ];
 
     let fileInput: ElementHandle<HTMLInputElement> | null = null;
@@ -212,7 +226,7 @@ const uploadImageToFacebook = async (
     }
 
     // If no file input found, try clicking the Photo/video button first
-    if (!fileInput) {
+    /** if (!fileInput) {
       console.log('File input not found, looking for Photo/video button...');
 
       const mediaButtonSelectors = [
@@ -272,7 +286,7 @@ const uploadImageToFacebook = async (
           continue;
         }
       }
-    }
+    } */
 
     if (!fileInput) {
       throw new Error(

@@ -5,7 +5,7 @@ import {
   cleanupImage,
   generateMultiPlatformImageFilename,
 } from '../../utils/imageUtils';
-import {cleanupVideo} from '../../utils/videoUtils';
+import {cleanupVideo} from '../../utils/video/videoUtils';
 import config from '../../config/index';
 import * as fs from 'fs';
 import * as path from 'path';
