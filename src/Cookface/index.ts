@@ -102,7 +102,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       } */
 
       // Run XEngage every ~4-10 minutes
-      if (now - lastEngage > getRandomWaitTime(FOUR_MINUTES, TEN_MINUTES)) {
+      if (now - lastEngage > getRandomWaitTime(THREE_MINUTES, FOUR_MINUTES)) {
         console.log(
           `[${new Date().toLocaleTimeString()}] ⏱️ Starting XEngage...`,
         );

@@ -50,8 +50,7 @@ async function commentsSpecial(
           'For social media automation and software development services, do not hesitate to contact us.🚂 https://youtu.be/dnY2p2whjk8?si=5yIJetxJtY0P1-jf';
         const reply2 =
           '🚂 Join our Telegram channel for uninterrupted news content https://t.me/tnk254';
-        const reply3 =
-          '🚂 Click the link to join our Telegram Football Channel - https://t.me/ebcsports';
+        const reply3 = `🚂 Earn regularly by completing surveys. You will receive pay via your AirTM account; Anyone from any country is eligible. Join using my referral link and start earning - https://t.me/Besample_bot?start=1d447a35-d034-450b-98eb-3cf76701b55e`;
         const reply4 = '🚂 https://youtu.be/EUWf0opisUg';
 
         // Get random engagement phrase instead of fixed reply5
@@ -60,10 +59,10 @@ async function commentsSpecial(
         const randomNumber = Math.random();
 
         let reply;
-        if (randomNumber > 0.9) {
+        if (randomNumber > 0.95) {
           reply = reply1;
-        } else if (randomNumber > 0.8) {
-          reply = reply2;
+        } else if (randomNumber > 0.65) {
+          reply = reply3;
         } /* else if (randomNumber > 0.7) {
           reply = reply3;
         }*/ else {
