@@ -67,6 +67,43 @@ async function fetchTweetTrends(
     }
   }
 
+  async function getBestTitleFromTopTrendsManual(): Promise<{
+    title: string;
+    index: number;
+  }> {
+    const top10Trends = trends.slice(0, 10);
+    const recentTrends = getRecentTrends();
+    console.log(`Recent Trends:\t ${recentTrends}`);
+    sleep(10000);
+
+    // Loop through top10trends and find the first unused one
+    for (let i = 0; i < top10Trends.length; i++) {
+      const currentTrend = top10Trends[i];
+
+      // Check if this trend is NOT in the recent trends list
+      if (!recentTrends.includes(currentTrend.title)) {
+        console.log(`Selected Trend: ${currentTrend.title}`);
+
+        // Save the selected trend to file
+        genAIService['saveTrendToFile'](currentTrend.title);
+
+        return {
+          title: currentTrend.title,
+          index: i,
+        };
+      }
+    }
+
+    // If all top 10 trends have been used recently, return null or handle as needed
+    console.log(
+      'All top 10 trends have been used recently. Returning number 1 trend!',
+    );
+    return {
+      title: top10Trends[0].title,
+      index: 1,
+    };
+  }
+
   async function getBestTitleFromTopTrends(): Promise<{
     title: string;
     index: number;
@@ -280,7 +317,7 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
   }
 
   try {
-    const {title: selectedTitle} = await getBestTitleFromTopTrends();
+    const {title: selectedTitle} = await getBestTitleFromTopTrendsManual();
 
     await page.evaluate(
       (label, navSelector) => {

@@ -30,7 +30,7 @@ const postTrendNewsOnFBPage = async (
   sharedImagePath?: string,
   videoFilePath?: string,
 ): Promise<string> => {
-  const genAI = new GenerativeAIService();
+  // const genAI = new GenerativeAIService();
   let imagePath = sharedImagePath;
 
   try {
@@ -52,7 +52,7 @@ const postTrendNewsOnFBPage = async (
 
     // Step 2: Upload image if available
     const rand = Math.random();
-    if (imagePath && rand <= 0.9) {
+    if (imagePath && rand <= 1.0) {
       await uploadImageToFacebook(page, imagePath, videoFilePath);
       await sleep(3000);
     }
