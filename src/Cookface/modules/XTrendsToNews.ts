@@ -1,4 +1,5 @@
 import sleep from '../utils/sleep';
+import getRandomWaitTime from '../utils/randomWaitTime';
 import fetchTweetTrends from '../services/fetchTweetTrends';
 import scrapeTrends24 from '../services/scrapeTrends24';
 import GenerativeAIService from '../services/generativeAI';
@@ -6,7 +7,8 @@ import GenerativeAIAudioService from '../services/GenAI/genAIAudioService';
 import GenerativeAIVideoService from '../services/GenAI/genAIVideoService';
 import {postTrendNewsOnX} from '../services/postTrendNewsOnX';
 import {postTrendNewsOnFB} from '../services/Facebook/postTrendNewsOnFB';
-// import {SwitchToProfile} from '../utils/facebook/switchToPage';
+import {postTrendNewsOnFBPage} from '../services/Facebook/postTrendNewsOnFBPage';
+import {SwitchToProfile} from '../utils/facebook/switchToPage';
 import {sendArticleToTelegram} from '../services/postTrendNewsOnTelegram';
 import {TikTokUpload, validateVideoFile} from '../services/TikTok/upload';
 import {
@@ -46,8 +48,8 @@ export const XTrendsToNews = async (
 
     // Initialize services
     const genAIService = new GenerativeAIService();
-    const genAIAudioService = new GenerativeAIAudioService();
-    const genAIVideoService = new GenerativeAIVideoService();
+    // const genAIAudioService = new GenerativeAIAudioService();
+    // const genAIVideoService = new GenerativeAIVideoService();
 
     const trends = await scrapeTrends24();
 
@@ -124,7 +126,7 @@ export const XTrendsToNews = async (
     await sleep(2000);
 
     // Generate audio for the news bite
-    console.log('Generating audio for news bite...');
+    /** console.log('Generating audio for news bite...');
     try {
       audioFilePath = await genAIAudioService.generateNewsAudio(
         newsBite,
@@ -161,7 +163,7 @@ export const XTrendsToNews = async (
         'Video generation failed, continuing without video:',
         videoError,
       );
-    }
+    } */
 
     await sleep(2000);
 
@@ -181,12 +183,12 @@ export const XTrendsToNews = async (
     await sleep(2000);
     await fbPage.reload({waitUntil: 'networkidle2'});
     console.log('Page reloaded successfully.');
-    await sleep(10000);
+    await sleep(getRandomWaitTime(5000, 10000));
 
     // Post to Facebook
     console.log('Posting to Facebook...');
     // await SwitchToProfile(fbPage);
-    await postTrendNewsOnFB(
+    await postTrendNewsOnFBPage(
       fbPage,
       newsBite,
       selectedImages[0].src,
@@ -195,8 +197,8 @@ export const XTrendsToNews = async (
     );
     console.log('Successfully posted to Facebook');
 
-    await fbPage.reload({waitUntil: 'networkidle2'});
-    console.log('Page reloaded successfully.');
+    // await fbPage.reload({waitUntil: 'networkidle2'});
+    // console.log('Page reloaded successfully.');
 
     await sleep(10000);
 
