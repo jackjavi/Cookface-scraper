@@ -317,7 +317,7 @@ Now reply ONLY with the number (1–15) of the trend you recommend. No explanati
   }
 
   try {
-    const {title: selectedTitle} = await getBestTitleFromTopTrendsManual();
+    const {title: selectedTitle} = await getBestTitleFromTopTrends();
 
     await page.evaluate(
       (label, navSelector) => {

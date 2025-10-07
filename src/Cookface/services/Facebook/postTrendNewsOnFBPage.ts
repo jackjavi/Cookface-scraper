@@ -144,24 +144,32 @@ const postTrendNewsOnFBPage = async (
     // Step 7: Select random groups to share to
     console.log('Step 7: Selecting random groups to share to...');
 
-    // Find all unchecked checkbox inputs with the specified class
-    const groupInputs = await page.$$(
-      'input.x1i10hfl.x9f619.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1ypdohk.x5yr21d.x1o0tod.xdj266r.x14z9mp.xat24cr.x1lziwak.x1w3u9th.x1a2a7pz.xexx8yu.xyri2b.x18d9i69.x1c1uobl.x10l6tqk.x13vifvy.xh8yej3[type="checkbox"][aria-checked="false"]',
-    );
+    // Use page.evaluate to avoid "Node is detached from document" errors
+    const groupsClicked = await page.evaluate(() => {
+      // Find all unchecked checkbox inputs
+      const groupInputs = Array.from(
+        document.querySelectorAll(
+          'input.x1i10hfl.x9f619.xggy1nq.xtpw4lu.x1tutvks.x1s3xk63.x1s07b3s.x1ypdohk.x5yr21d.x1o0tod.xdj266r.x14z9mp.xat24cr.x1lziwak.x1w3u9th.x1a2a7pz.xexx8yu.xyri2b.x18d9i69.x1c1uobl.x10l6tqk.x13vifvy.xh8yej3[type="checkbox"][aria-checked="false"]',
+        ),
+      ) as HTMLInputElement[];
 
-    if (groupInputs.length > 0) {
+      if (groupInputs.length === 0) {
+        console.log('No available groups found to share to');
+        return 0;
+      }
+
       // Generate random number between 2 and 4 (inclusive)
-      const numGroupsToSelect = Math.floor(Math.random() * 3) + 2; // Random between 2-4
+      const numGroupsToSelect = Math.floor(Math.random() * 3) + 2;
       console.log(
         `Found ${groupInputs.length} available groups, selecting ${numGroupsToSelect} groups`,
       );
 
       // Randomly select groups to click
-      const selectedGroups = [];
       const availableIndexes = Array.from(
         {length: groupInputs.length},
         (_, i) => i,
       );
+      const selectedIndexes: number[] = [];
 
       for (
         let i = 0;
@@ -170,59 +178,108 @@ const postTrendNewsOnFBPage = async (
       ) {
         const randomIndex = Math.floor(Math.random() * availableIndexes.length);
         const selectedIndex = availableIndexes.splice(randomIndex, 1)[0];
-        selectedGroups.push(selectedIndex);
+        selectedIndexes.push(selectedIndex);
       }
 
       // Click on selected groups
-      for (const index of selectedGroups) {
-        await groupInputs[index].click();
-        console.log(`Clicked on group ${index + 1}`);
-        await sleep(1000);
-      }
-
-      // Find and click the Done button using tab navigation
-      console.log('Navigating to Done button...');
-      let doneFound = false;
-      let tabAttempts = 0;
-      const maxTabAttempts = 20; // Prevent infinite loop
-
-      while (!doneFound && tabAttempts < maxTabAttempts) {
-        await page.keyboard.press('Tab');
-        await sleep(500);
-        tabAttempts++;
-
-        // Check if the focused element is the Done button
-        const isDoneButton = await page.evaluate(() => {
-          const activeEl = document.activeElement as HTMLElement;
-          if (activeEl && activeEl.getAttribute('aria-label') === 'Done') {
-            const span = activeEl.querySelector('span');
-            return (
-              span && span.textContent && span.textContent.includes('Done')
-            );
-          }
-          return false;
-        });
-
-        if (isDoneButton) {
-          console.log('Found Done button, clicking Enter...');
-          await page.keyboard.press('Enter');
-          doneFound = true;
-          await sleep(2000);
+      let clickedCount = 0;
+      for (const index of selectedIndexes) {
+        try {
+          groupInputs[index].click();
+          console.log(`Clicked on group ${index + 1}`);
+          clickedCount++;
+        } catch (e) {
+          console.log(`Failed to click group ${index + 1}`);
         }
       }
 
-      if (!doneFound) {
-        console.warn('Could not find Done button through tab navigation');
+      return clickedCount;
+    });
+
+    console.log(`Successfully clicked ${groupsClicked} groups`);
+    await sleep(2000);
+
+    // Step 7.1: Finding and Clicking on Done button
+    console.log('Searching for Done button using DOM navigation...');
+
+    const doneClicked = await page.evaluate(() => {
+      // Find all divs with the specific class and style
+      const candidateDivs = Array.from(
+        document.querySelectorAll('div.xkj4a21'),
+      ).filter(div => {
+        const style = (div as HTMLElement).getAttribute('style');
+        return style && style.includes('--x-minWidth: 500px');
+      });
+
+      console.log(
+        `Found ${candidateDivs.length} divs with class xkj4a21 and style --x-minWidth: 500px`,
+      );
+
+      // Find the correct div by checking which one contains the "Share to groups" dialog as a child
+      let targetDiv: Element | null = null;
+      for (const div of candidateDivs) {
+        const shareDialog = div.querySelector(
+          'div[aria-label="Share to groups"][role="dialog"]',
+        );
+        if (shareDialog) {
+          targetDiv = div;
+          console.log(
+            'Found correct div containing Share to groups dialog as child',
+          );
+          break;
+        }
       }
+
+      if (!targetDiv) {
+        console.log('Could not find div containing Share to groups dialog');
+        return false;
+      }
+
+      // Search for the Done button within the same outer div (targetDiv)
+      const doneButton = targetDiv.querySelector(
+        'div[aria-label="Done"][role="button"].x1i10hfl.xjbqb8w.x1ejq31n',
+      ) as HTMLElement;
+
+      if (doneButton) {
+        console.log(
+          'Found Done button in the outer div, scrolling into view...',
+        );
+        // Scroll the Done button into view before clicking
+        doneButton.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'center',
+        });
+
+        // Small delay to ensure scroll completes
+        setTimeout(() => {
+          console.log('Clicking Done button...');
+          doneButton.click();
+        }, 500);
+
+        return true;
+      }
+
+      console.log('Done button not found in the outer div');
+      return false;
+    });
+
+    if (doneClicked) {
+      console.log('Done button clicked successfully using DOM navigation');
+      await sleep(2500); // Increased sleep to account for scroll delay
     } else {
-      console.log('No available groups found to share to');
+      console.warn(
+        'Could not find or click Done button through DOM navigation',
+      );
     }
+
+    await sleep(getRandomWaitTime(1500, 3000));
 
     // Step 8: Click tab 3 times to highlight Post button and press Enter
     console.log('Step 8: Clicking tab 3 times to highlight Post button...');
     for (let i = 0; i < 3; i++) {
       await page.keyboard.press('Tab');
-      await sleep(1000);
+      await sleep(getRandomWaitTime(500, 1500));
     }
     await page.keyboard.press('Enter');
     console.log('Post button clicked successfully.');

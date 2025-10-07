@@ -67,7 +67,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       } */
 
       // Run TikTokCommentsEngage every ~ 1-1.45 hrs
-      /** if (
+      if (
         now - lastTikTokComments >
         getRandomWaitTime(ONEHOUR, ONEHOURFORTYFIVE)
       ) {
@@ -83,7 +83,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         lastTikTokComments = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      } */
+      }
 
       // Run TikTok Gain Train every ~3-4 hours
       /** if (now - lastGainTrain > getRandomWaitTime(THREEHOURS, FOURHOURS)) {
@@ -102,7 +102,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       } */
 
       // Run XEngage every ~4-10 minutes
-      /** if (now - lastEngage > getRandomWaitTime(THREE_MINUTES, FOUR_MINUTES)) {
+      if (now - lastEngage > getRandomWaitTime(THREE_MINUTES, FOUR_MINUTES)) {
         console.log(
           `[${new Date().toLocaleTimeString()}] ⏱️ Starting XEngage...`,
         );
@@ -115,7 +115,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
         lastEngage = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      } */
+      }
 
       // Run XTrendsToNews every ~1 hr - 1 hr 45 minutes
       if (now - lastTrends > getRandomWaitTime(ONEHOUR, ONEHOURFORTYFIVE)) {
@@ -134,7 +134,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       }
 
       // Run TikTokEngage every ~20-30 minutes
-      /** if (
+      if (
         now - lastTikTokLikes >
         getRandomWaitTime(ONEHOURFORTYFIVE, THREEHOURS)
       ) {
@@ -153,7 +153,7 @@ import {isWithinSleepWindow} from './utils/sleepWindow';
       }
 
       // Run fbEngage every ~ 1-2 hours
-      if (now - lastFbEngage > getRandomWaitTime(ONEHOUR, TWOHOURS)) {
+      /** if (now - lastFbEngage > getRandomWaitTime(ONEHOUR, TWOHOURS)) {
         console.log(
           `[${new Date().toLocaleTimeString()}] 🎵 Starting fbEngage...`,
         );
