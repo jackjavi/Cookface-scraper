@@ -153,7 +153,7 @@ async function tagActiveUsers(label: string, page: Page) {
     // }
 
     // activeUsers.push({ user: '@KVistoh' }, { user: '@wrdonthestrit' }, { user: '@celebishere' }, { user: '@DavidPolycap' }, { user: '@mekky_ayo' }, { user: '@Eliaskaneke' },);
-    activeUsers.push({user: '@TnkTrending'}, {user: '@EBCDEVS'});
+    activeUsers.push({user: '@TnkTrending'});
     activeUsers.sort(() => Math.random() - 0.5);
     const randomEngagementPhrase = getRandomEngagementPhrase();
     const formattedString =
