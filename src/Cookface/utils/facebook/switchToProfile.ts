@@ -1,13 +1,14 @@
 import {Page} from 'puppeteer';
 import sleep from '../sleep';
+import getRandomWaitTime from '../randomWaitTime';
 
 /**
- * Switches Facebook profile to page if currently on personal profile
+ * Switches Facebook page to personal profile if currently on page profile
  * @param page Puppeteer page instance
  */
-export const SwitchToPage = async (page: Page): Promise<void> => {
+export const SwitchToProfile = async (page: Page): Promise<void> => {
   try {
-    console.log('Starting profile to page switch process...');
+    console.log('Starting page to profile switch process...');
 
     // Step 1: Search for the timeline link
     const timelineLink = await page.$('a[aria-label*="timeline"][role="link"]');
@@ -23,9 +24,11 @@ export const SwitchToPage = async (page: Page): Promise<void> => {
     );
     console.log(`Found timeline link: ${ariaLabel}`);
 
-    // Step 2: Check if we're on Jack Javi's timeline
-    if (ariaLabel === "Jack Javi's timeline") {
-      console.log('Currently on Jack Javi timeline, switching to page...');
+    // Step 2: Check if we're on Trending News KENYA's timeline
+    if (ariaLabel === "Trending News KENYA's timeline") {
+      console.log(
+        'Currently on Trending News KENYA timeline, switching to personal profile...',
+      );
 
       // Locate and click the profile SVG
       const profileSvg = await page.$(
@@ -41,7 +44,7 @@ export const SwitchToPage = async (page: Page): Promise<void> => {
       await sleep(2000);
 
       // Step 3: Use Tab key to highlight switch option and press Enter
-      console.log('Using Tab key to switch to Trending News KENYA...');
+      console.log('Using Tab key to switch to Jack Javi...');
       await page.keyboard.press('Tab');
       await sleep(1000);
       await page.keyboard.press('Enter');
@@ -50,9 +53,9 @@ export const SwitchToPage = async (page: Page): Promise<void> => {
       // Step 4: Handle potential unsaved changes popup
       await handleUnsavedChangesPopup(page);
 
-      console.log('Successfully switched to Trending News KENYA page');
-    } else if (ariaLabel === "Trending News KENYA's timeline") {
-      console.log('Already on Trending News KENYA timeline - no switch needed');
+      console.log('Successfully switched to Jack Javi personal profile');
+    } else if (ariaLabel === "Jack Javi's timeline") {
+      console.log('Already on Jack Javi timeline - no switch needed');
     } else {
       console.log(`Unknown timeline detected: ${ariaLabel}`);
     }

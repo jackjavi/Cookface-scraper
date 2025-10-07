@@ -8,7 +8,7 @@ import GenerativeAIVideoService from '../services/GenAI/genAIVideoService';
 import {postTrendNewsOnX} from '../services/postTrendNewsOnX';
 import {postTrendNewsOnFB} from '../services/Facebook/postTrendNewsOnFB';
 import {postTrendNewsOnFBPage} from '../services/Facebook/postTrendNewsOnFBPage';
-import {SwitchToProfile} from '../utils/facebook/switchToPage';
+import {SwitchToPage} from '../utils/facebook/switchToPage';
 import {sendArticleToTelegram} from '../services/postTrendNewsOnTelegram';
 import {TikTokUpload, validateVideoFile} from '../services/TikTok/upload';
 import {
@@ -186,7 +186,7 @@ export const XTrendsToNews = async (
 
     // Post to Facebook
     console.log('Posting to Facebook...');
-    await SwitchToProfile(fbPage);
+    await SwitchToPage(fbPage);
     await postTrendNewsOnFBPage(
       fbPage,
       newsBite,
