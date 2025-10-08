@@ -262,7 +262,7 @@ export const XTrendsToNews = async (
     // Post to Facebook
     console.log('Posting to Facebook...');
     await SwitchToProfile(fbPage);
-    await postTrendNewsOnFBPage(
+    await postTrendNewsOnFB(
       fbPage,
       newsBite,
       selectedImages[0].src,
