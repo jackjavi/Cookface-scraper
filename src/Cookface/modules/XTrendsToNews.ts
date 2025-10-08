@@ -9,6 +9,7 @@ import {postTrendNewsOnX} from '../services/postTrendNewsOnX';
 import {postTrendNewsOnFB} from '../services/Facebook/postTrendNewsOnFB';
 import {postTrendNewsOnFBPage} from '../services/Facebook/postTrendNewsOnFBPage';
 import {SwitchToPage} from '../utils/facebook/switchToPage';
+import {SwitchToProfile} from '../utils/facebook/switchToProfile';
 import {sendArticleToTelegram} from '../services/postTrendNewsOnTelegram';
 import {TikTokUpload, validateVideoFile} from '../services/TikTok/upload';
 import {
@@ -184,7 +185,7 @@ export const XTrendsToNews = async (
     console.log('Page reloaded successfully.');
     await sleep(getRandomWaitTime(5000, 10000));
 
-    // Post to Facebook
+    // Post to Facebook Page
     console.log('Posting to Facebook...');
     await SwitchToPage(fbPage);
     await postTrendNewsOnFBPage(
@@ -197,10 +198,11 @@ export const XTrendsToNews = async (
     );
     console.log('Successfully posted to Facebook');
 
+    await sleep(getRandomWaitTime(3000, 6000));
     // await fbPage.reload({waitUntil: 'networkidle2'});
     // console.log('Page reloaded successfully.');
 
-    await sleep(10000);
+    await sleep(getRandomWaitTime(3000, 7000));
 
     // Post to Telegram using the shared image path
     console.log('Posting to Telegram...');
@@ -249,6 +251,25 @@ export const XTrendsToNews = async (
         console.log('Skipping TikTok upload - no TikTok page provided');
       }
     }
+
+    // Upload to Facebook personal profile
+    await fbPage.bringToFront();
+    await sleep(2000);
+    await fbPage.reload({waitUntil: 'networkidle2'});
+    console.log('Page reloaded successfully.');
+    await sleep(getRandomWaitTime(5000, 10000));
+
+    // Post to Facebook
+    console.log('Posting to Facebook...');
+    await SwitchToProfile(fbPage);
+    await postTrendNewsOnFBPage(
+      fbPage,
+      newsBite,
+      selectedImages[0].src,
+      sharedImagePaths.length > 0 ? sharedImagePaths[0] : undefined,
+      videoFilePath ? videoFilePath : undefined,
+    );
+    console.log('Successfully posted to Facebook');
 
     console.log('All platforms posted successfully!');
 
