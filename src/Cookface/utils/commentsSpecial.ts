@@ -61,7 +61,7 @@ async function commentsSpecial(
         let reply;
         if (randomNumber > 0.95) {
           reply = reply1;
-        } else if (randomNumber > 0.65) {
+        } else if (randomNumber > 0.9) {
           reply = reply3;
         } /* else if (randomNumber > 0.7) {
           reply = reply3;
