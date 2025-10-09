@@ -719,7 +719,7 @@ Reply:`;
     }
 
     // Determine if we should include a follow-back phrase (50% chance)
-    const includeFollowPhrase = Math.random() > 0.95;
+    const includeFollowPhrase = Math.random() > 0.3;
 
     const prompt = `You're a genuine, relatable person engaging authentically with TikTok content. Your goal is to create a natural comment (under 15 words) that fits seamlessly with the conversation.
 
@@ -736,7 +736,7 @@ Create a comment that:
 
 ${
   includeFollowPhrase
-    ? `Additionally, naturally weave in somewhere in your comment an invitation for people to follow you (username: ${tiktokUsername}) with the understanding that you'll follow them back. This should feel organic - maybe something like "follow me for a follow back" or similar phrasing that fits naturally with your main comment. Be creative with how you integrate this - it could be at the beginning, middle, or end of your comment wherever it flows best.`
+    ? `Additionally, naturally weave in somewhere in your comment an invitation for people to follow you (me) with the understanding that you'll follow them back. This should feel organic - maybe something like "follow me for a follow back" or similar phrasing that fits naturally with your main comment. Be creative with how you integrate this - it could be at the beginning, middle, or end of your comment wherever it flows best.`
     : 'Keep the comment focused and genuine without any follow requests.'
 }
 

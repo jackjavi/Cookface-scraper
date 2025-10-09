@@ -8,14 +8,6 @@ import {TikTokGainTrainModule} from './modules/TikTok/TikTokGainTrainModule';
 import {fbEngage} from './modules/fbEngage';
 import {initializeBrowser, visitBrowserPageLink} from './utils/browserManager';
 import {isWithinSleepWindow} from './utils/sleepWindow';
-import {
-  openTikTokPage,
-  closeTikTokPage,
-  openXPage,
-  closeXPage,
-  openFbPage,
-  closeFbPage,
-} from './utils/pageManager';
 
 (async () => {
   try {
@@ -33,6 +25,24 @@ import {
     const FOURHOURS = 4 * 60 * 60 * 1000;
 
     const browser = await initializeBrowser();
+
+    const tiktokPage = await browser!.newPage();
+    await tiktokPage.setViewport({width: 1366, height: 768});
+    await tiktokPage.goto('https://www.tiktok.com/', {
+      waitUntil: 'networkidle2',
+    });
+    console.log('TikTok page initialized.');
+    await sleep(1500);
+
+    const xPage = await browser!.newPage();
+    await xPage.goto('https://x.com', {waitUntil: 'networkidle2'});
+    console.log('X.com page initialized.');
+    await sleep(1500);
+
+    const fbPage = await browser!.newPage();
+    await fbPage.goto('https://www.facebook.com/', {waitUntil: 'networkidle2'});
+    console.log('Facebook page initialized.');
+    await sleep(1500);
 
     // Initialize timers
     let lastEngage = 0;
@@ -56,6 +66,25 @@ import {
         continue;
       } */
 
+      // Run TikTokCommentsEngage every ~ 1-1.45 hrs
+      if (
+        now - lastTikTokComments >
+        getRandomWaitTime(ONEHOUR, ONEHOURFORTYFIVE)
+      ) {
+        console.log(
+          `[${new Date().toLocaleTimeString()}] 🎵 Starting TikTokEngageComments...`,
+        );
+        try {
+          await TikTokCommentsEngage(tiktokPage);
+          console.log('✅ TikTokEngageComments completed successfully');
+        } catch (tiktokError: any) {
+          console.error('❌ TikTokEngageComments error:', tiktokError.message);
+        }
+        lastTikTokComments = Date.now();
+        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
+        continue;
+      }
+
       // Run TikTok Gain Train every ~3-4 hours
       /** if (now - lastGainTrain > getRandomWaitTime(THREEHOURS, FOURHOURS)) {
         console.log(
@@ -72,19 +101,16 @@ import {
         continue;
       } */
 
-      // Run XEngage every ~3-4 minutes
-      if (now - lastEngage > getRandomWaitTime(SIX_MINUTES, TEN_MINUTES)) {
+      // Run XEngage every ~4-10 minutes
+      if (now - lastEngage > getRandomWaitTime(THREE_MINUTES, FOUR_MINUTES)) {
         console.log(
           `[${new Date().toLocaleTimeString()}] ⏱️ Starting XEngage...`,
         );
-        const xPage = await openXPage(browser!);
         try {
           await XEngage(xPage);
           console.log('✅ XEngage completed successfully');
         } catch (xEngageError) {
           console.error('❌ XEngage error:', xEngageError);
-        } finally {
-          await closeXPage(xPage);
         }
         lastEngage = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
@@ -96,53 +122,19 @@ import {
         console.log(
           `[${new Date().toLocaleTimeString()}] 📊 Starting XTrendsToNews...`,
         );
-        // Initialize pages using the new functions
-        const tiktokPage = await openTikTokPage(browser!);
-        const xPage = await openXPage(browser!);
-        const fbPage = await openFbPage(browser!);
         try {
           await XTrendsToNews(xPage, fbPage, tiktokPage);
           console.log('✅ XTrendsToNews completed successfully');
         } catch (trendsError) {
           console.error('❌ XTrendsToNews error:', trendsError);
-        } finally {
-          // Ensure all pages are closed after use
-          await closeXPage(xPage);
-          await closeFbPage(fbPage);
-          await closeTikTokPage(tiktokPage);
         }
         lastTrends = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
       }
 
-      // Run TikTokCommentsEngage every ~ 1-1.45 hrs
+      // Run TikTokEngage every ~20-30 minutes
       if (
-        now - lastTikTokComments >
-        getRandomWaitTime(ONEHOUR, ONEHOURFORTYFIVE)
-      ) {
-        console.log(
-          `[${new Date().toLocaleTimeString()}] 🎵 Starting TikTokEngageComments...`,
-        );
-        // Initialize pages using the new functions
-        const tiktokPage = await openTikTokPage(browser!);
-        try {
-          await TikTokCommentsEngage(tiktokPage);
-          console.log('✅ TikTokEngageComments completed successfully');
-        } catch (tiktokError: any) {
-          console.error('❌ TikTokEngageComments error:', tiktokError.message);
-        } finally {
-          // Ensure the TikTok page is closed after use
-          await closeTikTokPage(tiktokPage);
-        }
-        lastTikTokComments = Date.now();
-        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
-        await sleep(getRandomWaitTime(1000, 3000));
-        continue;
-      }
-
-      // Run TikTokEngage every ~1.45-3 hours
-      /** if (
         now - lastTikTokLikes >
         getRandomWaitTime(ONEHOURFORTYFIVE, THREEHOURS)
       ) {
@@ -158,7 +150,7 @@ import {
         lastTikTokLikes = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
-      } */
+      }
 
       // Run fbEngage every ~ 1-2 hours
       /** if (now - lastFbEngage > getRandomWaitTime(ONEHOUR, TWOHOURS)) {
