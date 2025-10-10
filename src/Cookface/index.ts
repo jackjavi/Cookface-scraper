@@ -56,6 +56,25 @@ import {
         continue;
       } */
 
+      // Run fbEngage every ~ 1-2 hours
+      if (now - lastFbEngage > getRandomWaitTime(THIRTY_MINUTES, ONEHOUR)) {
+        console.log(
+          `[${new Date().toLocaleTimeString()}] 🎵 Starting fbEngage...`,
+        );
+        const fbPage = await openFbPage(browser!);
+        try {
+          await fbEngage(fbPage);
+          console.log('✅ fbEngage completed successfully');
+        } catch (fbError) {
+          console.error('❌ fbEngage error:', fbError);
+        } finally {
+          await closeFbPage(fbPage);
+        }
+        lastFbEngage = Date.now();
+        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
+        continue;
+      }
+
       // Run TikTok Gain Train every ~3-4 hours
       /** if (now - lastGainTrain > getRandomWaitTime(THREEHOURS, FOURHOURS)) {
         console.log(
@@ -73,7 +92,7 @@ import {
       } */
 
       // Run XEngage every ~3-4 minutes
-      if (now - lastEngage > getRandomWaitTime(SIX_MINUTES, TEN_MINUTES)) {
+      if (now - lastEngage > getRandomWaitTime(FOUR_MINUTES, SIX_MINUTES)) {
         console.log(
           `[${new Date().toLocaleTimeString()}] ⏱️ Starting XEngage...`,
         );
@@ -137,7 +156,6 @@ import {
         }
         lastTikTokComments = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
-        await sleep(getRandomWaitTime(1000, 3000));
         continue;
       }
 
@@ -156,22 +174,6 @@ import {
           console.error('❌ TikTokEngage error:', tiktokError);
         }
         lastTikTokLikes = Date.now();
-        await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
-        continue;
-      } */
-
-      // Run fbEngage every ~ 1-2 hours
-      /** if (now - lastFbEngage > getRandomWaitTime(ONEHOUR, TWOHOURS)) {
-        console.log(
-          `[${new Date().toLocaleTimeString()}] 🎵 Starting fbEngage...`,
-        );
-        try {
-          await fbEngage(fbPage);
-          console.log('✅ fbEngage completed successfully');
-        } catch (fbError) {
-          console.error('❌ fbEngage error:', fbError);
-        }
-        lastFbEngage = Date.now();
         await sleep(getRandomWaitTime(10000, 30000)); // Short cooldown
         continue;
       } */

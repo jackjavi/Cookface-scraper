@@ -793,6 +793,71 @@ Comment:`;
     }
   }
 
+  /**
+   * Generate a thoughtful Facebook comment based on the post text and existing comments
+   * Add this method to the GenerativeAIService class
+   * @param postText - The original Facebook post text
+   * @param comments - Array of existing comments on the post
+   * @returns Promise<string> - Generated comment
+   */
+  async generateFacebookComment(
+    postText: string,
+    comments: string[],
+  ): Promise<string> {
+    if (!postText || !Array.isArray(comments) || comments.length === 0) {
+      throw new Error(
+        'Invalid input: postText must be a non-empty string and comments must be a non-empty array.',
+      );
+    }
+
+    // Take up to 10 most recent comments for context
+    const recentComments = comments.slice(0, 10);
+
+    const prompt = `
+You're a genuine, thoughtful person engaging naturally with Facebook content. Your goal is to create an authentic comment (under 25 words) that adds value to the conversation.
+
+Original Post:
+"${postText}"
+
+Existing Comments:
+${recentComments.map((comment, index) => `${index + 1}. ${comment}`).join('\n')}
+
+Create a comment that:
+- Responds naturally to the post or engages with the conversation flow
+- Matches the tone and energy of existing comments
+- Adds value through support, insight, relatability, humor, or thoughtful perspective
+- Feels authentic and conversational, like something a real person would say
+- Encourages positive engagement or meaningful discussion
+- Avoids being overly promotional, generic, or spammy
+- Uses natural Facebook language and style
+
+Keep it short (under 25 words), genuine, and engaging. Use emojis sparingly if they fit naturally. No hashtags.
+
+Comment:`;
+
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const generatedComment = response.text();
+
+      // Clean the comment: remove prefixes, markdown, quotes, and excess formatting
+      const cleanComment = generatedComment
+        .replace(/^[^:]*:\s*/, '') // Remove everything up to and including the first colon
+        .replace(/\*\*/g, '') // Remove markdown bold indicators (**)
+        .replace(/\n/g, ' ') // Replace newlines with spaces
+        .replace(/(^["'""'']+)|(["'""'']+$)/g, '') // Remove quotes at start/end
+        .replace(/(?<=\s)["'""'']+|["'""'']+(?=\s)/g, '') // Remove stray quotes around words
+        .replace(/Comment:\s*/i, '') // Remove "Comment:" prefix if present
+        .trim();
+
+      console.log('Generated Facebook comment:', cleanComment);
+      return cleanComment;
+    } catch (error) {
+      console.error('Error generating Facebook comment:', error);
+      throw new Error('Failed to generate Facebook comment');
+    }
+  }
+
   async generateFacebookPostSwahiliSheng(): Promise<string> {
     const recentPosts = this.getRecentEntries(this.shengPostsFilePath, 10);
 

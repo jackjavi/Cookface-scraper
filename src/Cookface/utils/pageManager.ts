@@ -23,6 +23,7 @@ export async function closeTikTokPage(page: Page): Promise<void> {
 // X (Twitter) Page Management
 export async function openXPage(browser: Browser): Promise<Page> {
   const xPage = await browser.newPage();
+  await xPage.setViewport({width: 1366, height: 768});
   await xPage.goto('https://x.com', {waitUntil: 'networkidle2'});
   console.log('X.com page initialized.');
   await sleep(1500);
@@ -39,6 +40,7 @@ export async function closeXPage(page: Page): Promise<void> {
 // Facebook Page Management
 export async function openFbPage(browser: Browser): Promise<Page> {
   const fbPage = await browser.newPage();
+  await fbPage.setViewport({width: 1366, height: 768});
   await fbPage.goto('https://www.facebook.com/', {waitUntil: 'networkidle2'});
   console.log('Facebook page initialized.');
   await sleep(1500);
